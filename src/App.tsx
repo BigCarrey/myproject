@@ -110,7 +110,7 @@ function App() {
   );
 
   return (
-    <div className="h-full flex items-center justify-center bg-gradient-to-br from-slate-100 via-blue-50 to-purple-50">
+    <div className="h-full flex items-center justify-center bg-gray-50">
       {/* Left Sidebar Navigation */}
       <div className="sidebar">
         <div className="sidebar-header">
@@ -148,11 +148,6 @@ function App() {
             </button>
           ))}
         </nav>
-
-        <div className="sidebar-footer">
-          <p>Demo 演示模式</p>
-          <p>点击左侧模块切换场景</p>
-        </div>
       </div>
 
       {/* Phone Mockup - Centered */}

@@ -172,58 +172,28 @@ html, body, #root {
   animation: pulse-glow 2s infinite;
 }
 
-.sidebar-footer {
-  padding: 16px 8px 0;
-  border-top: 1px solid #f1f5f9;
-  text-align: center;
-}
-
-.sidebar-footer p:first-child {
-  font-size: 12px;
-  font-weight: 600;
-  color: #64748b;
-}
-
-.sidebar-footer p:last-child {
-  font-size: 11px;
-  color: #94a3b8;
-  margin-top: 4px;
-}
-
 /* ===== Phone Frame ===== */
 .phone-frame {
   width: 390px;
   height: 90vh;
   max-height: 780px;
-  background: #1a1a2e;
-  border-radius: 44px;
-  padding: 12px;
-  box-shadow:
-    0 20px 60px rgba(0,0,0,0.2),
-    0 0 0 2px rgba(255,255,255,0.1),
-    inset 0 0 0 1px rgba(255,255,255,0.05);
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
   position: relative;
   flex-shrink: 0;
 }
 
 .phone-notch {
-  position: absolute;
-  top: 12px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 28px;
-  background: #1a1a2e;
-  border-radius: 0 0 18px 18px;
-  z-index: 50;
+  display: none;
 }
 
 .phone-screen {
   width: 100%;
   height: 100%;
-  border-radius: 34px;
+  border-radius: 16px;
   overflow: hidden;
-  background: linear-gradient(180deg, #EEF2FF 0%, #F5F7FB 50%, #F0F0FF 100%);
+  background: #F8F9FA;
   display: flex;
   flex-direction: column;
 }
