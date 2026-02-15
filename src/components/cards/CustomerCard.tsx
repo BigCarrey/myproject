@@ -16,60 +16,58 @@ export function CustomerCard({ data }: CustomerCardProps) {
 
   const priorityLabels = { high: '高优先', medium: '中优先', low: '低优先' };
 
-  return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-      <div className="p-3">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary-light flex items-center justify-center text-white font-bold text-sm">
-            {customer.avatar}
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-sm">{customer.name}</span>
-              <span className={`text-xs px-1.5 py-0.5 rounded-full ${priorityColors[customer.priority]}`}>
-                {priorityLabels[customer.priority]}
-              </span>
-            </div>
-            <p className="text-xs text-text-secondary">
-              {customer.age}岁 · {customer.occupation} · 年收入{customer.annualIncome}
-            </p>
-          </div>
+return (
+  <div className="bg-white rounded-3xl shadow-sm border border-gray-50 overflow-hidden mb-4">
+    {/* 1. 增加整体内边距 p-5 */}
+    <div className="p-5">
+      
+      {/* 2. 头部信息区域：增加间距 gap-4 */}
+      <div className="flex items-start gap-4 mb-4">
+        {/* 头像增大一点，使用更柔和的背景 */}
+        <div className="w-12 h-12 rounded-full bg-blue-50 flex-shrink-0 flex items-center justify-center text-blue-500 font-bold text-lg">
+          {customer.avatar}
         </div>
-
-        <div className="flex flex-wrap gap-1 mb-2">
-          {customer.tags.map((tag) => (
-            <span key={tag} className="text-xs bg-primary-50 text-primary px-2 py-0.5 rounded-full">
-              {tag}
+        
+        <div className="flex-1 pt-0.5">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-bold text-base text-gray-800">{customer.name}</span>
+            <span className={`text-xs px-2 py-0.5 rounded-lg ${priorityColors[customer.priority]}`}>
+              {priorityLabels[customer.priority]}
             </span>
-          ))}
-        </div>
-
-        {!!data.detailed && (
-          <>
-            <div className="space-y-1.5 text-xs text-text-secondary border-t border-gray-100 pt-2 mt-2">
-              <p>👤 家庭：{customer.familyStatus}</p>
-              <p>📍 地址：{customer.address}</p>
-              <p>📅 上次联系：{customer.lastContact}</p>
-              {customer.existingPolicies.length > 0 && (
-                <div>
-                  <p className="font-medium text-text mb-1">📋 已有保单：</p>
-                  {customer.existingPolicies.map((p, i) => (
-                    <p key={i} className="ml-4">
-                      · {p.name}（{p.type}）- {p.coverage}
-                    </p>
-                  ))}
-                </div>
-              )}
-            </div>
-          </>
-        )}
-
-        {customer.notes && (
-          <div className="mt-2 p-2 bg-yellow-50 rounded-lg text-xs text-yellow-800">
-            💡 {customer.notes}
           </div>
-        )}
+          <p className="text-sm text-gray-500">
+            {customer.age}岁 · {customer.occupation}
+          </p>
+        </div>
       </div>
+
+      {/* 3. 标签区域：增加间距 */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {customer.tags.map((tag) => (
+          <span key={tag} className="text-xs bg-gray-50 text-gray-600 px-2.5 py-1 rounded-md">
+            {tag}
+          </span>
+        ))}
+      </div>
+
+      {/* 4. 重点备注：模仿新图中的样式，添加左侧装饰条和更大的内间距 */}
+      {customer.notes && (
+        <div className="relative p-3 bg-orange-50/50 rounded-xl text-sm text-orange-800 border-l-4 border-orange-300">
+          <span className="flex items-start gap-1">
+            <span className="mt-0.5">💡</span>
+            <span className="leading-relaxed">{customer.notes}</span>
+          </span>
+        </div>
+      )}
+
+      {/* 5. 详细信息（可选展开部分） */}
+      {!!data.detailed && (
+        <div className="mt-4 pt-4 border-t border-gray-50 space-y-2 text-sm text-gray-600">
+           <p>📍 {customer.address}</p>
+           <p>📅 上次联系：{customer.lastContact}</p>
+        </div>
+      )}
     </div>
-  );
+  </div>
+);
 }
