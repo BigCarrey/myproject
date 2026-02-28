@@ -14,7 +14,7 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content:
-              '小张，新的一月开始了。已完成客户盘点并推荐本月经营名单：\n\n• **低温客户**：加强联系，避免流失、逐步升温\n• **中高温客户**：加强拜访促成，推动升温转化\n\n📌 本月提醒：李平安（生日 9/12）、王建国（生日 3/8）需安排问候；刘大明、张伟有生存金待领取。',
+              '小张，新的一月开始了。已完成客户盘点并推荐本月经营名单：\n\n• **低温客户**：加强联系，避免流失、逐步升温\n• **中高温客户**：加强拜访促成，推动升温转化\n\n📌 生日与生存金提醒详见下方「本月经营客户」列表。',
             speechText:
               '小张，已完成本月客户盘点。低温客户加强联系，中高温客户加强拜访促成。本月有生日和生存金提醒，请留意。',
           },
@@ -61,6 +61,7 @@ export const scenarios: Scenario[] = [
             content: '',
             data: {
               totalCount: 6,
+              displayCount: 6,
               customers: [
                 {
                   name: '李平安',
@@ -70,6 +71,7 @@ export const scenarios: Scenario[] = [
                   actionIcon: '🤝',
                   tags: ['高净值', '保养老'],
                   lastContact: '本月',
+                  birthday: '9/12',
                 },
                 {
                   name: '王建国',
@@ -79,6 +81,7 @@ export const scenarios: Scenario[] = [
                   actionIcon: '🤝',
                   tags: ['加保意向', '子女教育'],
                   lastContact: '本月',
+                  birthday: '3/8',
                 },
                 {
                   name: '李美琳',
@@ -97,6 +100,7 @@ export const scenarios: Scenario[] = [
                   actionIcon: '📩',
                   tags: ['首次接触', '高收入'],
                   lastContact: '本月',
+                  survivalFund: true,
                 },
                 {
                   name: '陈晓雯',
@@ -115,36 +119,10 @@ export const scenarios: Scenario[] = [
                   actionIcon: '📱',
                   tags: ['老客户', '传承需求'],
                   lastContact: '本月',
+                  survivalFund: true,
                 },
               ],
               summary: '已为您圈选出6位重点经营客户，建议优先推进高温高价值与中温高价值客群。',
-            },
-            delay: 250,
-          },
-        ],
-        quickReplies: [
-          { label: '好的，我约了下周一下午两点面访李平安', value: 'confirm-schedule' },
-        ],
-      },
-      // Step 1: AI 确认拜访计划
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '好的，已添加拜访计划。',
-            speechText: '好的，已为您添加李平安的拜访计划。',
-          },
-          {
-            type: 'schedule-card',
-            content: '',
-            data: {
-              title: '李平安经营计划',
-              days: [
-                {
-                  day: '下周一',
-                  items: [{ time: '14:00', task: '面访李平安 - 沟通养老规划方案', type: 'visit' }],
-                },
-              ],
             },
             delay: 250,
           },
@@ -180,7 +158,7 @@ export const scenarios: Scenario[] = [
               days: [
                 {
                   day: '周一',
-                  items: [{ time: '14:00', task: '面访李平安 - 养老规划方案', type: 'visit' }],
+                  items: [{ time: '10:00', task: '面访张伟 - 保障方案讲解', type: 'visit' }],
                 },
                 {
                   day: '周二',
@@ -201,6 +179,34 @@ export const scenarios: Scenario[] = [
                 {
                   day: '周六',
                   items: [{ time: '14:00', task: '面访李美琳 - 重疾保障方案', type: 'visit' }],
+                },
+              ],
+            },
+            delay: 250,
+          },
+        ],
+        quickReplies: [
+          { label: '好的，我约了本周一下午两点面访李平安', value: 'confirm-schedule' },
+          { label: '好的，收到', value: 'back-to-menu' },
+        ],
+      },
+      // Step 1: AI 确认拜访计划
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '好的，已添加拜访计划。',
+            speechText: '好的，已为您添加李平安的拜访计划。',
+          },
+          {
+            type: 'schedule-card',
+            content: '',
+            data: {
+              title: '李平安经营计划',
+              days: [
+                {
+                  day: '本周一',
+                  items: [{ time: '14:00', task: '面访李平安 - 沟通养老规划方案', type: 'visit' }],
                 },
               ],
             },
@@ -235,7 +241,9 @@ export const scenarios: Scenario[] = [
             type: 'customer-list',
             content: '',
             data: {
+              title: '今日经营客户',
               totalCount: 5,
+              displayCount: 5,
               customers: [
                 {
                   name: '李平安',
@@ -263,6 +271,7 @@ export const scenarios: Scenario[] = [
                   actionIcon: '📩',
                   tags: ['首次接触', '高收入'],
                   lastContact: '1周前',
+                  quickReply: { label: '给中温客户转发资讯', value: 'forward-mid' },
                 },
                 {
                   name: '陈晓雯',
@@ -272,6 +281,7 @@ export const scenarios: Scenario[] = [
                   actionIcon: '📩',
                   tags: ['理财需求', '养老规划'],
                   lastContact: '1周前',
+                  quickReply: { label: '给中温客户转发资讯', value: 'forward-mid' },
                 },
                 {
                   name: '刘大明',
@@ -281,18 +291,21 @@ export const scenarios: Scenario[] = [
                   actionIcon: '📱',
                   tags: ['老客户', '传承需求'],
                   lastContact: '3周前',
+                  quickReply: { label: '帮低温客户发问候', value: 'greet-low' },
                 },
               ],
+              actionable: true,
               summary: '建议优先跟进高温客户，低温客户可一键发送问候维护关系。',
             },
             delay: 250,
           },
         ],
         quickReplies: [
-          { label: '帮我给低温客户发个问候吧', value: 'send-greeting' },
+          { label: '帮低温客户发问候', value: 'greet-low' },
+          { label: '给中温客户转发资讯', value: 'forward-mid' },
         ],
       },
-      // Step 1: AI 确认发送
+      // Step 1: AI 确认发送（内容由 useChat 根据上一步 quickReply 动态选择）
       {
         aiMessages: [
           {

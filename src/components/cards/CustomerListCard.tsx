@@ -1,3 +1,5 @@
+import { useChatContext } from '../../contexts/ChatContext';
+
 interface CustomerListCardProps {
   data: Record<string, unknown>;
 }
@@ -10,20 +12,29 @@ interface CustomerListItem {
   actionIcon: string;
   tags: string[];
   lastContact: string;
+  /** 生日，如 9/12 */
+  birthday?: string;
+  /** 生存金待领取 */
+  survivalFund?: boolean;
+  /** 可点击时触发的快捷回复 */
+  quickReply?: { label: string; value: string };
 }
 
 export function CustomerListCard({ data }: CustomerListCardProps) {
   const customers = data.customers as CustomerListItem[];
   const summary = data.summary as string | undefined;
   const totalCount = (data.totalCount as number) ?? customers.length;
-  const displayCount = 3;
+  const displayCount = (data.displayCount as number) ?? 3;
+  const title = (data.title as string) ?? '本月经营客户';
+  const actionable = (data.actionable as boolean) ?? false;
   const displayCustomers = customers.slice(0, displayCount);
+  const { onQuickReply } = useChatContext();
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
       {/* 简洁的标题 */}
       <div className="px-4 py-3 border-b border-gray-100">
-        <h3 className="text-gray-800 font-medium text-sm">本月经营客户（{totalCount}）</h3>
+        <h3 className="text-gray-800 font-medium text-sm">{title}（{totalCount}）</h3>
       </div>
 
       {/* 客户列表 */}
@@ -41,10 +52,22 @@ export function CustomerListCard({ data }: CustomerListCardProps) {
                 </div>
 
                 <div className="flex-1 min-w-0">
-                  {/* 客户名称和最后联系时间 */}
-                  <div className="flex items-center justify-between mb-1.5">
+                  {/* 客户名称、提醒标识和最后联系时间 */}
+                  <div className="flex items-center justify-between mb-1.5 flex-wrap gap-1">
                     <span className="font-medium text-sm text-gray-800">{customer.name}</span>
-                    <span className="text-xs text-gray-400">{customer.lastContact}联系</span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {customer.birthday && (
+                        <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded border border-amber-200">
+                          🎂 生日 {customer.birthday}
+                        </span>
+                      )}
+                      {customer.survivalFund && (
+                        <span className="text-xs bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded border border-emerald-200">
+                          💰 生存金待领取
+                        </span>
+                      )}
+                      <span className="text-xs text-gray-400">{customer.lastContact}联系</span>
+                    </div>
                   </div>
 
                   {/* 标签 - 简洁样式，最多3个 */}
@@ -63,9 +86,18 @@ export function CustomerListCard({ data }: CustomerListCardProps) {
                 <span className="text-xs text-gray-800 truncate mr-3">
                   {customer.actionIcon} {customer.action}
                 </span>
-                <button className="text-xs text-blue-600 border border-blue-600 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors whitespace-nowrap flex-shrink-0">
-                  去经营
-                </button>
+                {actionable && customer.quickReply && onQuickReply ? (
+                  <button
+                    onClick={() => onQuickReply(customer.quickReply!)}
+                    className="text-xs text-blue-600 border border-blue-600 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors whitespace-nowrap flex-shrink-0"
+                  >
+                    一键触客
+                  </button>
+                ) : (
+                  <button className="text-xs text-blue-600 border border-blue-600 px-3 py-1 rounded-full hover:bg-blue-50 transition-colors whitespace-nowrap flex-shrink-0">
+                    去经营
+                  </button>
+                )}
               </div>
             </div>
           ))}

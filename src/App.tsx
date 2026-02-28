@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
+import { ChatContext } from './contexts/ChatContext';
 import { Header } from './components/Header';
 import { MessageBubble } from './components/MessageBubble';
 import { InputBar } from './components/InputBar';
@@ -237,6 +238,12 @@ function App() {
               />
 
               {/* Chat messages area */}
+              <ChatContext.Provider
+                value={{
+                  onQuickReply: chat.handleQuickReply,
+                  currentScenario: chat.currentScenario,
+                }}
+              >
               <div
                 ref={chatContainerRef}
                 className="flex-1 overflow-y-auto pt-4 pb-4"
@@ -249,12 +256,13 @@ function App() {
                 {chat.isTyping && <TypingIndicator />}
 
                 {/* Quick replies */}
-                {chat.quickReplies.length > 0 && !chat.isTyping && (
+                {chat.quickReplies.length > 0 && !chat.isTyping && !chat.currentScenario && (
                   <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
                 )}
 
                 <div ref={messagesEndRef} />
               </div>
+              </ChatContext.Provider>
 
               {/* Input area */}
               <InputBar

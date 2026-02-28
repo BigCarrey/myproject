@@ -22,6 +22,7 @@ export function useChat() {
   const sessionRef = useRef(0);
   const speakFnRef = useRef<((text: string) => void) | null>(null);
   const enqueueSpeakFnRef = useRef<((text: string) => void) | null>(null);
+  const lastQuickReplyRef = useRef<QuickReply | null>(null);
 
   const registerSpeak = useCallback(
     (fn: (text: string) => void, enqueueFn: (text: string) => void) => {
@@ -65,7 +66,31 @@ export function useChat() {
       const scenario = scenarios.find((s) => s.id === scenarioId);
       if (!scenario || stepIndex >= scenario.steps.length) return;
 
-      const step = scenario.steps[stepIndex];
+      let step = scenario.steps[stepIndex];
+      // 场景三 Step 1：根据上一步用户选择展示不同确认消息
+      if (scenarioId === 'daily-engagement' && stepIndex === 1 && lastQuickReplyRef.current) {
+        const val = lastQuickReplyRef.current.value;
+        const overrides: Record<string, { content: string; speechText: string }> = {
+          'greet-low': {
+            content: '✅ 已为刘大明发送问候消息，后续可继续触客其他客户。',
+            speechText: '好的，已为刘大明发送问候消息。',
+          },
+          'forward-mid': {
+            content: '✅ 已为张伟、陈晓雯转发保障科普资讯，后续可继续触客其他客户。',
+            speechText: '好的，已为中温客户转发资讯。',
+          },
+        };
+        const override = overrides[val];
+        if (override) {
+          step = {
+            ...step,
+            aiMessages: [
+              { type: 'text' as const, content: override.content, speechText: override.speechText },
+            ],
+          };
+        }
+      }
+
       clearTimeouts();
       setQuickReplies([]);
       setTyping(true);
@@ -142,7 +167,7 @@ export function useChat() {
 
   const handleQuickReply = useCallback(
     (reply: QuickReply) => {
-      // Add user message
+      lastQuickReplyRef.current = reply;
       addMessage({ role: 'user', type: 'text', content: reply.label });
       setQuickReplies([]);
 
