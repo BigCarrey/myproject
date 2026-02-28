@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
+import { AUDIO_MANIFEST, TEXT_TO_KEY } from '../data/audio-manifest';
 
 interface UseSpeechReturn {
   isListening: boolean;
@@ -15,6 +16,27 @@ interface UseSpeechReturn {
 
 function stripPunct(text: string): string {
   return text.replace(/[。！？，、；：…]/g, '');
+}
+
+/** 预生成音频播放倍速（1.0=原速，1.2=快 20%） */
+const PREGENERATED_PLAYBACK_RATE = 1.2;
+
+/** 将清单中的路径解析为带 base 的完整 URL（开发和生产均需 base 前缀） */
+function resolveAudioUrl(path: string): string {
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  return path.startsWith('/') ? base + path : base + '/' + path;
+}
+
+/** 从预生成清单中查找音频 URL，找不到返回 null */
+function findPreGeneratedAudio(text: string): string | null {
+  const normalized = text
+    .replace(/[#*_~`|>\-]/g, '')
+    .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const key = TEXT_TO_KEY[normalized];
+  const path = key && AUDIO_MANIFEST[key] ? AUDIO_MANIFEST[key] : null;
+  return path ? resolveAudioUrl(path) : null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,9 +149,9 @@ export function useSpeech(): UseSpeechReturn {
   // Session counter for narrate() – incremented on each call so a cancelled
   // narration never fires its onEnd callback.
   const narrateSessionRef = useRef(0);
-  // Chrome bug workaround: long utterances (>~15s) silently stop.
-  // A periodic pause+resume keeps the engine alive.
   const keepAliveRef = useRef<number | null>(null);
+  const audioQueueRef = useRef<Array<{ url: string; onEnd?: () => void }>>([]);
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const SILENCE_TIMEOUT = 1000; // 1秒静默后自动发送
 
@@ -199,49 +221,101 @@ export function useSpeech(): UseSpeechReturn {
     }
   }, [clearSilenceTimer]);
 
+  const stopPreGeneratedAudio = useCallback(() => {
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current = null;
+    }
+    audioQueueRef.current = [];
+  }, []);
+
+  const processAudioQueue = useCallback(() => {
+    const queue = audioQueueRef.current;
+    if (queue.length === 0) {
+      setIsSpeaking(false);
+      return;
+    }
+    const { url, onEnd } = queue.shift()!;
+    const audio = new Audio(url);
+    audio.playbackRate = PREGENERATED_PLAYBACK_RATE;
+    currentAudioRef.current = audio;
+    audio.onended = () => {
+      currentAudioRef.current = null;
+      onEnd?.();
+      processAudioQueue();
+    };
+    audio.onerror = () => {
+      currentAudioRef.current = null;
+      processAudioQueue();
+    };
+    audio.play().catch(() => processAudioQueue());
+  }, []);
+
   const speak = useCallback((text: string) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    if (typeof window === 'undefined') return;
 
-    window.speechSynthesis.cancel();
+    stopPreGeneratedAudio();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
 
+    const url = findPreGeneratedAudio(text);
+    if (url) {
+      setIsSpeaking(true);
+      const audio = new Audio(url);
+      audio.playbackRate = PREGENERATED_PLAYBACK_RATE;
+      currentAudioRef.current = audio;
+      audio.onended = () => {
+        currentAudioRef.current = null;
+        setIsSpeaking(false);
+      };
+      audio.onerror = () => {
+        currentAudioRef.current = null;
+        setIsSpeaking(false);
+      };
+      audio.play().catch(() => setIsSpeaking(false));
+      return;
+    }
+
+    if (!window.speechSynthesis) return;
     const voice = pickBestZhVoice();
     const chunks = splitIntoChunks(text);
     if (chunks.length === 0) return;
 
     setIsSpeaking(true);
-
     chunks.forEach((chunk, idx) => {
       const utterance = new SpeechSynthesisUtterance(chunk);
       utterance.lang = 'zh-CN';
       utterance.rate = 1.25;
       utterance.pitch = 1.0;
       utterance.volume = 1.0;
-
-      // 只在找到本地中文语音时显式指定 voice，避免某些浏览器把
-      // 远程语音列出来但实际播不出来，导致整体静音。
       if (voice && voice.lang.startsWith('zh') && voice.localService) {
         utterance.voice = voice;
       }
-
       if (idx === chunks.length - 1) {
         utterance.onend = () => setIsSpeaking(false);
         utterance.onerror = () => setIsSpeaking(false);
       }
-
       window.speechSynthesis.speak(utterance);
     });
-  }, []);
+  }, [stopPreGeneratedAudio]);
 
   /** Queue speech WITHOUT cancelling ongoing utterances. */
   const enqueueSpeak = useCallback((text: string) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    if (typeof window === 'undefined') return;
 
+    const url = findPreGeneratedAudio(text);
+    if (url) {
+      setIsSpeaking(true);
+      audioQueueRef.current.push({ url });
+      if (!currentAudioRef.current) processAudioQueue();
+      return;
+    }
+
+    if (!window.speechSynthesis) return;
     const voice = pickBestZhVoice();
     const chunks = splitIntoChunks(text);
     if (chunks.length === 0) return;
 
     setIsSpeaking(true);
-
     chunks.forEach((chunk) => {
       const utterance = new SpeechSynthesisUtterance(chunk);
       utterance.lang = 'zh-CN';
@@ -251,7 +325,6 @@ export function useSpeech(): UseSpeechReturn {
       if (voice && voice.lang.startsWith('zh') && voice.localService) {
         utterance.voice = voice;
       }
-
       utterance.onend = () => {
         if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
           setIsSpeaking(false);
@@ -262,10 +335,9 @@ export function useSpeech(): UseSpeechReturn {
           setIsSpeaking(false);
         }
       };
-
       window.speechSynthesis.speak(utterance);
     });
-  }, []);
+  }, [processAudioQueue]);
 
   /**
    * Male-voice narrator. Uses a SINGLE utterance (no chunking) so the TTS
@@ -280,17 +352,45 @@ export function useSpeech(): UseSpeechReturn {
   }, []);
 
   const narrate = useCallback((text: string, onEnd?: () => void) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
+    if (typeof window === 'undefined') {
       onEnd?.();
       return;
     }
 
     clearKeepAlive();
-    window.speechSynthesis.cancel();
+    stopPreGeneratedAudio();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     narrateSessionRef.current += 1;
     const session = narrateSessionRef.current;
 
-    // Clean text for TTS: strip markdown, emoji, replace em-dashes with commas
+    const url = findPreGeneratedAudio(text);
+    if (url) {
+      setIsSpeaking(true);
+      const audio = new Audio(url);
+      audio.playbackRate = PREGENERATED_PLAYBACK_RATE;
+      currentAudioRef.current = audio;
+      audio.onended = () => {
+        currentAudioRef.current = null;
+        setIsSpeaking(false);
+        if (narrateSessionRef.current === session) onEnd?.();
+      };
+      audio.onerror = () => {
+        currentAudioRef.current = null;
+        setIsSpeaking(false);
+        if (narrateSessionRef.current === session) onEnd?.();
+      };
+      audio.play().catch(() => {
+        setIsSpeaking(false);
+        if (narrateSessionRef.current === session) onEnd?.();
+      });
+      return;
+    }
+
+    if (!window.speechSynthesis) {
+      onEnd?.();
+      return;
+    }
+
     const clean = text
       .replace(/[#*_~`|>]/g, '')
       .replace(/[\u{1F300}-\u{1F9FF}]/gu, '')
@@ -303,11 +403,10 @@ export function useSpeech(): UseSpeechReturn {
     }
 
     const voice = pickMaleZhVoice();
-    // Single utterance – lets the engine read the whole passage in one breath
     const utterance = new SpeechSynthesisUtterance(clean);
     utterance.lang = 'zh-CN';
-    utterance.rate = 1.15;  // brisk narration pace
-    utterance.pitch = 0.9;  // slightly lower to distinguish from AI chat voice
+    utterance.rate = 1.3;
+    utterance.pitch = 0.9;
     utterance.volume = 1.0;
     if (voice) utterance.voice = voice;
 
@@ -324,23 +423,22 @@ export function useSpeech(): UseSpeechReturn {
 
     window.speechSynthesis.speak(utterance);
 
-    // Chrome bug: long utterances (>~15s) silently stop.
-    // Periodic pause+resume keeps the engine alive.
     keepAliveRef.current = window.setInterval(() => {
       if (window.speechSynthesis.speaking) {
         window.speechSynthesis.pause();
         window.speechSynthesis.resume();
       }
     }, 10000);
-  }, [clearKeepAlive]);
+  }, [clearKeepAlive, stopPreGeneratedAudio]);
 
   const stopSpeaking = useCallback(() => {
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
+    if (typeof window !== 'undefined') {
       clearKeepAlive();
-      window.speechSynthesis.cancel();
+      stopPreGeneratedAudio();
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
       setIsSpeaking(false);
     }
-  }, [clearKeepAlive]);
+  }, [clearKeepAlive, stopPreGeneratedAudio]);
 
   return {
     isListening,

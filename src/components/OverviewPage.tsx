@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 
 const OVERVIEW_NARRATION =
   '欢迎体验"万能营销助手"。' +
@@ -70,23 +70,21 @@ export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      if ((e.target as HTMLElement).closest('.overview-start-btn')) return;
-      const synth = window.speechSynthesis;
-      if (synth && !synth.speaking && !synth.pending) {
-        narrate(OVERVIEW_NARRATION);
-      }
-    },
-    [narrate]
-  );
-
   return (
-    <div className="overview-page" onClick={handleClick}>
+    <div className="overview-page">
       {/* Hero */}
       <div className="overview-hero">
         <div className="overview-logo">AI</div>
-        <h1 className="overview-title">万能营销助手</h1>
+        <h1
+          className="overview-title overview-title-clickable"
+          onClick={() => narrate(OVERVIEW_NARRATION)}
+          onKeyDown={(e) => e.key === 'Enter' && narrate(OVERVIEW_NARRATION)}
+          role="button"
+          tabIndex={0}
+          aria-label="点击播放旁白"
+        >
+          万能营销助手
+        </h1>
         <p className="overview-subtitle">绩优代理人的 AI 客户经营引导助手</p>
       </div>
 

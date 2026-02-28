@@ -358,6 +358,11 @@ html, body, #root {
   letter-spacing: 0.02em;
 }
 
+.overview-title-clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
 .overview-subtitle {
   font-size: 16px;
   color: rgba(255,255,255,0.85);
