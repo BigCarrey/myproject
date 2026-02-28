@@ -1,7 +1,11 @@
 import { useEffect, useCallback } from 'react';
 
 const OVERVIEW_NARRATION =
-  '欢迎体验万能营销助手，聚焦四大能力：深度可视化、服务被动转主动、对话即交易、闭环式成交。接下来用七个典型场景，带您快速体验。';
+  '欢迎体验"万能营销助手"。' +
+  '绩优小张，入职平安人寿十年，服务五百多位客户，是营业区的业绩标兵。' +
+  '她平时最大的痛点是——客户太多、时间不够用；客户信息分散、整理费时间；不常联系的客户想加强经营，却不知从何入手。' +
+  '万能营销助手按月、周、日三级节奏，为她提供持续的客户经营引导。' +
+  '下面用五个场景，带您快速体验。';
 
 interface OverviewPageProps {
   onStart: () => void;
@@ -11,46 +15,42 @@ interface OverviewPageProps {
 const pillars = [
   {
     icon: '📊',
-    title: '深度可视化',
+    title: '客户分层可视化',
     color: '#4F6BF6',
     gradient: 'linear-gradient(135deg, #4F6BF6 0%, #667eea 100%)',
     points: [
-      '客户画像多维分析，精准定位客群',
-      '保障缺口可视化，量化需求差距',
-      '团队经营数据仪表盘，实时掌握全局',
+      '500+ 客户自动分层，温度-价值宫格一目了然',
+      '生日、生存金、保单节点全掌握',
     ],
   },
   {
     icon: '🔔',
-    title: '服务被动转主动',
+    title: '主动经营提醒',
     color: '#7C3AED',
     gradient: 'linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%)',
     points: [
-      '每月自动提醒盘点客户，生成经营计划',
-      '每周推送行事历，持续跟进不遗漏',
-      '拜访前主动提醒，提前准备方案',
+      '月/周/日三级节奏自动推送经营计划',
+      '低温升温、高温促成全覆盖',
     ],
   },
   {
-    icon: '💬',
-    title: '对话即交易',
+    icon: '📲',
+    title: '一键高效触客',
     color: '#0EA5E9',
     gradient: 'linear-gradient(135deg, #0EA5E9 0%, #38BDF8 100%)',
     points: [
-      '对话式定制产品方案，自然流畅',
-      '语音智能记录拜访，自动生成总结',
-      '实时推送销售攻略与异议处理话术',
+      '一键问候低温客户，一键转发资讯',
+      '面访前自动准备方案与攻略',
     ],
   },
   {
-    icon: '🎯',
-    title: '闭环式成交',
+    icon: '📈',
+    title: '闭环复盘提升',
     color: '#10B981',
     gradient: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
     points: [
-      '盘点→计划→拜访→复盘，全流程闭环',
-      '智能推荐附近客户，提升拜访效率',
-      '收入激励追踪，驱动目标达成',
+      '周报自动标出薄弱环节与待加强客户',
+      '月度复盘亮点与技能短板，个性化学习计划',
     ],
   },
 ];
@@ -58,24 +58,18 @@ const pillars = [
 const timeline = [
   { icon: '📋', label: '每月初', desc: '盘点客户', color: '#4F6BF6' },
   { icon: '📅', label: '每周初', desc: '经营计划', color: '#6366F1' },
-  { icon: '💼', label: '拜访前', desc: '方案准备', color: '#818CF8' },
-  { icon: '📝', label: '拜访后', desc: '智能记录', color: '#7C3AED' },
-  { icon: '👥', label: '当晚', desc: '辅导下属', color: '#A78BFA' },
+  { icon: '📲', label: '每天', desc: '当日经营', color: '#818CF8' },
   { icon: '📊', label: '每周末', desc: '周工作总结', color: '#0EA5E9' },
   { icon: '📈', label: '每月末', desc: '月度复盘', color: '#10B981' },
 ];
 
 export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
   useEffect(() => {
-    // Attempt auto-play. Chrome may block this without a prior user gesture —
-    // in that case the click handler below serves as a silent fallback.
     const t = window.setTimeout(() => narrate(OVERVIEW_NARRATION), 500);
     return () => window.clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Silent click-to-start fallback: if auto-play was blocked, the first click
-  // anywhere on the page (except the start button) triggers narration.
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       if ((e.target as HTMLElement).closest('.overview-start-btn')) return;
@@ -93,7 +87,7 @@ export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
       <div className="overview-hero">
         <div className="overview-logo">AI</div>
         <h1 className="overview-title">万能营销助手</h1>
-        <p className="overview-subtitle">AI 驱动的智能保险销售全流程解决方案</p>
+        <p className="overview-subtitle">绩优代理人的 AI 客户经营引导助手</p>
       </div>
 
       {/* 4 Pillars */}

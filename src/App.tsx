@@ -9,64 +9,48 @@ import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios } from './data/scenarios';
 
-const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七'];
+const SCENE_NUMS = ['一', '二', '三', '四', '五'];
 
 const modulesMeta = [
   {
     id: 'monthly-review',
-    name: '每月初，提醒代理人盘点客户',
+    name: '每月初，盘点客户',
     timing: '每月初',
     icon: '📋',
     color: '#4F6BF6',
-    narration: '场景一，每月初，AI主动提醒代理人盘点客户并生成经营计划。',
+    narration: '场景一，每月初，AI自动盘点客户，推荐经营名单并提醒生日与生存金。',
   },
   {
     id: 'weekly-plan',
-    name: '每周初，提醒本周经营计划',
+    name: '每周初，经营计划',
     timing: '每周初',
     icon: '📅',
     color: '#6366F1',
-    narration: '场景二，每周初，AI推送本周拜访计划与客户跟进策略。',
+    narration: '场景二，每周初，AI推送分层经营计划与行事历。',
   },
   {
-    id: 'pre-visit',
-    name: '某天，客户拜访前',
-    timing: '拜访前',
-    icon: '💼',
+    id: 'daily-engagement',
+    name: '每天，当日经营',
+    timing: '每天',
+    icon: '📲',
     color: '#818CF8',
-    narration: '场景三，拜访前，AI自动生成保障检视与专属产品方案。',
-  },
-  {
-    id: 'post-visit',
-    name: '某天，客户拜访后',
-    timing: '拜访后',
-    icon: '📝',
-    color: '#7C3AED',
-    narration: '场景四，拜访后，AI语音记录拜访并生成总结与跟进计划。',
-  },
-  {
-    id: 'team-coaching',
-    name: '某天晚上：辅导下属',
-    timing: '晚上',
-    icon: '👥',
-    color: '#A78BFA',
-    narration: '场景五，当天晚上，AI辅助主管精准辅导下属。',
+    narration: '场景三，每天，AI推送当日经营提醒，支持一键问候与转发资讯。',
   },
   {
     id: 'weekly-summary',
-    name: '每周末，形成周工作总结',
-    timing: '周末',
+    name: '每周末，周工作总结',
+    timing: '每周末',
     icon: '📊',
     color: '#0EA5E9',
-    narration: '场景六，每周末，AI自动生成本周工作周报。',
+    narration: '场景四，每周末，AI生成周报，标出薄弱环节与需加强经营的客户。',
   },
   {
     id: 'monthly-retrospective',
-    name: '每月末，形成月度工作复盘',
-    timing: '月末',
+    name: '每月末，月度复盘',
+    timing: '每月末',
     icon: '📈',
     color: '#10B981',
-    narration: '场景七，每月末，AI生成月度复盘报告，闭环全月经营。',
+    narration: '场景五，每月末，AI生成月度复盘报告，标出亮点与需提升技能。',
   },
 ];
 
@@ -191,7 +175,7 @@ function App() {
           <div className="sidebar-logo">AI</div>
           <div>
             <h2 className="sidebar-title">万能营销助手</h2>
-            <p className="sidebar-subtitle">智能保险销售平台</p>
+            <p className="sidebar-subtitle">绩优代理人客户经营引导</p>
           </div>
         </div>
 
