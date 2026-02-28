@@ -78,13 +78,13 @@ export function useChat() {
 
       const currentSession = sessionRef.current;
 
-      let totalDelay = 600;
+      let totalDelay = 300;
       const messageCallbacks: Array<{ delay: number; msg: typeof step.aiMessages[0] }> = [];
 
       step.aiMessages.forEach((msg) => {
         const msgDelay = totalDelay;
         messageCallbacks.push({ delay: msgDelay, msg });
-        totalDelay += (msg.delay || 400) + 600;
+        totalDelay += (msg.delay ?? 200) + 300;
       });
 
       messageCallbacks.forEach(({ delay, msg }, index) => {
@@ -117,7 +117,7 @@ export function useChat() {
             const qrTimeout = window.setTimeout(() => {
               if (sessionRef.current !== currentSession) return;
               setQuickReplies(step.quickReplies || []);
-            }, step.quickReplyDelay ?? 300);
+            }, step.quickReplyDelay ?? 150);
             timeoutRefs.current.push(qrTimeout);
           }
         }, delay);

@@ -29,7 +29,7 @@ export const scenarios: Scenario[] = [
               ],
               upgradeTarget: '5位中温客户提升至高温',
             },
-            delay: 500,
+            delay: 250,
           },
           {
             type: 'customer-grid',
@@ -54,7 +54,7 @@ export const scenarios: Scenario[] = [
               ],
               tip: '建议优先经营中温高价值客户，提升成交概率',
             },
-            delay: 400,
+            delay: 250,
           },
           {
             type: 'customer-list',
@@ -63,7 +63,7 @@ export const scenarios: Scenario[] = [
               totalCount: 6,
               customers: [
                 {
-                  name: '赵高',
+                  name: '李平安',
                   temperature: '高温',
                   value: '高价值',
                   action: '面访沟通养老规划方案',
@@ -119,11 +119,13 @@ export const scenarios: Scenario[] = [
               ],
               summary: '已为您圈选出6位重点经营客户，建议优先推进高温高价值与中温高价值客群。',
             },
-            delay: 400,
+            delay: 250,
           },
         ],
         // 不再给快捷回复，引导代理人通过语音/输入自然说出“Ok，我约了下周一下午两点……”这类话
-        quickReplies: [],
+        quickReplies: [
+          { label: '好的，我约了下周一下午两点面访李平安', value: 'confirm-schedule' },
+        ],
       },
       // Step 1: 代理人反馈后，直接确认并展示拜访计划
       {
@@ -145,10 +147,12 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 400,
+            delay: 250,
           },
         ],
-        quickReplies: [],
+        quickReplies: [
+          { label: '好的，收到', value: 'back-to-menu' },
+        ],
       },
     ],
   },
@@ -202,7 +206,7 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 500,
+            delay: 250,
           },
         ],
         quickReplies: [
@@ -230,12 +234,12 @@ export const scenarios: Scenario[] = [
           },
           {
             type: 'text',
-            content: '提前分析客户需求、准备产品方案，有助于提高促成概率。需要帮您定制一份产品方案吗？',
-            delay: 400,
+            content: '需要帮您定制一份产品方案吗？',
+            delay: 250,
           },
         ],
         quickReplies: [
-          { label: '好的，帮我给客户李平安定制一份产品方案', value: 'analyze' },
+          { label: '好的，帮我定制产品方案', value: 'analyze' },
           { label: '稍后再说', value: 'back-to-menu' },
         ],
       },
@@ -246,14 +250,14 @@ export const scenarios: Scenario[] = [
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '正在根据客户宫格分析客户李平安的痛点及需求。45岁，社会中坚客群，重点需求：保财富、保养老。',
+            speechText: '李平安45岁，社会中坚客群，重点需求保财富、保养老。',
             data: {
               title: '需求分析',
               stepIcon: '🔍',
               autoCollapse: true,
-              collapseDelay: 3000,
-              itemRevealDelay: 1500,
-              firstItemDelay: 800,
+              collapseDelay: 1200,
+              itemRevealDelay: 500,
+              firstItemDelay: 300,
               summary: '李平安，45岁，社会中坚客群 | 重点需求：保财富、保养老',
               items: [
                 {
@@ -278,21 +282,21 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 7500,
+            delay: 2500,
           },
 
           // 保障检视（逐项展示 → 自动折叠）
           {
             type: 'collapsible-step',
             content: '',
-            speechText: '接下来进行保障检视，结合李平安在平安内外部的保单情况，分析保障缺口。',
+            speechText: '保障检视：财富缺口80万，养老缺口180万。',
             data: {
               title: '保障检视',
               stepIcon: '📊',
               autoCollapse: true,
-              collapseDelay: 3000,
-              itemRevealDelay: 1500,
-              firstItemDelay: 800,
+              collapseDelay: 1200,
+              itemRevealDelay: 500,
+              firstItemDelay: 300,
               summary: '财富缺口80万，养老缺口180万（含中银保信同业数据）',
               items: [
                 {
@@ -306,67 +310,19 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 6000,
+            delay: 2000,
           },
 
           // 方案推荐（保持展开）
           {
             type: 'product-plans',
             content: '',
-            speechText: '根据需求分析和保障缺口，已为李平安智能匹配专属产品+服务方案平安添盈-臻享家医和销售攻略，您可以查看详情。',
+            speechText: '已为李平安匹配平安添盈臻享家医方案和销售攻略。',
             data: {
               needsSummary:
                 '根据客户需求及保险缺口，智能匹配以下产品方案：',
             },
-            delay: 500,
-          },
-          {
-            type: 'visit-strategy',
-            content: '',
-            data: {
-              customerName: '李平安',
-              sections: [
-                {
-                  title: '历史案例参考',
-                  icon: '📖',
-                  items: [
-                    '张先生，46岁企业高管，同属社会中坚客群，保障缺口与李平安相似，最终选择"年金险+增额终身寿"组合方案，年缴保费4万元，兼顾教育金储备与养老规划',
-                    '赵女士，43岁，也面临财富缺口和养老缺口双重需求，通过分阶段投保策略，首年年缴2.5万元，次年追加至4万元，客户接受度更高',
-                  ],
-                },
-              ],
-            },
-            delay: 500,
-          },
-        ],
-        quickReplies: [
-          { label: '查看方案详情', value: 'sales-benefit' },
-          { label: '查看销售攻略', value: 'sales-strategy' },
-        ],
-        quickReplyDelay: 2500,
-      },
-      // Step 2: 测算销售利益
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content:
-              '促成以上方案后，您可获得收入7500元（含首佣FYC6000元，销售津贴1500元）还差4500C即可满足晋级P4的累计FYC标准，还差4000C可达标金钻，加油！',
-            speechText: '促成后收入7500元，离晋级和达标都不远了，加油！',
-          },
-        ],
-        quickReplies: [
-          { label: '查看销售攻略', value: 'sales-strategy' },
-          { label: '准备出发拜访', value: 'back-to-menu' },
-        ],
-      },
-      // Step 3: 匹配销售攻略
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '为了帮您促成销售，已根据客户画像为您生成适合李平安的个性化经营建议，助您高效沟通、顺利出单。',
-            speechText: '销售攻略已生成，祝您拜访顺利！',
+            delay: 250,
           },
           {
             type: 'visit-strategy',
@@ -409,12 +365,13 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 500,
+            delay: 250,
           },
         ],
         quickReplies: [
-          { label: '好的，准备出发', value: 'back-to-menu' },
+          { label: '准备出发拜访', value: 'back-to-menu' },
         ],
+        quickReplyDelay: 800,
       },
     ],
   },
@@ -437,19 +394,14 @@ export const scenarios: Scenario[] = [
         ],
         quickReplies: [{ label: '开始智能记录', value: 'start-record' }],
       },
-      // Step 1: 模拟语音记录 + 生成总结
+      // Step 1: 模拟语音记录 + 生成总结 + 确认 + 附近客户（合并原 Step 1-3）
       {
         aiMessages: [
           {
             type: 'text',
             content:
-              '🎙️ 已识别您的语音记录：\n\n「刚刚拜访完客户李平安，聊得还挺顺利。一开始我们先寒暄了一下，客户说最近在考虑孩子的教育金问题，但又担心年金险太死板，钱放进去就拿不出来，不太灵活。我跟他说年金可以搭配万能账户，灵活性会好一些，他也点了几下头，但还是有点犹豫。后来我进一步介绍了【平安添盈·臻享家医】方案，并结合客户孩子的成长路径做了演示，客户最终决定投保。」\n\n「聊的过程中还了解到，客户目前在香蜜湖有一套房，名下有两辆车，一辆宝马，一辆特斯拉，家庭经济状况比较稳健，年收入120万左右。客户本人是公司合伙人，生日是9月12号，太太主要负责家庭理财和孩子教育支出。」',
+              '🎙️ 已识别您的语音记录：\n\n「刚刚拜访完客户李平安，聊得还挺顺利。客户关注子女教育金，经介绍【平安添盈·臻享家医】方案后决定投保。客户年收入约120万，公司合伙人，生日9月12日。」',
             speechText: '语音已识别。',
-          },
-          {
-            type: 'text',
-            content: '已为您记录拜访内容，正在为您生成拜访总结。',
-            delay: 800,
           },
           {
             type: 'visit-summary',
@@ -475,32 +427,14 @@ export const scenarios: Scenario[] = [
               sentiment: '积极正面',
               closeProbability: 90,
             },
-            speechText: '好的。',
-            delay: 500,
+            speechText: '已为您生成拜访总结。',
+            delay: 300,
           },
           {
             type: 'text',
-            content: '本次拜访信息及客户情况已整理完毕，请确认是否正确？',
-            speechText: '本次拜访信息已整理完毕，请确认是否正确？',
-            delay: 800,
-          },
-        ],
-        quickReplies: [
-          { label: '确认', value: 'confirm-update' },
-        ],
-      },
-      // Step 2: 确认更新 + 推荐附近客户
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '已同步更新本次拜访信息及客户情况到李平安的客户档案',
-            speechText: '好的，已完成李平安客户档案更新。另外这附近还有两位客户，建议您可以顺路拜访。',
-          },
-          {
-            type: 'text',
-            content: '您当前在福田区香蜜湖街道，附近还有两位客户，建议您安排拜访',
-            delay: 500,
+            content: '本次拜访信息已整理完毕。已同步更新到李平安客户档案。附近还有两位客户，建议您可顺路拜访。',
+            speechText: '拜访信息已确认并更新，附近有两位客户可顺路拜访。',
+            delay: 400,
           },
           {
             type: 'nearby-customers',
@@ -525,82 +459,11 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 400,
+            delay: 300,
           },
         ],
         quickReplies: [
-          { label: '拜访王五', value: 'visit-wangwu' },
-        ],
-      },
-      // Step 3: 准备拜访王五
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '好的，我先帮你分析王五的客户画像和沟通重点，方便您高效推进拜访。',
-            speechText: '好的',
-          },
-          {
-            type: 'customer-card',
-            content: '',
-            data: { customerId: 'c7', detailed: true },
-            delay: 800,
-          },
-          {
-            type: 'visit-strategy',
-            content: '',
-            data: {
-              customerName: '王五',
-              sections: [
-                {
-                  title: '客户核心需求',
-                  icon: '🎯',
-                  items: [
-                    '子女教育金储备（长子12岁，3年后面临高中及留学规划）',
-                    '家庭财富稳健增值，抵御通胀风险',
-                  ],
-                },
-                {
-                  title: '切入话题建议',
-                  icon: '💬',
-                  items: [
-                    '从孩子教育规划入手，了解留学意向和费用预期',
-                    '结合企业经营现金流，探讨资产配置方案',
-                  ],
-                },
-                {
-                  title: '推荐产品方向',
-                  icon: '📦',
-                  items: [
-                    '教育年金险：锁定未来教育费用',
-                    '增额终身寿：兼顾财富增值与灵活支取',
-                  ],
-                },
-                {
-                  title: '历史案例参考',
-                  icon: '📖',
-                  items: [
-                    '周先生，40岁企业主，长子10岁，通过教育年金+增额终身寿组合方案，年缴保费5万元，成功锁定子女留学费用并兼顾家庭财富增值',
-                    '吴女士，38岁，同样关注子女教育规划，首次面谈从孩子兴趣班支出切入，第二次面谈促成教育年金险签约，年缴2.5万元',
-                  ],
-                },
-                {
-                  title: '注意事项',
-                  icon: '⚠️',
-                  items: [
-                    '客户已有医疗险，切勿重复推荐同类产品',
-                    '上次面谈已建立信任，本次可适当推进促成动作',
-                  ],
-                },
-              ],
-            },
-            speechText: '王五的客户画像和沟通策略已准备好，建议从孩子教育规划切入。',
-            delay: 600,
-          },
-        ],
-        quickReplies: [
-          { label: '帮我定制产品方案', value: 'back-to-menu' },
-          { label: '准备出发拜访', value: 'back-to-menu' },
+          { label: '好的，收到', value: 'back-to-menu' },
         ],
       },
     ],
@@ -626,12 +489,11 @@ export const scenarios: Scenario[] = [
             type: 'team-dashboard',
             content: '',
             data: { members: 'all' },
-            delay: 500,
+            delay: 250,
           },
         ],
         quickReplies: [
           { label: '需要，分析李明情况', value: 'analyze-liming' },
-          { label: '查看全组数据', value: 'view-data' },
         ],
       },
       // Step 1: 辅助面谈
@@ -646,7 +508,7 @@ export const scenarios: Scenario[] = [
             type: 'member-card',
             content: '',
             data: { memberId: 't1' },
-            delay: 400,
+            delay: 250,
           },
           {
             type: 'ability-analysis',
@@ -665,13 +527,13 @@ export const scenarios: Scenario[] = [
                 { label: '促成动作', level: 'weak' },
               ],
             },
-            delay: 600,
+            delay: 300,
           },
           {
             type: 'text',
             content:
               '为更好地帮助李明达钻，建议您组织一次面谈，进行针对性辅导。已为您生成面谈方案：',
-            delay: 400,
+            delay: 250,
           },
           {
             type: 'coaching-plan',
@@ -687,10 +549,12 @@ export const scenarios: Scenario[] = [
                 { type: '演练', title: '《实战演练：年金险方案客户促成及异议处理》' },
               ],
             },
-            delay: 600,
+            delay: 300,
           },
         ],
-        quickReplies: [],
+        quickReplies: [
+          { label: '好的，收到', value: 'back-to-menu' },
+        ],
       },
     ],
   },
@@ -702,13 +566,13 @@ export const scenarios: Scenario[] = [
     icon: '📊',
     description: '周末',
     steps: [
-      // Step 0: 提醒做周工作总结
+      // Step 0: 工作总结 + 能力分析 + 学习计划 + 推荐客户（合并原 Step 0-3）
       {
         aiMessages: [
           {
             type: 'text',
-            content: '本周即将结束，已为您生成本周工作总结，请查收。',
-            speechText: '张经理，已为您生成本周工作总结。是否让我进一步为您分析薄弱环节？',
+            content: '本周即将结束，已为您生成本周工作总结。',
+            speechText: '张经理，本周工作总结已生成。',
           },
           {
             type: 'work-summary',
@@ -726,19 +590,7 @@ export const scenarios: Scenario[] = [
                 '促成动作和异议处理两个环节相对薄弱',
               ],
             },
-            delay: 0,
-          },
-        ],
-        quickReplies: [{ label: '查看薄弱环节分析', value: 'weak-areas' }],
-      },
-      // Step 1: 提示薄弱环节
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content:
-              '在本周的客户沟通中，您在"促成动作"和"异议处理"两个环节表现相对薄弱。\n\n例如：在与客户赵高的沟通中，客户表达了对资金流动性的担忧，但您未能有效引导客户理解"年金+万能账户"的灵活性，导致客户仍未明确下单。',
-            speechText: '本周促成动作和异议处理是短板，为帮助您提升薄弱环节，建议看看我为您推荐的学习内容与实战演练工具',
+            delay: 200,
           },
           {
             type: 'ability-analysis',
@@ -757,18 +609,7 @@ export const scenarios: Scenario[] = [
                 { label: '促成动作', level: 'weak' },
               ],
             },
-            delay: 0,
-          },
-        ],
-        quickReplies: [{ label: '查看学习建议', value: 'learning' }],
-      },
-      // Step 2: 推送学习内容
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '为帮助您提升薄弱环节，我为您推荐以下学习内容与实战演练工具：',
-            speechText: '已为您推荐针对性学习内容，建议本周内完成。另外为快速填补业绩差额，我为你准备了经营攻略',
+            delay: 200,
           },
           {
             type: 'learning-plan',
@@ -782,19 +623,14 @@ export const scenarios: Scenario[] = [
               ],
               tip: '点击进入实战演练，系统将根据您本周沟通的客户类型生成个性化实战场景',
             },
-            delay: 0,
+            delay: 200,
           },
-        ],
-        quickReplies: [{ label: '业绩差额经营攻略', value: 'income' }],
-      },
-      // Step 3: 个人收入考核津贴提醒 + 推荐客户
-      {
-        aiMessages: [
           {
             type: 'text',
             content:
-              '您本月距离销售津贴提档还差 **2000元 FYC**。\n\n若本月新增FYC 2000元，即可多获得销售津贴 **1100元**。建议销售1件保费2万的「金越年金红26」即可达成。\n\n以下3位客户意向较高，建议您下周重点拜访：',
-            speechText: '已为您筛选3位高潜力客户，建议下周重点拜访。',
+              '您本月距离销售津贴提档还差 **2000元 FYC**。以下3位客户意向较高，建议您下周重点拜访：',
+            speechText: '已为您筛选3位高潜力客户。',
+            delay: 300,
           },
           {
             type: 'customer-list',
@@ -832,12 +668,12 @@ export const scenarios: Scenario[] = [
               ],
               summary: '是否帮您将这3位客户加入下周的拜访计划？',
             },
-            delay: 0,
+            delay: 200,
           },
         ],
         quickReplies: [{ label: '好的，加入计划', value: 'confirm' }],
       },
-      // Step 4: 确认添加计划
+      // Step 1: 确认添加计划
       {
         aiMessages: [
           {
@@ -865,7 +701,7 @@ export const scenarios: Scenario[] = [
                 },
               ],
             },
-            delay: 0,
+            delay: 200,
           },
         ],
         quickReplies: [{ label: '好的，收到', value: 'back-to-menu' }],
@@ -880,14 +716,14 @@ export const scenarios: Scenario[] = [
     icon: '📈',
     description: '月末',
     steps: [
-      // Step 0: 月度复盘提醒 + 月度总结数据
+      // Step 0: 月度复盘 + 能力分析 + 学习计划（合并原 Step 0-2）
       {
         aiMessages: [
           {
             type: 'text',
             content:
-              '本月即将结束，已为您生成月度工作复盘报告，请查收。\n\n本月累计FYC **20000元**，超额完成目标，表现优秀！整体超过了营业部80%的代理人。',
-            speechText: '张经理，月度复盘报告出炉，本月超额完成目标，表现优秀！是否看看您还有哪些技能可以进一步提升？',
+              '本月即将结束，已为您生成月度工作复盘报告。本月累计FYC **20000元**，超额完成目标，表现优秀！',
+            speechText: '张经理，月度复盘报告出炉，本月超额完成目标，表现优秀！',
           },
           {
             type: 'work-summary',
@@ -911,18 +747,7 @@ export const scenarios: Scenario[] = [
                 '客户升温节奏把握不足，部分客户跟进间隔较长',
               ],
             },
-            delay: 0,
-          },
-        ],
-        quickReplies: [{ label: '查看需提升技能', value: 'skills' }],
-      },
-      // Step 1: 识别需提升的技能
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '根据本月数据分析，您在以下技能方面仍有提升空间：',
-            speechText: '根据本月数据，以下技能仍有提升空间。另外，已为您准备好下月计划',
+            delay: 200,
           },
           {
             type: 'ability-analysis',
@@ -943,18 +768,7 @@ export const scenarios: Scenario[] = [
                 { label: '客户升温', level: 'weak' },
               ],
             },
-            delay: 0,
-          },
-        ],
-        quickReplies: [{ label: '查看下月提升计划', value: 'next-plan' }],
-      },
-      // Step 2: 推送下月提升计划
-      {
-        aiMessages: [
-          {
-            type: 'text',
-            content: '为帮助您在下月进一步提升，已为您生成个性化学习计划：',
-            speechText: '下月计划已生成，建议您借助公司的客户活动邀请更多客户参加。',
+            delay: 200,
           },
           {
             type: 'learning-plan',
@@ -970,7 +784,7 @@ export const scenarios: Scenario[] = [
               ],
               tip: '系统将根据您本月实际客户沟通记录，生成针对性演练场景，帮助快速突破短板',
             },
-            delay: 0,
+            delay: 200,
           },
         ],
         quickReplies: [{ label: '好的，收到', value: 'back-to-menu' }],
