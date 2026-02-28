@@ -153,7 +153,7 @@ export function useSpeech(): UseSpeechReturn {
   const audioQueueRef = useRef<Array<{ url: string; onEnd?: () => void }>>([]);
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  const SILENCE_TIMEOUT = 1000; // 1秒静默后自动发送
+  const SILENCE_TIMEOUT = 2500; // 收到 final 结果后 2.5 秒静默再结束，避免长句中间停顿被误判
 
   const supported =
     !!getSpeechRecognition() &&
@@ -184,20 +184,26 @@ export function useSpeech(): UseSpeechReturn {
     recognition.onresult = (event: any) => {
       const results = event.results;
       let text = '';
+      let hasFinal = false;
       for (let i = 0; i < results.length; i++) {
-        const seg = results[i][0].transcript.trim();
+        const result = results[i];
+        const seg = result[0].transcript.trim();
         if (!seg) continue;
         text += stripPunct(seg);
+        if (result.isFinal) hasFinal = true;
       }
       setTranscript(text);
 
-      // 每次收到新结果，重置静默计时器
+      // 仅在收到 final 结果时启动静默计时：用户说完一句后，等 2.5 秒无新语音再结束
+      // 若只有 interim 结果（用户仍在说），不启动计时，避免长句中间停顿被误判为结束
       clearSilenceTimer();
-      silenceTimerRef.current = window.setTimeout(() => {
-        if (recognitionRef.current) {
-          recognitionRef.current.stop();
-        }
-      }, SILENCE_TIMEOUT);
+      if (hasFinal && text) {
+        silenceTimerRef.current = window.setTimeout(() => {
+          if (recognitionRef.current) {
+            recognitionRef.current.stop();
+          }
+        }, SILENCE_TIMEOUT);
+      }
     };
 
     recognition.onend = () => {
