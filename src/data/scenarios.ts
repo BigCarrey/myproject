@@ -36,8 +36,8 @@ export const scenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '帮我盘点本月客户', value: 'review-all' },
-          { label: '查看精选客户名单', value: 'view-list' },
+          { label: '确认盘点结果', value: 'review-all' },
+          { label: '查看经营客户列表', value: 'view-list' },
         ],
       },
       // Step 1: 完成盘点 + 生成经营计划
@@ -88,7 +88,7 @@ export const scenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '查看要经营的客户', value: 'view-customers' },
+          { label: '确认经营计划', value: 'view-customers' },
         ],
       },
       // Step 2: 查看经营客户列表
@@ -249,8 +249,8 @@ export const scenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '好的，收到', value: 'back-to-menu' },
-          { label: '调整计划', value: 'adjust-plan' },
+          { label: '确认，收到', value: 'back-to-menu' },
+          { label: '微调计划', value: 'adjust-plan' },
         ],
       },
     ],
@@ -278,7 +278,7 @@ export const scenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '好的，帮我给客户李平安定制一份产品方案', value: 'analyze' },
+          { label: '确认，帮我定制方案', value: 'analyze' },
           { label: '稍后再说', value: 'back-to-menu' },
         ],
       },
@@ -368,6 +368,8 @@ export const scenarios: Scenario[] = [
             content: '',
             data: {
               customerName: '李平安',
+              successProbability: 82,
+              riskPoints: ['客户对流动性敏感，需重点讲解万能账户灵活性'],
               sections: [
                 {
                   title: '历史案例参考',
@@ -416,6 +418,8 @@ export const scenarios: Scenario[] = [
             content: '',
             data: {
               customerName: '李平安',
+              successProbability: 82,
+              riskPoints: ['客户对流动性敏感，需重点讲解万能账户', '上次沟通已建立信任，本次可适当推进促成'],
               sections: [
                 {
                   title: '沟通技巧建议',
@@ -478,7 +482,7 @@ export const scenarios: Scenario[] = [
             speechText: '下午好！拜访结束了，可以告诉我具体的拜访情况吗？我来帮您记录',
           },
         ],
-        quickReplies: [{ label: '开始智能记录', value: 'start-record' }],
+        quickReplies: [{ label: '确认，开始记录', value: 'start-record' }],
       },
       // Step 1: 模拟语音记录 + 生成总结
       {
@@ -523,8 +527,8 @@ export const scenarios: Scenario[] = [
           },
           {
             type: 'text',
-            content: '本次拜访信息及客户情况已整理完毕，请确认是否正确？',
-            speechText: '本次拜访信息已整理完毕，请确认是否正确？',
+            content: '李平安成功投保，您本月又离目标近了一步！本次拜访信息及客户情况已整理完毕，请确认是否正确？',
+            speechText: '李平安成功投保，恭喜！拜访信息已整理完毕，请确认。',
             delay: 800,
           },
         ],
@@ -594,6 +598,8 @@ export const scenarios: Scenario[] = [
             content: '',
             data: {
               customerName: '王五',
+              successProbability: 78,
+              riskPoints: ['客户已有医疗险，切勿重复推荐同类产品'],
               sections: [
                 {
                   title: '客户核心需求',
@@ -772,7 +778,7 @@ export const scenarios: Scenario[] = [
             delay: 0,
           },
         ],
-        quickReplies: [{ label: '查看薄弱环节分析', value: 'weak-areas' }],
+        quickReplies: [{ label: '确认，查看薄弱环节', value: 'weak-areas' }],
       },
       // Step 1: 提示薄弱环节
       {
@@ -803,15 +809,15 @@ export const scenarios: Scenario[] = [
             delay: 0,
           },
         ],
-        quickReplies: [{ label: '查看学习建议', value: 'learning' }],
+        quickReplies: [{ label: '确认，查看学习建议', value: 'learning' }],
       },
       // Step 2: 推送学习内容
       {
         aiMessages: [
           {
             type: 'text',
-            content: '为帮助您提升薄弱环节，我为您推荐以下学习内容与实战演练工具：',
-            speechText: '已为您推荐针对性学习内容，建议本周内完成。另外为快速填补业绩差额，我为你准备了经营攻略',
+            content: '别担心，AI已为您准备好针对性学习计划。以下学习内容与实战演练工具，助您快速突破短板：',
+            speechText: '别担心，已为您准备好针对性学习内容，建议本周内完成。另外为快速填补业绩差额，我为你准备了经营攻略',
           },
           {
             type: 'learning-plan',
@@ -836,8 +842,8 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content:
-              '您本月距离销售津贴提档还差 **2000元 FYC**。\n\n若本月新增FYC 2000元，即可多获得销售津贴 **1100元**。建议销售1件保费2万的「金越年金红26」即可达成。\n\n以下3位客户意向较高，建议您下周重点拜访：',
-            speechText: '已为您筛选3位高潜力客户，建议下周重点拜访。',
+              '您本月距离销售津贴提档还差 **2000元 FYC**。\n\n若本月新增FYC 2000元，即可多获得销售津贴 **1100元**。建议销售1件保费2万的「金越年金红26」即可达成。\n\n📊 **达成概率：约 78%**（基于推荐客户意向与历史转化）\n⚠️ **风险提示**：若本周未达钻，将影响连续钻石\n\n以下3位客户意向较高，建议您下周重点拜访：',
+            speechText: '已为您筛选3位高潜力客户，达成概率约78%，建议下周重点拜访。',
           },
           {
             type: 'customer-list',
@@ -929,8 +935,8 @@ export const scenarios: Scenario[] = [
           {
             type: 'text',
             content:
-              '本月即将结束，已为您生成月度工作复盘报告，请查收。\n\n本月累计FYC **20000元**，超额完成目标，表现优秀！整体超过了营业部80%的代理人。',
-            speechText: '张经理，月度复盘报告出炉，本月超额完成目标，表现优秀！是否看看您还有哪些技能可以进一步提升？',
+              '本月即将结束，已为您生成月度工作复盘报告，请查收。\n\n本月累计FYC **20000元**，超额完成目标，表现优秀！超过营业部80%的代理人，恭喜！',
+            speechText: '张经理，月度复盘报告出炉，本月超额完成目标，超过营业部80%的代理人，恭喜！是否看看您还有哪些技能可以进一步提升？',
           },
           {
             type: 'work-summary',
@@ -957,7 +963,7 @@ export const scenarios: Scenario[] = [
             delay: 0,
           },
         ],
-        quickReplies: [{ label: '查看需提升技能', value: 'skills' }],
+        quickReplies: [{ label: '确认，查看需提升技能', value: 'skills' }],
       },
       // Step 1: 识别需提升的技能
       {
@@ -989,7 +995,7 @@ export const scenarios: Scenario[] = [
             delay: 0,
           },
         ],
-        quickReplies: [{ label: '查看下月提升计划', value: 'next-plan' }],
+        quickReplies: [{ label: '确认，查看下月计划', value: 'next-plan' }],
       },
       // Step 2: 推送下月提升计划
       {
@@ -1017,6 +1023,47 @@ export const scenarios: Scenario[] = [
           },
         ],
         quickReplies: [{ label: '好的，收到', value: 'back-to-menu' }],
+      },
+    ],
+  },
+
+  // Module 8: 拍照识别保单/客户档案
+  {
+    id: 'image-recognition',
+    name: '拍照识别保单/客户档案',
+    icon: '📷',
+    description: '拍照',
+    steps: [
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '收到您上传的保单照片，正在智能识别...',
+            speechText: '收到保单照片，正在识别。',
+          },
+          {
+            type: 'text',
+            content: '已识别李平安的平安福2023保单信息：\n\n• 投保人：李平安\n• 险种：重疾险\n• 保额：30万\n• 年缴保费：12,000元\n• 已自动补充至客户档案',
+            speechText: '已识别李平安的平安福2023保单，保额30万，年缴1万2，已自动补充至客户档案。',
+            delay: 800,
+          },
+          {
+            type: 'customer-card',
+            content: '',
+            data: { customerId: 'c1', detailed: true },
+            delay: 500,
+          },
+          {
+            type: 'text',
+            content: '客户档案已更新，您可以直接在拜访前调用该客户的保障检视与方案推荐。',
+            speechText: '档案已更新，拜访时可直接调用。',
+            delay: 400,
+          },
+        ],
+        quickReplies: [
+          { label: '确认，已更新', value: 'back-to-menu' },
+          { label: '为该客户定制方案', value: 'pre-visit-from-image' },
+        ],
       },
     ],
   },

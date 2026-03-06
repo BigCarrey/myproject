@@ -90,8 +90,8 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
         return <CoverageAnalysisCard key={index} data={item.data ?? {}} />;
       case 'text':
         return (
-          <div key={index} className="bg-white rounded-lg px-3 py-2 shadow-sm">
-            <p className="text-[13px] text-gray-700 leading-relaxed">{item.content}</p>
+          <div key={index} className="glass rounded-xl px-3 py-2">
+            <p className="text-[13px] text-[#0F172A] leading-relaxed">{item.content}</p>
           </div>
         );
       default:
@@ -100,37 +100,37 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200 shadow-sm overflow-hidden bg-white">
+    <div className="rounded-[24px] overflow-hidden crystal border border-white/80">
       {/* Header */}
       <div
         className={`flex items-center justify-between px-4 py-3 cursor-pointer transition-all duration-300 ${
           isCompleted
-            ? 'bg-gradient-to-r from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100'
-            : 'bg-gradient-to-r from-blue-50 to-indigo-50'
+            ? 'bg-gradient-to-r from-[#F0FDF4] to-[#D1FAE5] hover:from-[#D1FAE5] hover:to-[#A7F3D0]'
+            : 'bg-gradient-to-r from-[#EFF6FF] to-[#DBEAFE]'
         }`}
         onClick={toggle}
       >
         <div className="flex items-center gap-2">
           {isCompleted ? (
-            <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0">
+            <div className="w-5 h-5 rounded-full bg-[#10B981] flex items-center justify-center flex-shrink-0">
               <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
               </svg>
             </div>
           ) : (
-            <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0">
+            <div className="w-5 h-5 rounded-full bg-[#3B82F6] flex items-center justify-center flex-shrink-0">
               <div className="w-2 h-2 rounded-full bg-white animate-pulse" />
             </div>
           )}
-          <span className="text-[14px] font-semibold text-gray-800">{stepIcon} {title}</span>
+          <span className="text-[14px] font-semibold text-[#0F172A]">{stepIcon} {title}</span>
           {isCompleted ? (
-            <span className="text-[11px] text-green-600 font-medium ml-1">已完成</span>
+            <span className="text-[11px] text-[#10B981] font-medium ml-1">已完成</span>
           ) : (
-            <span className="text-[11px] text-blue-500 font-medium ml-1 animate-pulse">分析中...</span>
+            <span className="text-[11px] text-[#3B82F6] font-medium ml-1 animate-pulse">分析中...</span>
           )}
         </div>
         <svg
-          className={`w-4 h-4 text-gray-400 transition-transform duration-300 flex-shrink-0 ${
+          className={`w-4 h-4 text-[#64748B] transition-transform duration-300 flex-shrink-0 ${
             isCollapsed ? '' : 'rotate-180'
           }`}
           fill="none"
@@ -150,7 +150,7 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
           opacity: isCollapsed ? 0 : 1,
         }}
       >
-        <div className="p-3 space-y-3 bg-gray-50/30 border-t border-gray-100">
+        <div className="p-3 space-y-3 bg-[#F8FAFC]/50 border-t border-white/50">
           {items.map((item, index) => {
             if (index >= visibleCount) return null;
             return (
@@ -163,11 +163,11 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
           {!allItemsVisible && visibleCount > 0 && (
             <div className="flex items-center gap-1.5 px-2 py-1 animate-step-item-reveal">
               <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
-              <span className="text-[11px] text-blue-400 ml-1">思考中...</span>
+              <span className="text-[11px] text-[#3B82F6] ml-1">思考中...</span>
             </div>
           )}
           {/* Scroll anchor for auto-scroll during item reveal */}
@@ -177,8 +177,8 @@ export function CollapsibleStepCard({ data }: CollapsibleStepCardProps) {
 
       {/* Summary when collapsed */}
       {isCollapsed && summary && (
-        <div className="px-4 py-2 border-t border-gray-100 bg-green-50/30 animate-fade-in">
-          <p className="text-[11px] text-gray-500 leading-relaxed">{summary}</p>
+        <div className="px-4 py-2 border-t border-white/50 bg-[#F0FDF4]/50 animate-fade-in">
+          <p className="text-[11px] text-[#475569] leading-relaxed">{summary}</p>
         </div>
       )}
     </div>

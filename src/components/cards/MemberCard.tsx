@@ -11,10 +11,10 @@ export function MemberCard({ data }: MemberCardProps) {
   const achieveRate = Math.round((member.monthlyAchieved / member.monthlyTarget) * 100);
 
   return (
-    <div className="bg-white rounded-[20px] border border-purple-200 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-purple-500 to-violet-400 px-4 py-2">
+    <div className="crystal rounded-[24px] overflow-hidden border border-white/80">
+      <div className="bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-medium text-[15px]">
+          <div className="w-8 h-8 rounded-full bg-white/30 flex items-center justify-center text-white font-medium text-[15px]">
             {member.avatar}
           </div>
           <div className="text-white">
@@ -25,17 +25,17 @@ export function MemberCard({ data }: MemberCardProps) {
       </div>
       <div className="p-3">
         <div className="grid grid-cols-2 gap-2 mb-2">
-          <div className="bg-gray-50 rounded-lg p-2 text-center">
-            <p className="text-[13px] text-text-secondary">月度达成</p>
-            <p className="text-lg font-bold text-purple-500">{achieveRate}%</p>
-            <p className="text-[13px] text-text-secondary">
+          <div className="bg-[#F8FAFC] rounded-xl p-2 text-center">
+            <p className="text-[13px] text-[#475569]">月度达成</p>
+            <p className={`text-lg font-bold ${achieveRate >= 80 ? 'text-[#10B981]' : 'text-[#3B82F6]'}`}>{achieveRate}%</p>
+            <p className="text-[13px] text-[#475569]">
               {(member.monthlyAchieved / 10000).toFixed(1)}万/{(member.monthlyTarget / 10000).toFixed(0)}万
             </p>
           </div>
-          <div className="bg-gray-50 rounded-lg p-2 text-center">
-            <p className="text-[13px] text-text-secondary">周拜访量</p>
-            <p className="text-lg font-bold text-purple-500">
-              {member.weeklyVisits}<span className="text-[13px] text-text-secondary">/{member.weeklyTarget}</span>
+          <div className="bg-[#F8FAFC] rounded-xl p-2 text-center">
+            <p className="text-[13px] text-[#475569]">周拜访量</p>
+            <p className="text-lg font-bold text-[#3B82F6]">
+              {member.weeklyVisits}<span className="text-[13px] text-[#475569]">/{member.weeklyTarget}</span>
             </p>
             <p className="text-[13px] text-text-secondary">
               完成率 {Math.round((member.weeklyVisits / member.weeklyTarget) * 100)}%
@@ -44,10 +44,10 @@ export function MemberCard({ data }: MemberCardProps) {
         </div>
 
         {member.issues && member.issues.length > 0 && (
-          <div className="bg-purple-50 rounded-lg p-2">
-            <p className="text-[13px] font-medium text-purple-700 mb-1">⚠️ 问题诊断：</p>
+          <div className="bg-[#FEF3C7] rounded-xl p-2">
+            <p className="text-[13px] font-medium text-[#B45309] mb-1">⚠️ 问题诊断：</p>
             {member.issues.map((issue, i) => (
-              <p key={i} className="text-[13px] text-purple-600 ml-2">• {issue}</p>
+              <p key={i} className="text-[13px] text-[#92400E] ml-2">• {issue}</p>
             ))}
           </div>
         )}

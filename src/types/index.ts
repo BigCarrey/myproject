@@ -33,6 +33,8 @@ export interface Message {
   speechText?: string;
   data?: Record<string, unknown>;
   timestamp: number;
+  /** 用户消息中的图片（base64 或 URL） */
+  imageUrl?: string;
 }
 
 export interface QuickReply {

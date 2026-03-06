@@ -14,23 +14,23 @@ export function VisitSummaryCard({ data }: VisitSummaryCardProps) {
   const closeProbability = data.closeProbability as number;
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2.5">
+    <div className="crystal rounded-[24px] overflow-hidden border border-white/80">
+      <div className="bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📝 拜访总结 - {customerName}</h3>
       </div>
       <div className="p-3 space-y-2.5">
         {/* Meta info */}
         <div className="grid grid-cols-2 gap-2 text-[13px]">
-          <div className="flex items-center gap-1 text-text-secondary">
+          <div className="flex items-center gap-1 text-[#475569]">
             <span>📅</span> {date}
           </div>
-          <div className="flex items-center gap-1 text-text-secondary">
+          <div className="flex items-center gap-1 text-[#475569]">
             <span>⏱️</span> {duration}
           </div>
-          <div className="flex items-center gap-1 text-text-secondary">
+          <div className="flex items-center gap-1 text-[#475569]">
             <span>📍</span> {location}
           </div>
-          <div className="flex items-center gap-1 text-text-secondary">
+          <div className="flex items-center gap-1 text-[#475569]">
             <span>👥</span> {attendees}
           </div>
         </div>
@@ -40,8 +40,8 @@ export function VisitSummaryCard({ data }: VisitSummaryCardProps) {
           <p className="text-[13px] font-medium mb-1">📋 关键要点：</p>
           <ul className="space-y-1">
             {keyPoints.map((point, i) => (
-              <li key={i} className="text-[13px] text-text-secondary flex items-start gap-1.5">
-                <span className="text-blue-500 mt-0.5">✓</span>
+              <li key={i} className="text-[13px] text-[#475569] flex items-start gap-1.5">
+                <span className="text-[#10B981] mt-0.5">✓</span>
                 <span>{point}</span>
               </li>
             ))}
@@ -53,8 +53,8 @@ export function VisitSummaryCard({ data }: VisitSummaryCardProps) {
           <p className="text-[13px] font-medium mb-1">🎯 下一步行动：</p>
           <ul className="space-y-1">
             {nextActions.map((action, i) => (
-              <li key={i} className="text-[13px] text-text-secondary flex items-start gap-1.5">
-                <span className="text-primary">→</span>
+              <li key={i} className="text-[13px] text-[#475569] flex items-start gap-1.5">
+                <span className="text-[#3B82F6]">→</span>
                 <span>{action}</span>
               </li>
             ))}
@@ -62,14 +62,14 @@ export function VisitSummaryCard({ data }: VisitSummaryCardProps) {
         </div>
 
         {/* Status bar */}
-        <div className="flex items-center justify-between bg-gray-50 rounded-lg p-2">
+        <div className="flex items-center justify-between bg-[#F8FAFC] rounded-xl p-2">
           <div className="flex items-center gap-2">
-            <span className="text-[13px] text-text-secondary">客户态度：</span>
-            <span className="text-[13px] font-medium text-blue-600">{sentiment}</span>
+            <span className="text-[13px] text-[#475569]">客户态度：</span>
+            <span className="text-[13px] font-medium text-[#3B82F6]">{sentiment}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-[13px] text-text-secondary">签单概率：</span>
-            <span className={`text-[13px] font-bold ${closeProbability >= 70 ? 'text-blue-600' : closeProbability >= 40 ? 'text-indigo-600' : 'text-purple-500'}`}>
+            <span className="text-[13px] text-[#475569]">签单概率：</span>
+            <span className={`text-[13px] font-bold ${closeProbability >= 70 ? 'text-[#10B981]' : closeProbability >= 40 ? 'text-[#3B82F6]' : 'text-[#6366F1]'}`}>
               {closeProbability}%
             </span>
           </div>

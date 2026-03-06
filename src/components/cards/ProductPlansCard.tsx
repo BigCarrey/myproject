@@ -1,60 +1,18 @@
 import { useState, useEffect, useRef } from 'react';
+import { preVisitLiPinganPlans } from '../../data/scenarioProducts';
+import type { ScenarioProductPlan } from '../../data/scenarioProducts';
 
 interface ProductPlansCardProps {
   data: Record<string, unknown>;
 }
 
-interface ProductPlan {
-  tag: string;
-  tagColor: string;
-  name: string;
-  subName?: string;
-  metrics: Array<{ label: string; value: string }>;
-  service?: string;
-  highlights?: string[];
-  recommended?: boolean;
-}
-
 export function ProductPlansCard({ data }: ProductPlansCardProps) {
-  const plans = data.plans as ProductPlan[] | undefined;
+  const plans = data.plans as ScenarioProductPlan[] | undefined;
   const needsSummary = (data.needsSummary as string) ?? '';
   const firstItemDelay = (data.firstItemDelay as number) ?? 600;
   const itemRevealDelay = (data.itemRevealDelay as number) ?? 1200;
 
-  const defaultPlans: ProductPlan[] = [
-    {
-      tag: '保财富',
-      tagColor: 'bg-amber-500',
-      name: '平安添盈·臻享家医',
-      subName: '终身寿险',
-      metrics: [
-        { label: '保额', value: '80万' },
-        { label: '交费期', value: '3年' },
-        { label: '首年保费', value: '10万' },
-        { label: '总保费', value: '30万' },
-      ],
-      service: '臻享家医服务',
-      highlights: ['预估客户60岁时财富保障可达80万', '享臻享家医服务，守护家人健康'],
-      recommended: true,
-    },
-    {
-      tag: '保养老',
-      tagColor: 'bg-blue-500',
-      name: '平安御享金瑞',
-      subName: '年金险',
-      metrics: [
-        { label: '保额', value: '180万' },
-        { label: '交费期', value: '5年' },
-        { label: '首年保费', value: '5万' },
-        { label: '总保费', value: '25万' },
-      ],
-      service: '居家养老服务',
-      highlights: ['60岁起每月领取养老金', '搭配万能账户灵活增值'],
-      recommended: false,
-    },
-  ];
-
-  const displayPlans = plans ?? defaultPlans;
+  const displayPlans = plans ?? preVisitLiPinganPlans;
 
   const [visibleCount, setVisibleCount] = useState(0);
   const scrollAnchorRef = useRef<HTMLDivElement>(null);
@@ -81,48 +39,48 @@ export function ProductPlansCard({ data }: ProductPlansCardProps) {
   }, [visibleCount]);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="crystal rounded-[24px] overflow-hidden border border-white/80">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-500 to-purple-500 px-4 py-2.5">
+      <div className="bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📋 智能方案推荐</h3>
       </div>
 
       <div className="p-3">
         {/* Needs summary */}
         {needsSummary && (
-          <div className="bg-gray-50 rounded-lg px-3 py-2 mb-3">
-            <p className="text-xs text-gray-600">{needsSummary}</p>
+          <div className="bg-[#F8FAFC] rounded-xl px-3 py-2 mb-3">
+            <p className="text-xs text-[#475569]">{needsSummary}</p>
           </div>
         )}
 
         {/* Plans - progressive reveal */}
         <div className="space-y-3">
-          {displayPlans.map((plan, index) => {
+          {displayPlans.map((plan: ScenarioProductPlan, index: number) => {
             if (index >= visibleCount) return null;
             return (
               <div
                 key={index}
-                className={`rounded-lg border overflow-hidden animate-step-item-reveal ${
+                className={`rounded-xl border overflow-hidden animate-step-item-reveal ${
                   plan.recommended
-                    ? 'border-indigo-200 ring-1 ring-indigo-100'
-                    : 'border-gray-200'
+                    ? 'border-[#3B82F6]/40 ring-1 ring-[#BFDBFE]'
+                    : 'border-[#E2E8F0]'
                 }`}
               >
                 {/* Plan header */}
                 <div className={`px-3 py-2 flex items-center justify-between ${
-                  plan.recommended ? 'bg-indigo-50' : 'bg-gray-50'
+                  plan.recommended ? 'bg-[#EFF6FF]' : 'bg-[#F8FAFC]'
                 }`}>
                   <div className="flex items-center gap-2">
                     <span className={`text-[10px] text-white px-1.5 py-0.5 rounded ${plan.tagColor}`}>
                       {plan.tag}
                     </span>
-                    <span className="text-[13px] font-semibold text-gray-800">{plan.name}</span>
+                    <span className="text-[13px] font-semibold text-[#0F172A]">{plan.name}</span>
                     {plan.subName && (
-                      <span className="text-[11px] text-gray-400">{plan.subName}</span>
+                      <span className="text-[11px] text-[#64748B]">{plan.subName}</span>
                     )}
                   </div>
                   {plan.recommended && (
-                    <span className="text-[10px] bg-indigo-500 text-white px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] bg-[#3B82F6] text-white px-2 py-0.5 rounded-full">
                       优先推荐
                     </span>
                   )}
@@ -131,10 +89,10 @@ export function ProductPlansCard({ data }: ProductPlansCardProps) {
                 {/* Metrics */}
                 <div className="px-3 py-2">
                   <div className="grid grid-cols-4 gap-2">
-                    {plan.metrics.map((metric, i) => (
+                    {plan.metrics.map((metric: { label: string; value: string }, i: number) => (
                       <div key={i} className="text-center">
-                        <p className="text-[10px] text-gray-400">{metric.label}</p>
-                        <p className="text-[13px] font-semibold text-gray-800">{metric.value}</p>
+                        <p className="text-[10px] text-[#64748B]">{metric.label}</p>
+                        <p className="text-[13px] font-semibold text-[#0F172A]">{metric.value}</p>
                       </div>
                     ))}
                   </div>
@@ -143,7 +101,7 @@ export function ProductPlansCard({ data }: ProductPlansCardProps) {
                 {/* Service */}
                 {plan.service && (
                   <div className="px-3 pb-1.5">
-                    <span className="text-[11px] text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full">
+                    <span className="text-[11px] text-[#3B82F6] bg-[#EFF6FF] px-2 py-0.5 rounded-full">
                       🎁 {plan.service}
                     </span>
                   </div>
@@ -152,11 +110,30 @@ export function ProductPlansCard({ data }: ProductPlansCardProps) {
                 {/* Highlights */}
                 {plan.highlights && plan.highlights.length > 0 && (
                   <div className="px-3 pb-2.5">
-                    {plan.highlights.map((hl, i) => (
-                      <p key={i} className="text-[11px] text-gray-500 leading-relaxed">
+                    {plan.highlights.map((hl: string, i: number) => (
+                      <p key={i} className="text-[11px] text-[#475569] leading-relaxed">
                         • {hl}
                       </p>
                     ))}
+                  </div>
+                )}
+
+                {/* 促成概率 */}
+                {plan.closeProbability != null && (
+                  <div className="px-3 pb-2 flex items-center justify-between">
+                    <span className="text-[11px] text-[#475569]">促成概率</span>
+                    <span className={`text-[13px] font-bold ${plan.closeProbability >= 70 ? 'text-[#10B981]' : plan.closeProbability >= 40 ? 'text-[#3B82F6]' : 'text-[#6366F1]'}`}>
+                      {plan.closeProbability}%
+                    </span>
+                  </div>
+                )}
+
+                {/* 风险提示 */}
+                {plan.riskHint && (
+                  <div className="px-3 pb-2.5">
+                    <span className="text-[10px] bg-[#FEF3C7] text-[#B45309] px-2 py-1 rounded-lg block">
+                      ⚠️ {plan.riskHint}
+                    </span>
                   </div>
                 )}
               </div>
@@ -167,11 +144,11 @@ export function ProductPlansCard({ data }: ProductPlansCardProps) {
           {visibleCount > 0 && visibleCount < displayPlans.length && (
             <div className="flex items-center gap-1.5 px-2 py-1 animate-step-item-reveal">
               <div className="flex gap-1">
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '0ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '150ms' }} />
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] animate-bounce" style={{ animationDelay: '300ms' }} />
               </div>
-              <span className="text-[11px] text-indigo-400 ml-1">匹配中...</span>
+              <span className="text-[11px] text-[#3B82F6] ml-1">匹配中...</span>
             </div>
           )}
 

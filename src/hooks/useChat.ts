@@ -146,7 +146,77 @@ export function useChat() {
       addMessage({ role: 'user', type: 'text', content: reply.label });
       setQuickReplies([]);
 
+      if (reply.value === 'pre-visit-from-image') {
+        startScenario('pre-visit');
+        return;
+      }
+
+      if (reply.value === 'confirm-today') {
+        addMessage({
+          role: 'ai',
+          type: 'text',
+          content: '好的，已确认今日安排。如需查看具体场景，请选择下方模块。',
+          speechText: '已确认，如需查看具体场景请选择。',
+        });
+        setQuickReplies(
+          scenarios.map((s) => ({
+            label: `${s.icon} ${s.name}`,
+            value: s.id,
+          }))
+        );
+        return;
+      }
+
+      if (reply.value === 'adjust-plan') {
+        startScenario('weekly-plan');
+        return;
+      }
+
+      if (reply.value === 'cta-experience' || reply.value === 'cta-contact') {
+        addMessage({
+          role: 'ai',
+          type: 'text',
+          content:
+            reply.value === 'cta-experience'
+              ? '感谢您的关注！万能营销助手即将上线，敬请期待。'
+              : '感谢您的关注！我们的团队将尽快与您联系，共同探讨合作可能。',
+          speechText: '感谢您的关注，我们将尽快与您联系。',
+        });
+        setQuickReplies(
+          scenarios.map((s) => ({
+            label: `${s.icon} ${s.name}`,
+            value: s.id,
+          }))
+        );
+        return;
+      }
+
       if (reply.value === 'back-to-menu') {
+        // 月度复盘结束：展示收束旁白与 CTA
+        if (state.currentScenario === 'monthly-retrospective') {
+          setState((prev) => ({
+            ...prev,
+            currentScenario: null,
+            currentStep: 0,
+          }));
+          const closingMsg = {
+            role: 'ai' as const,
+            type: 'text' as const,
+            content:
+              '从月初盘点，到每日拜访，再到周末复盘，AI贯穿全流程。\n\n传统代理人靠人力堆砌，AI代理人靠智能赋能。\n\n**这就是代际鸿沟。**',
+            speechText: '从月初盘点到每日拜访，再到周末复盘，AI贯穿全流程。传统代理人靠人力堆砌，AI代理人靠智能赋能。这就是代际鸿沟。',
+          };
+          const t = window.setTimeout(() => {
+            addMessage(closingMsg);
+            setQuickReplies([
+              { label: '立即体验', value: 'cta-experience' },
+              { label: '联系我们', value: 'cta-contact' },
+            ]);
+          }, 500);
+          timeoutRefs.current.push(t);
+          return;
+        }
+
         setState((prev) => ({
           ...prev,
           currentScenario: null,
@@ -289,29 +359,48 @@ export function useChat() {
       role: 'ai',
       type: 'text',
       content:
-        '您好，张经理！我是您的AI智能助理\n\n今天是2025年2月14日，我已经为您准备好了今天的工作安排。\n\n📌 今日待办：\n• 10:00 拜访王建国（教育金方案）\n• 14:00 团队周例会\n• 16:00 电话跟进李美琳\n\n请选择您需要的服务：',
-      speechText: '张经理您好！今天有三项待办，请选择需要的服务。',
+        '您好，张经理！我是您的AI智能助理\n\n今天是2025年2月14日，**我已为您准备好**今天的工作安排。\n\n📌 今日待办：\n• 10:00 拜访王建国（教育金方案）\n• 14:00 团队周例会\n• 16:00 电话跟进李美琳\n\n请确认或调整：',
+      speechText: '张经理您好！今天有三项待办，我已为您准备好，请确认或调整。',
       timestamp: Date.now(),
     };
 
     setState((prev) => ({
       ...prev,
       messages: [welcomeMsg],
-      quickReplies: scenarios.map((s) => ({
-        label: `${s.icon} ${s.name}`,
-        value: s.id,
-      })),
+      quickReplies: [
+        { label: '✓ 确认今日安排', value: 'confirm-today' },
+        { label: '调整计划', value: 'adjust-plan' },
+        ...scenarios.map((s) => ({
+          label: `${s.icon} ${s.name}`,
+          value: s.id,
+        })),
+      ],
     }));
     if (welcomeMsg.speechText && speakFnRef.current) {
       speakFnRef.current(welcomeMsg.speechText);
     }
   }, []);
 
+  const handleUserImage = useCallback(
+    (imageUrl: string, text?: string) => {
+      addMessage({
+        role: 'user',
+        type: 'text',
+        content: text || '[已上传保单/身份证照片]',
+        imageUrl,
+      });
+      setQuickReplies([]);
+      startScenario('image-recognition');
+    },
+    [addMessage, startScenario]
+  );
+
   return {
     ...state,
     addMessage,
     handleQuickReply,
     handleUserMessage,
+    handleUserImage,
     startScenario,
     resetAndStartScenario,
     initChat,

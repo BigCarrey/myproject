@@ -57,19 +57,19 @@ export function CustomerProfileGrid({ data }: CustomerProfileGridProps) {
   const description = (data.description as string) ?? '处于社会中坚客群，子女教育占家庭收入35%';
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="crystal rounded-[24px] overflow-hidden border border-white/80">
       {/* Header */}
-      <div className="bg-gradient-to-r from-violet-500 to-purple-500 px-4 py-2.5">
+      <div className="bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">👤 客群宫格定位</h3>
       </div>
 
       <div className="p-3">
         {/* Pain points */}
         <div className="mb-3">
-          <p className="text-xs text-gray-500 mb-1.5">{customerName}的核心痛点：</p>
+          <p className="text-xs text-[#475569] mb-1.5">{customerName}的核心痛点：</p>
           <div className="flex flex-wrap gap-1.5">
             {painPoints.map((point, i) => (
-              <span key={i} className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full border border-orange-200">
+              <span key={i} className="text-xs bg-[#FEF3C7] text-[#B45309] px-2 py-0.5 rounded-lg border border-[#FDE68A]">
                 {point}
               </span>
             ))}
@@ -83,7 +83,7 @@ export function CustomerProfileGrid({ data }: CustomerProfileGridProps) {
             <div className="flex ml-12">
               {xLabels.map((label, i) => (
                 <div key={i} className="flex-1 text-center">
-                  <span className="text-[10px] text-gray-400 leading-tight">{label}</span>
+                  <span className="text-[10px] text-[#64748B] leading-tight">{label}</span>
                 </div>
               ))}
             </div>
@@ -94,7 +94,7 @@ export function CustomerProfileGrid({ data }: CustomerProfileGridProps) {
               <div className="w-12 flex flex-col justify-around pr-1">
                 {yLabels.map((label, i) => (
                   <div key={i} className="text-right">
-                    <span className="text-[10px] text-gray-400">{label}</span>
+                    <span className="text-[10px] text-[#64748B]">{label}</span>
                   </div>
                 ))}
               </div>
@@ -110,7 +110,7 @@ export function CustomerProfileGrid({ data }: CustomerProfileGridProps) {
                           key={colIndex}
                           className={`relative h-9 rounded flex items-center justify-center ${
                             isHighlight
-                              ? 'bg-violet-500 text-white ring-2 ring-violet-400 ring-offset-1'
+                              ? 'bg-[#3B82F6] text-white ring-2 ring-[#60A5FA] ring-offset-1'
                               : cell.color
                           }`}
                         >
@@ -128,8 +128,8 @@ export function CustomerProfileGrid({ data }: CustomerProfileGridProps) {
         </div>
 
         {/* Description */}
-        <div className="mt-2 bg-violet-50 rounded-lg px-3 py-2 border border-violet-100">
-          <p className="text-xs text-violet-700">
+        <div className="mt-2 bg-[#EFF6FF] rounded-xl px-3 py-2 border border-[#BFDBFE]">
+          <p className="text-xs text-[#1E3A8A]">
             <span className="font-medium">📌 {customerName}</span>：{description}
           </p>
         </div>

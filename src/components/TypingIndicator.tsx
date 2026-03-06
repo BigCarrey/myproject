@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+const AI_AVATAR_URL = 'https://api.dicebear.com/7.x/micah/svg?seed=waneng&backgroundColor=transparent';
+
 export function TypingIndicator() {
   const [elapsed, setElapsed] = useState(0);
 
@@ -11,22 +13,35 @@ export function TypingIndicator() {
   }, []);
 
   return (
-    <div className="px-4 mb-4 animate-fade-in-up">
+    <div className="px-4 mb-4 animate-stagger-entry">
       <div className="flex gap-2.5">
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#4B7BF5] to-[#6366F1] flex-shrink-0 flex items-center justify-center mt-0.5">
-          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ animation: 'spin-slow 3s linear infinite' }}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-          </svg>
+        {/* AI 头像 - 带呼吸光晕与光轨 */}
+        <div className="relative flex-shrink-0 mt-0.5">
+          {/* 底层光晕 */}
+          <div
+            className="absolute inset-0 rounded-full blur-md animate-pulse opacity-60"
+            style={{ background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)' }}
+          />
+          {/* 外围虚线光轨 */}
+          <div className="absolute -inset-1 rounded-full border-2 border-dashed border-[#3B82F6]/40 animate-orbit" />
+          {/* 头像容器 */}
+          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-white/50 ring-2 ring-white/30">
+            <img
+              src={AI_AVATAR_URL}
+              alt="AI"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
 
-        <div className="bg-white rounded-[18px] rounded-tl-[4px] px-4 py-2.5 shadow-[0_1px_3px_rgba(0,0,0,0.06)] flex items-center gap-2">
-          <span className="text-[14px] text-[#8B8FA7] font-medium">深度思考中</span>
-          <span className="text-[13px] text-[#8B8FA7]/60">&middot;</span>
-          <span className="text-[13px] text-[#4B7BF5] font-medium">{elapsed.toFixed(1)}s</span>
+        <div className="crystal rounded-[20px] rounded-tl-[6px] px-4 py-2.5 flex items-center gap-2">
+          <span className="text-[14px] text-[#475569] font-medium">深度思考中</span>
+          <span className="text-[13px] text-[#94a3b8]">&middot;</span>
+          <span className="text-[13px] text-[#3B82F6] font-medium">{elapsed.toFixed(1)}s</span>
           <span className="flex items-center gap-0.5 ml-0.5">
-            <span className="typing-dot w-1 h-1 bg-[#4B7BF5]/50 rounded-full"></span>
-            <span className="typing-dot w-1 h-1 bg-[#4B7BF5]/50 rounded-full"></span>
-            <span className="typing-dot w-1 h-1 bg-[#4B7BF5]/50 rounded-full"></span>
+            <span className="w-1.5 h-1.5 bg-[#3B82F6]/50 rounded-full animate-pulse" style={{ animationDelay: '0ms' }} />
+            <span className="w-1.5 h-1.5 bg-[#3B82F6]/50 rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
+            <span className="w-1.5 h-1.5 bg-[#3B82F6]/50 rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
           </span>
         </div>
       </div>

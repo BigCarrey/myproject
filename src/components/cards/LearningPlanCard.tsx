@@ -8,9 +8,9 @@ interface LearningItem {
 }
 
 const typeStyle: Record<string, { bg: string; text: string }> = {
-  课程: { bg: 'bg-blue-500', text: 'text-white' },
-  演练: { bg: 'bg-purple-500', text: 'text-white' },
-  工具: { bg: 'bg-green-500', text: 'text-white' },
+  课程: { bg: 'bg-[#3B82F6]', text: 'text-white' },
+  演练: { bg: 'bg-[#6366F1]', text: 'text-white' },
+  工具: { bg: 'bg-[#10B981]', text: 'text-white' },
 };
 
 export function LearningPlanCard({ data }: LearningPlanCardProps) {
@@ -19,26 +19,26 @@ export function LearningPlanCard({ data }: LearningPlanCardProps) {
   const tip = data.tip as string | undefined;
 
   return (
-    <div className="bg-white rounded-[20px] border border-blue-200 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2.5">
+    <div className="crystal rounded-[24px] overflow-hidden border border-white/80">
+      <div className="bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">📚 {title}</h3>
       </div>
       <div className="p-3 space-y-2">
         {items.map((item, i) => {
           const style = typeStyle[item.type] ?? { bg: 'bg-gray-400', text: 'text-white' };
           return (
-            <div key={i} className="flex items-start gap-2 bg-gray-50 rounded-lg px-3 py-2.5">
+            <div key={i} className="flex items-start gap-2 bg-[#F8FAFC] rounded-xl px-3 py-2.5">
               <span
                 className={`text-[12px] font-medium ${style.bg} ${style.text} rounded px-1.5 py-0.5 flex-shrink-0 mt-0.5`}
               >
                 {item.type}
               </span>
-              <span className="text-[13px] text-gray-700 leading-[1.5]">{item.title}</span>
+              <span className="text-[13px] text-[#0F172A] leading-[1.5]">{item.title}</span>
             </div>
           );
         })}
         {tip && (
-          <div className="bg-indigo-50 rounded-lg px-3 py-2 text-[12px] text-indigo-700">
+          <div className="bg-[#EFF6FF] rounded-xl px-3 py-2 text-[12px] text-[#1E3A8A]">
             💡 {tip}
           </div>
         )}

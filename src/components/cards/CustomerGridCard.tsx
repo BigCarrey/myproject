@@ -38,8 +38,8 @@ export function CustomerGridCard({ data }: CustomerGridCardProps) {
   const colLabels = ['高价值', '中价值', '低价值'];
 
   return (
-    <div className="bg-white rounded-[20px] border border-gray-100 shadow-sm overflow-hidden">
-      <div className="bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] px-4 py-2.5">
+    <div className="crystal rounded-[24px] overflow-hidden border border-white/80">
+      <div className="bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">🔲 客户经营九宫格</h3>
       </div>
       <div className="p-3">

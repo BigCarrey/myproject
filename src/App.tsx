@@ -9,7 +9,7 @@ import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios } from './data/scenarios';
 
-const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七'];
+const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七', '八'];
 
 const modulesMeta = [
   {
@@ -67,6 +67,14 @@ const modulesMeta = [
     icon: '📈',
     color: '#10B981',
     narration: '场景七，每月末，AI生成月度复盘报告，闭环全月经营。',
+  },
+  {
+    id: 'image-recognition',
+    name: '拍照识别保单/客户档案',
+    timing: '拍照',
+    icon: '📷',
+    color: '#EC4899',
+    narration: '场景八，拍照上传保单或身份证，AI智能识别并自动补充客户档案。',
   },
 ];
 
@@ -181,7 +189,9 @@ function App() {
   }
 
   return (
-    <div className="h-full flex items-center justify-center py-5" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)' }}>
+    <div className="h-full flex items-center justify-center py-5 relative bg-gradient-to-b from-[#EBF5FF] via-[#E0F2FE] to-[#DBEAFE]">
+      {/* 噪点纹理覆盖层 */}
+      <div className="noise-overlay" aria-hidden="true" />
       {/* Left Sidebar Navigation */}
       <div className="sidebar">
         <div className="sidebar-header">
@@ -252,7 +262,7 @@ function App() {
               {/* Chat messages area */}
               <div
                 ref={chatContainerRef}
-                className="flex-1 overflow-y-auto pt-4 pb-4"
+                className="flex-1 overflow-y-auto scrollbar-hide pt-4 pb-4"
                 style={{ WebkitOverflowScrolling: 'touch' }}
               >
                 {chat.messages.map((msg) => (
@@ -272,6 +282,7 @@ function App() {
               {/* Input area */}
               <InputBar
                 onSend={chat.handleUserMessage}
+                onSendImage={chat.handleUserImage}
                 onVoiceStart={speech.startListening}
                 onVoiceStop={speech.stopListening}
                 isListening={speech.isListening}

@@ -17,9 +17,9 @@ interface CoverageCategory {
 }
 
 const statusConfig = {
-  adequate: { label: '保障充足', color: 'text-green-600', bg: 'bg-green-50', barColor: 'bg-green-400' },
-  gap: { label: '', color: 'text-orange-600', bg: 'bg-orange-50', barColor: 'bg-orange-400' },
-  missing: { label: '缺失', color: 'text-red-500', bg: 'bg-red-50', barColor: 'bg-red-300' },
+  adequate: { label: '保障充足', color: 'text-[#10B981]', bg: 'bg-[#F0FDF4]', barColor: 'bg-[#10B981]' },
+  gap: { label: '', color: 'text-[#F59E0B]', bg: 'bg-[#FFFBEB]', barColor: 'bg-[#F59E0B]' },
+  missing: { label: '缺失', color: 'text-[#EF4444]', bg: 'bg-[#FEF2F2]', barColor: 'bg-[#FCA5A5]' },
 };
 
 export function CoverageAnalysisCard({ data }: CoverageAnalysisCardProps) {
@@ -64,19 +64,19 @@ export function CoverageAnalysisCard({ data }: CoverageAnalysisCardProps) {
   const displayCategories = categories ?? defaultCategories;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+    <div className="crystal rounded-[24px] overflow-hidden border border-white/80">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-4 py-2.5">
+      <div className="bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] px-4 py-2.5">
         <h3 className="text-white font-semibold text-[15px]">🔍 {customerName}保障缺口分析</h3>
       </div>
 
       <div className="p-3">
         {/* Comparison tabs */}
         <div className="flex gap-2 mb-3">
-          <button className="text-[11px] px-2.5 py-1 rounded-full bg-blue-500 text-white">
+          <button className="text-[11px] px-2.5 py-1 rounded-full bg-[#3B82F6] text-white">
             与前20%客群均值比
           </button>
-          <button className="text-[11px] px-2.5 py-1 rounded-full bg-gray-100 text-gray-500">
+          <button className="text-[11px] px-2.5 py-1 rounded-full bg-[#F8FAFC] text-[#475569]">
             与前50%客群均值比
           </button>
         </div>
@@ -88,7 +88,7 @@ export function CoverageAnalysisCard({ data }: CoverageAnalysisCardProps) {
               {/* Category header */}
               <div className="flex items-center gap-1.5 mb-1.5">
                 <span className="text-sm">{cat.icon}</span>
-                <span className="text-xs font-semibold text-gray-700">{cat.category}</span>
+                <span className="text-xs font-semibold text-[#0F172A]">{cat.category}</span>
               </div>
 
               {/* Items */}
@@ -98,10 +98,10 @@ export function CoverageAnalysisCard({ data }: CoverageAnalysisCardProps) {
                   return (
                     <div key={itemIndex} className={`flex items-center gap-2 rounded-lg px-2.5 py-1.5 ${config.bg}`}>
                       {/* Name */}
-                      <span className="text-[11px] text-gray-600 w-14 flex-shrink-0">{item.name}</span>
+                      <span className="text-[11px] text-[#475569] w-14 flex-shrink-0">{item.name}</span>
 
                       {/* Progress bar */}
-                      <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="flex-1 h-1.5 bg-[#F1F5F9] rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full ${config.barColor}`}
                           style={{
@@ -111,7 +111,7 @@ export function CoverageAnalysisCard({ data }: CoverageAnalysisCardProps) {
                       </div>
 
                       {/* Existing info */}
-                      <span className="text-[11px] text-gray-500 w-16 text-right flex-shrink-0">
+                      <span className="text-[11px] text-[#64748B] w-16 text-right flex-shrink-0">
                         {item.existing}
                       </span>
 
@@ -122,7 +122,7 @@ export function CoverageAnalysisCard({ data }: CoverageAnalysisCardProps) {
 
                       {/* Priority tag */}
                       {item.priority && (
-                        <span className="text-[10px] bg-red-500 text-white px-1.5 py-0.5 rounded flex-shrink-0">
+                        <span className="text-[10px] bg-[#D4AF37] text-white px-1.5 py-0.5 rounded flex-shrink-0">
                           建议优先
                         </span>
                       )}
@@ -135,8 +135,8 @@ export function CoverageAnalysisCard({ data }: CoverageAnalysisCardProps) {
         </div>
 
         {/* Data source note */}
-        <div className="mt-3 pt-2 border-t border-gray-100">
-          <p className="text-[10px] text-gray-400">
+        <div className="mt-3 pt-2 border-t border-[#E2E8F0]">
+          <p className="text-[10px] text-[#64748B]">
             📊 数据来源：公司内部保单 + 中银保信同业保障数据（已获客户授权）
           </p>
         </div>
