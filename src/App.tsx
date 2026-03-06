@@ -90,57 +90,57 @@ const modulesMeta: ModuleMeta[] = [
 const modulesMetaV2: ModuleMeta[] = [
   {
     id: 'v2-target-customers',
-    scenarioId: 'monthly-review',
+    scenarioId: 'v2-target-customers',
     name: '目标客群推荐',
-    timing: '客群筛选',
+    timing: '整合多元数据',
     icon: '🎯',
     color: '#4F6BF6',
-    narration: '模块一，目标客群推荐，AI智能筛选高潜力客户并推荐经营优先级。',
+    narration: '模块一，目标客群推荐。AI整合保单数据、资产变动、家庭生命周期等多元数据，智能筛选高潜力客户，洞察偏好与价值，精准推荐经营优先级。',
   },
   {
     id: 'v2-plan-schedule',
-    scenarioId: 'weekly-plan',
+    scenarioId: 'v2-plan-schedule',
     name: '经营计划排程',
-    timing: '计划排程',
+    timing: '事件契机识别',
     icon: '📅',
     color: '#6366F1',
-    narration: '模块二，经营计划排程，AI自动生成本周拜访计划与时间安排。',
+    narration: '模块二，经营计划排程。AI自动识别生日、保单周年、子女升学等关键事件契机，自动编排行事历，让每一次触访都恰逢其时。',
   },
   {
     id: 'v2-visit-materials',
-    scenarioId: 'pre-visit',
+    scenarioId: 'v2-visit-materials',
     name: '触访素材匹配',
-    timing: '素材匹配',
+    timing: '一客一策',
     icon: '📂',
     color: '#818CF8',
-    narration: '模块三，触访素材匹配，AI根据客户画像自动匹配产品方案与沟通策略。',
+    narration: '模块三，触访素材匹配。AI根据客户画像实现一客一策，智能匹配产品方案、案例文章、工具视频等多元素材，大幅提升触访转化率。',
   },
   {
     id: 'v2-action-reminder',
-    scenarioId: 'post-visit',
+    scenarioId: 'v2-action-reminder',
     name: '经营动作提醒',
-    timing: '动作提醒',
+    timing: '每日主动提醒',
     icon: '🔔',
     color: '#7C3AED',
-    narration: '模块四，经营动作提醒，AI记录拜访情况并提醒跟进动作。',
+    narration: '模块四，经营动作提醒。AI每日主动推送经营待办，按优先级排序，支持一键完成记录，确保每个经营动作不遗漏。',
   },
   {
     id: 'v2-visit-review',
-    scenarioId: 'weekly-summary',
+    scenarioId: 'v2-visit-review',
     name: '拜访复盘分析',
-    timing: '复盘分析',
+    timing: '语音记录分析',
     icon: '📊',
     color: '#0EA5E9',
-    narration: '模块五，拜访复盘分析，AI自动分析本周拜访数据与薄弱环节。',
+    narration: '模块五，拜访复盘分析。AI智能分析拜访语音记录，自动提炼关键时刻、情绪波动与转化信号，并提供精准的经营建议，帮助代理人持续进步。',
   },
   {
     id: 'v2-archive-summary',
-    scenarioId: 'monthly-retrospective',
+    scenarioId: 'v2-archive-summary',
     name: '经营档案总结',
-    timing: '档案总结',
-    icon: '📈',
+    timing: '全景互动历程',
+    icon: '📁',
     color: '#10B981',
-    narration: '模块六，经营档案总结，AI生成月度经营档案与提升计划。',
+    narration: '模块六，经营档案总结。AI汇聚客户全景互动历程，生成多维度画像与深度洞察，帮助代理人深度了解客户，制定长期经营策略，实现客户终身价值最大化。',
   },
 ];
 
@@ -227,11 +227,29 @@ function App() {
 
   const handleQuickReply = useCallback(
     (reply: { label: string; value: string }) => {
-      const scenario = scenarios.find((s) => s.id === reply.value);
+      // Map V2 cross-module quick reply values to their scenario IDs
+      const v2QuickReplyMap: Record<string, string> = {
+        'v2-plan-schedule': 'v2-plan-schedule',
+        'v2-prepare-materials': 'v2-visit-materials',
+        'v2-view-materials': 'v2-visit-materials',
+        'v2-material-li': 'v2-visit-materials',
+        'v2-daily-reminder': 'v2-action-reminder',
+        'v2-start-review': 'v2-visit-review',
+        'v2-post-visit': 'v2-visit-review',
+        'v2-archive': 'v2-archive-summary',
+        'v2-back-to-targets': 'v2-target-customers',
+        'v2-next-plan': 'v2-archive-summary',
+      };
+
+      const targetScenarioId = v2QuickReplyMap[reply.value] ?? reply.value;
+      const scenario = scenarios.find((s) => s.id === targetScenarioId);
       if (scenario) {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
         chat.startScenario(scenario.id);
         setActiveModule(scenario.id);
+        // Sync sidebar highlight for V2 modules
+        const v2Mod = modulesMetaV2.find((m) => m.scenarioId === scenario.id);
+        if (v2Mod) setActiveModule(v2Mod.id);
       } else {
         chat.handleQuickReply(reply);
       }

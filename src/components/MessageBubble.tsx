@@ -23,6 +23,12 @@ import { VisitStrategyCard } from './cards/VisitStrategyCard';
 import { AbilityAnalysisCard } from './cards/AbilityAnalysisCard';
 import { CoachingPlanCard } from './cards/CoachingPlanCard';
 import { LearningPlanCard } from './cards/LearningPlanCard';
+import { V2TargetSegmentCard } from './cards/V2TargetSegmentCard';
+import { V2EventCalendarCard } from './cards/V2EventCalendarCard';
+import { V2MaterialKitCard } from './cards/V2MaterialKitCard';
+import { V2DailyActionCard } from './cards/V2DailyActionCard';
+import { V2VoiceReviewCard } from './cards/V2VoiceReviewCard';
+import { V2CustomerArchiveCard } from './cards/V2CustomerArchiveCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -163,6 +169,19 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <CoachingPlanCard data={message.data as Record<string, unknown>} />;
       case 'learning-plan':
         return <LearningPlanCard data={message.data as Record<string, unknown>} />;
+      // V2 cards
+      case 'v2-target-segment':
+        return <V2TargetSegmentCard data={message.data as Record<string, unknown>} />;
+      case 'v2-event-calendar':
+        return <V2EventCalendarCard data={message.data as Record<string, unknown>} />;
+      case 'v2-material-kit':
+        return <V2MaterialKitCard data={message.data as Record<string, unknown>} />;
+      case 'v2-daily-action':
+        return <V2DailyActionCard data={message.data as Record<string, unknown>} />;
+      case 'v2-voice-review':
+        return <V2VoiceReviewCard data={message.data as Record<string, unknown>} />;
+      case 'v2-customer-archive':
+        return <V2CustomerArchiveCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

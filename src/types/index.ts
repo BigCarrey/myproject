@@ -23,7 +23,14 @@ export type MessageContentType =
   | 'visit-strategy'
   | 'ability-analysis'
   | 'coaching-plan'
-  | 'learning-plan';
+  | 'learning-plan'
+  // V2 cards
+  | 'v2-target-segment'
+  | 'v2-event-calendar'
+  | 'v2-material-kit'
+  | 'v2-daily-action'
+  | 'v2-voice-review'
+  | 'v2-customer-archive';
 
 export interface Message {
   id: string;

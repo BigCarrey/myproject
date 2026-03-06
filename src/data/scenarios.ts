@@ -1020,4 +1020,641 @@ export const scenarios: Scenario[] = [
       },
     ],
   },
+
+  // ─────────────────────────────────────────────
+  // V2 模块一：目标客群推荐
+  // 亮点：整合多元数据、洞察偏好价值
+  // ─────────────────────────────────────────────
+  {
+    id: 'v2-target-customers',
+    name: '目标客群推荐',
+    icon: '🎯',
+    description: '整合多元数据，洞察偏好价值，智能推荐高潜力客群',
+    steps: [
+      // Step 0: AI 主动推送客群分析
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '张经理，早上好！AI 已整合您的客户行为数据、资产变动、家庭生命周期及市场利率信号，为您筛选出本月**重点经营客群**，请查收。',
+            speechText: '张经理早上好，AI已整合多元数据，为您推荐本月重点目标客群，请查收。',
+          },
+          {
+            type: 'v2-target-segment',
+            content: '',
+            data: {
+              segmentSummary: '基于 5 类数据源交叉分析，识别出 3 位高潜力客户',
+              dataSources: ['保单数据', '资产变动', '家庭生命周期', '行为偏好', '市场利率'],
+              customers: [
+                {
+                  name: '王建国',
+                  avatar: '王',
+                  segment: '高净值 · 子女教育需求旺盛期',
+                  valueScore: 88,
+                  potentialScore: 92,
+                  priority: 'S',
+                  tags: ['子女升学节点', '资产新增20万', '高意向'],
+                  dataSources: ['子女15岁·升学节点', '近期理财到期'],
+                  insight: '长子今年中考，教育金需求窗口期已开启；近期50万理财到期，有配置保险资产意向，建议本月优先拜访。',
+                },
+                {
+                  name: '李美琳',
+                  avatar: '李',
+                  segment: '医疗行业 · 重疾保障缺口大',
+                  valueScore: 82,
+                  potentialScore: 85,
+                  priority: 'A',
+                  tags: ['重疾缺口50万', '职业高风险', '已有医疗险'],
+                  dataSources: ['职业风险分析', '现有保障扫描'],
+                  insight: '作为医生深知重疾风险，但自身重疾保额仅20万，缺口达50万以上，接受度高，可直接切入重疾险加保方案。',
+                },
+                {
+                  name: '陈晓雯',
+                  avatar: '陈',
+                  segment: '年轻白领 · 养老规划起步期',
+                  valueScore: 71,
+                  potentialScore: 79,
+                  priority: 'A',
+                  tags: ['30岁前养老窗口', '理财偏好稳健', '未婚'],
+                  dataSources: ['年龄节点', '理财偏好数据'],
+                  insight: '30岁前是养老年金配置黄金期，客户理财风格偏稳健，对长期储蓄型产品接受度高，建议推荐年金+万能组合。',
+                },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看王建国详细分析', value: 'v2-segment-detail' },
+          { label: '生成本月经营计划', value: 'v2-plan-schedule' },
+        ],
+      },
+      // Step 1: 展示客群分析维度与行动建议
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '**王建国**综合价值评分最高（S级），以下是 AI 深度洞察：\n\n• **财富偏好**：重视资产安全与传承，厌恶高波动产品\n• **决策风格**：理性，需要数据与对比支撑\n• **触达偏好**：工作日上午10-11点，面访优于微信\n• **家庭关注**：长子教育金 > 自身养老 > 企业财富隔离\n\n建议以**子女教育金缺口可视化**为切入，结合近期理财到期资金承接，推动教育年金成交。',
+            speechText: '王建国综合评分最高，客户偏好资产安全，建议以子女教育金缺口切入，推动年金方案成交。',
+          },
+        ],
+        quickReplies: [
+          { label: '生成王建国经营计划', value: 'v2-plan-for-customer' },
+          { label: '返回客群列表', value: 'back' },
+        ],
+      },
+      // Step 2: 为选定客户生成经营行动
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '已为**王建国**生成专属经营方案，进入计划排程模块，AI 将自动识别事件契机并编排本月行事历。',
+            speechText: '王建国专属方案已生成，即将进入计划排程，为您自动编排本月行事历。',
+          },
+        ],
+        quickReplies: [
+          { label: '查看经营计划排程', value: 'v2-view-schedule' },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // V2 模块二：经营计划排程
+  // 亮点：事件契机识别、自动编排行事历
+  // ─────────────────────────────────────────────
+  {
+    id: 'v2-plan-schedule',
+    name: '经营计划排程',
+    icon: '📅',
+    description: '事件契机识别，自动编排行事历，精准排程拜访计划',
+    steps: [
+      // Step 0: 识别事件契机
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '🔍 AI 正在扫描您客户群的**近期事件契机**——生日、保单周年、节假日、子女升学节点……已识别 **6 个高价值触访时机**，正在自动编排本月行事历。',
+            speechText: 'AI已扫描识别6个高价值触访时机，正在自动编排本月行事历。',
+          },
+          {
+            type: 'v2-event-calendar',
+            content: '',
+            data: {
+              title: '3月经营行事历',
+              triggerCount: 6,
+              events: [
+                {
+                  date: '3/07',
+                  weekday: '周六',
+                  customer: '王建国',
+                  eventType: '生日',
+                  eventDesc: '客户太太生日',
+                  action: '发送定制生日祝福，顺带提及教育金方案，预约面谈',
+                  actionType: 'message',
+                  priority: 'high',
+                },
+                {
+                  date: '3/10',
+                  weekday: '周二',
+                  customer: '李美琳',
+                  eventType: '保单周年',
+                  eventDesc: '重疾险投保满2年，可回顾保障全貌',
+                  action: '上门做保障检视，切入重疾加保建议',
+                  actionType: 'visit',
+                  priority: 'high',
+                },
+                {
+                  date: '3/12',
+                  weekday: '周四',
+                  customer: '王建国',
+                  eventType: '市场时机',
+                  eventDesc: '理财产品到期，50万资金待配置',
+                  action: '电话确认到期资金，发送教育年金方案对比',
+                  actionType: 'call',
+                  priority: 'high',
+                },
+                {
+                  date: '3/15',
+                  weekday: '周日',
+                  customer: '陈晓雯',
+                  eventType: '节假日',
+                  eventDesc: '3·15消费者权益日，保险意识强化节点',
+                  action: '发送保障意识科普文章，引导重新评估个人保障',
+                  actionType: 'message',
+                  priority: 'medium',
+                },
+                {
+                  date: '3/18',
+                  weekday: '周三',
+                  customer: '王建国',
+                  eventType: '子女升学',
+                  eventDesc: '长子中考倒计时100天',
+                  action: '面访：子女教育金需求深度沟通，呈现方案',
+                  actionType: 'visit',
+                  priority: 'high',
+                },
+                {
+                  date: '3/25',
+                  weekday: '周二',
+                  customer: '刘大明',
+                  eventType: '保单到期',
+                  eventDesc: '年金险缴费期满，财富传承需求待激活',
+                  action: '上门回访，探讨传承规划与保单贷款需求',
+                  actionType: 'visit',
+                  priority: 'medium',
+                },
+              ],
+            },
+            delay: 600,
+          },
+        ],
+        quickReplies: [
+          { label: '确认计划，准备素材', value: 'v2-prepare-materials' },
+          { label: '调整3月18日安排', value: 'v2-reschedule' },
+        ],
+      },
+      // Step 1: 确认计划并提示下一步
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '本月行事历已确认！本周优先事项：\n\n**3月7日（本周六）** 王建国太太生日，建议今晚准备祝福语\n**3月10日（下周二）** 李美琳保单周年，建议提前准备保障检视报告\n\nAI 将在每个事件前 **24小时** 发送提醒，并自动匹配相应素材。接下来，为您查看**触访素材包**？',
+            speechText: '行事历已确认，本周优先安排王建国太太生日祝福，下周二李美琳保单周年拜访，AI将提前24小时提醒并匹配素材。',
+          },
+        ],
+        quickReplies: [
+          { label: '查看触访素材包', value: 'v2-view-materials' },
+          { label: '好的，知道了', value: 'back' },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // V2 模块三：触访素材匹配
+  // 亮点：一客一策、多元素材
+  // ─────────────────────────────────────────────
+  {
+    id: 'v2-visit-materials',
+    name: '触访素材匹配',
+    icon: '📂',
+    description: '一客一策，多元素材智能匹配，提升触访转化率',
+    steps: [
+      // Step 0: 素材匹配主界面
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '距离**王建国**面访还有 **3天**，AI 已根据他的画像——高净值、教育金需求、理性决策、资金即将到期——为他定制了专属素材包，实现**一客一策**。',
+            speechText: '距离王建国面访还有3天，AI已根据他的画像，为他定制了专属素材包，实现一客一策。',
+          },
+          {
+            type: 'v2-material-kit',
+            content: '',
+            data: {
+              customerName: '王建国',
+              strategyNote: '策略：教育金缺口可视化 → 资金承接 → 年金+万能组合方案',
+              materials: [
+                {
+                  type: 'tool',
+                  title: '教育金需求计算器',
+                  desc: '根据孩子年龄与目标学校，动态测算未来教育费用缺口，数据直观冲击感强',
+                  matchReason: '王建国长子15岁、有名校意向，计算器可实时展示资金缺口，触动其需求',
+                  tag: '强推荐',
+                },
+                {
+                  type: 'product',
+                  title: '平安教育年金险 · 专属方案对比',
+                  desc: '保费20万/年，教育期年领15万，退休后持续领取至85岁，含身故保障',
+                  matchReason: '契合客户50万理财到期资金规模，一次性及分期缴费均可，灵活匹配',
+                  tag: '主推方案',
+                },
+                {
+                  type: 'article',
+                  title: '《高净值家庭如何用保险锁定子女教育确定性》',
+                  desc: '用3个真实案例说明市场波动下保险教育金的优势，适合理性型客户',
+                  matchReason: '王建国偏理性，需要数据与案例支撑，此文章可在面访前微信发送预热',
+                },
+                {
+                  type: 'case',
+                  title: '同类客户成交案例：企业高管·教育金+传承双规划',
+                  desc: '43岁企业高管，子女13岁，通过年金+终身寿险完成教育金与财富传承一体化配置',
+                  matchReason: '与王建国背景高度相似，引发共鸣，可用"有位客户和您情况很像"切入',
+                },
+                {
+                  type: 'video',
+                  title: '产品演示视频：教育年金收益演示（3分钟）',
+                  desc: '以时间轴形式动态展示每年领取金额，视觉化效果突出，适合面访现场播放',
+                  matchReason: '面访时直接播放，客户感知产品价值更直观，加速决策',
+                },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '查看李美琳的素材包', value: 'v2-material-li' },
+          { label: '一键发送预热素材给王建国', value: 'v2-send-material' },
+        ],
+      },
+      // Step 1: 另一位客户的素材包
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '以下是为**李美琳**（医生·重疾险加保）定制的素材包，策略方向：职业风险感知强化 → 保障缺口量化 → 重疾险加保方案。',
+            speechText: '以下是李美琳的专属素材包，策略方向为职业风险感知强化，切入重疾险加保方案。',
+          },
+          {
+            type: 'v2-material-kit',
+            content: '',
+            data: {
+              customerName: '李美琳',
+              strategyNote: '策略：职业风险认知 → 现有保障缺口可视化 → 重疾险加保方案呈现',
+              materials: [
+                {
+                  type: 'tool',
+                  title: '保障缺口分析报告',
+                  desc: '基于现有保单自动生成，清晰标注重疾保障缺口50万，医疗及收入替代缺口',
+                  matchReason: '李美琳是医生，对数据高度敏感，缺口报告比口头描述更有说服力',
+                  tag: '强推荐',
+                },
+                {
+                  type: 'article',
+                  title: '《医护人员高发重疾险种揭秘》',
+                  desc: '医疗行业职业暴露风险统计，重点覆盖甲状腺癌、白血病等医护高发病',
+                  matchReason: '以专业数据唤起职业风险意识，作为医生更能理解并接受',
+                },
+                {
+                  type: 'product',
+                  title: '平安守护百分百·重疾险加保方案',
+                  desc: '首年保费约1.8万，保额50万，覆盖120种重疾，含轻症豁免',
+                  matchReason: '精准填补50万保障缺口，年保费在医生收入承受范围内',
+                  tag: '主推方案',
+                },
+                {
+                  type: 'case',
+                  title: '真实理赔案例：30岁护士确诊甲状腺癌理赔60万',
+                  desc: '以真实理赔经历说明重疾险对医护人员的实际保障价值',
+                  matchReason: '同为医疗行业，理赔案例最具说服力，建议作为最后一张牌',
+                },
+              ],
+            },
+            delay: 400,
+          },
+        ],
+        quickReplies: [
+          { label: '确认素材，查看今日提醒', value: 'v2-daily-reminder' },
+          { label: '一键发送预热文章给李美琳', value: 'v2-send-li' },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // V2 模块四：经营动作提醒
+  // 亮点：每日主动提醒、一键完成
+  // ─────────────────────────────────────────────
+  {
+    id: 'v2-action-reminder',
+    name: '经营动作提醒',
+    icon: '🔔',
+    description: '每日主动提醒，一键完成，确保每个经营动作不遗漏',
+    steps: [
+      // Step 0: 今日提醒推送
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '⏰ **早上8:30** · 张经理，今日有 **5项** 经营动作待完成，AI 已按优先级排好顺序，点击**一键完成**记录动作进度。',
+            speechText: '张经理早上好，今日有5项经营动作待完成，AI已按优先级排好顺序，点击一键完成即可记录进度。',
+          },
+          {
+            type: 'v2-daily-action',
+            content: '',
+            data: {
+              dateLabel: '3月10日（周二）· 今日重点：李美琳保单周年拜访日',
+              summary: '今日核心目标：完成李美琳重疾险加保面谈，同步跟进王建国预热素材回应。',
+              actions: [
+                {
+                  id: 'a1',
+                  time: '09:00',
+                  customer: '王建国',
+                  action: '发送《高净值家庭教育金配置》文章预热，跟进昨日素材阅读情况',
+                  actionType: 'message',
+                  urgency: 'normal',
+                  hint: '参考话术：王总，昨天发您的文章看了吗，有个数据挺适合您家情况的……',
+                },
+                {
+                  id: 'a2',
+                  time: '10:30',
+                  customer: '李美琳',
+                  action: '上门拜访，完成保障检视，切入重疾险加保方案呈现',
+                  actionType: 'visit',
+                  urgency: 'high',
+                  hint: '带上保障缺口报告及重疾险方案，面访预计1小时',
+                },
+                {
+                  id: 'a3',
+                  time: '14:00',
+                  customer: '张伟',
+                  action: '电话跟进：上次拜访后的产品疑问是否已解决，探测温度',
+                  actionType: 'call',
+                  urgency: 'normal',
+                  hint: '上次提到对保险有疑虑，可以先从理赔服务体验切入',
+                },
+                {
+                  id: 'a4',
+                  time: '15:30',
+                  customer: '陈晓雯',
+                  action: '发送3·15保障知识科普长图文，附个人保障诊断预约入口',
+                  actionType: 'send',
+                  urgency: 'normal',
+                },
+                {
+                  id: 'a5',
+                  time: '17:00',
+                  customer: '王建国',
+                  action: '确认3月18日面谈时间，提前发送《教育金方案PDF》供预习',
+                  actionType: 'message',
+                  urgency: 'normal',
+                  hint: '建议在下班前发送，客户晚上有时间看',
+                },
+              ],
+            },
+            delay: 500,
+          },
+        ],
+        quickReplies: [
+          { label: '拜访李美琳结束，记录结果', value: 'v2-post-visit' },
+          { label: '查看今日全部动作话术', value: 'v2-scripts' },
+        ],
+      },
+      // Step 1: 拜访后记录与提醒
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '✅ 今日完成情况良好！已完成 **3/5** 项动作。\n\n待完成项提醒：\n• **17:00** 王建国 - 确认面谈时间（📱 点击一键发送消息）\n• **拜访复盘** - 李美琳拜访结果请及时录入，AI 将生成复盘分析\n\n是否现在进行**拜访复盘**？',
+            speechText: '今日已完成3项动作，还有2项待完成。建议现在进行李美琳的拜访复盘，AI将自动生成分析建议。',
+          },
+        ],
+        quickReplies: [
+          { label: '开始拜访复盘分析', value: 'v2-start-review' },
+          { label: '稍后再做', value: 'back' },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // V2 模块五：拜访复盘分析
+  // 亮点：语音记录分析、提供经营建议
+  // ─────────────────────────────────────────────
+  {
+    id: 'v2-visit-review',
+    name: '拜访复盘分析',
+    icon: '📊',
+    description: '语音记录智能分析，提炼关键时刻，提供经营建议',
+    steps: [
+      // Step 0: 发起语音分析
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '🎙️ AI 已接收到您与**李美琳**的拜访语音记录（约 52 分钟），正在分析中……\n\n提取关键时刻、情绪波动、异议节点及转化信号，完成后自动生成复盘报告。',
+            speechText: 'AI已接收拜访语音记录，正在分析关键时刻、情绪波动和转化信号，请稍候。',
+          },
+        ],
+        quickReplies: [
+          { label: '查看复盘报告', value: 'v2-show-review' },
+        ],
+      },
+      // Step 1: 展示复盘报告
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '📋 **李美琳**拜访复盘报告已生成：',
+            speechText: '李美琳拜访复盘报告已生成，请查看关键时刻与经营建议。',
+          },
+          {
+            type: 'v2-voice-review',
+            content: '',
+            data: {
+              customerName: '李美琳',
+              duration: '52分钟',
+              sentiment: '积极偏正向',
+              sentimentScore: 78,
+              keyMoments: [
+                {
+                  time: '08:12',
+                  label: '痛点激活',
+                  quote: '我们科室上个月有同事确诊甲状腺癌，才30多岁……',
+                  type: 'pain-point',
+                },
+                {
+                  time: '22:35',
+                  label: '产品兴趣',
+                  quote: '这个重疾险50万保额，一年保费1.8万，还挺合理的',
+                  type: 'positive',
+                },
+                {
+                  time: '31:18',
+                  label: '异议出现',
+                  quote: '我还是觉得现在花这个钱……要不先考虑一下？',
+                  type: 'objection',
+                },
+                {
+                  time: '44:50',
+                  label: '机会信号',
+                  quote: '如果先生也一起投保有没有优惠，他保障也不够',
+                  type: 'opportunity',
+                },
+              ],
+              advices: [
+                {
+                  category: '异议应对',
+                  icon: '💡',
+                  advice: '31分钟出现犹豫是典型的"近期未发生损失则不觉得迫切"心理，建议下次用同事确诊案例强化紧迫感，可搭配理赔时间轴图。',
+                },
+                {
+                  category: '机会把握',
+                  icon: '🎯',
+                  advice: '客户44分钟主动询问配偶投保，是强成交信号！建议在3天内回访，给出家庭联合投保优惠方案，推动夫妻共同加保。',
+                },
+                {
+                  category: '跟进节奏',
+                  icon: '📅',
+                  advice: '本次温度偏高（78分），建议3日内跟进，发送配偶保障缺口分析+家庭联合方案，趁热打铁促成。',
+                },
+              ],
+              nextStep: '3天内回访李美琳：呈现家庭联合重疾险方案，配偶同投享受保费折扣，预计签单概率从65%提升至80%。',
+            },
+            delay: 600,
+          },
+        ],
+        quickReplies: [
+          { label: '生成3天后回访提醒', value: 'v2-set-reminder' },
+          { label: '查看配偶联合投保方案', value: 'v2-spouse-plan' },
+        ],
+      },
+      // Step 2: 确认回访提醒
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '✅ 已为您设置 **3月13日（周五）10:00** 回访李美琳提醒，届时 AI 将自动推送：\n\n• 📋 李美琳+先生家庭联合重疾险方案\n• 💬 回访开场话术建议\n• 📈 此次跟进签单概率评估\n\n同时，本次拜访已同步至**经营档案**，客户互动历程自动更新。',
+            speechText: '回访提醒已设置，3月13日AI将自动推送联合方案和话术建议。本次拜访已同步至经营档案。',
+          },
+        ],
+        quickReplies: [
+          { label: '查看李美琳经营档案', value: 'v2-archive' },
+          { label: '好的，完成', value: 'back' },
+        ],
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────────
+  // V2 模块六：经营档案总结
+  // 亮点：全景互动历程、深度了解客户
+  // ─────────────────────────────────────────────
+  {
+    id: 'v2-archive-summary',
+    name: '经营档案总结',
+    icon: '📁',
+    description: '全景互动历程，深度了解客户，持续优化经营策略',
+    steps: [
+      // Step 0: 打开经营档案
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '📁 正在打开**李美琳**的经营档案……AI 已整合 2 年来的全部互动记录，生成深度客户画像与经营历程全景视图。',
+            speechText: '正在打开李美琳的经营档案，AI已整合两年互动记录，生成深度客户画像与全景互动历程。',
+          },
+          {
+            type: 'v2-customer-archive',
+            content: '',
+            data: {
+              customerName: '李美琳',
+              avatar: '李',
+              relationYears: 2,
+              totalInteractions: 18,
+              totalPremium: '1.5万/年',
+              lifetimeValue: '预估28万',
+              dimensionScores: [
+                { label: '信任度', score: 82, icon: '🤝' },
+                { label: '保障意识', score: 90, icon: '🛡️' },
+                { label: '消费能力', score: 78, icon: '💰' },
+                { label: '决策速度', score: 55, icon: '⚡' },
+                { label: '转介绍意愿', score: 71, icon: '👥' },
+              ],
+              deepInsight: '李美琳是典型的"高认知、慢决策"客户——她完全理解风险，但在消费上偏谨慎。经过2年积累，信任基础扎实，本次丈夫联合投保需求是历史以来最强的成交信号，要抓住这个窗口期。',
+              timeline: [
+                {
+                  date: '2024/03',
+                  type: 'purchase',
+                  title: '首单成交',
+                  detail: '平安e生保·百万医疗险，保费1,500元/年，从此建立关系',
+                },
+                {
+                  date: '2024/06',
+                  type: 'visit',
+                  title: '二次拜访',
+                  detail: '保障检视，客户了解了重疾险概念，表示"暂时不急"',
+                },
+                {
+                  date: '2024/09',
+                  type: 'event',
+                  title: '转介绍机会',
+                  detail: '推荐同事陈医生，虽未成单，展现出一定转介绍意愿',
+                },
+                {
+                  date: '2024/11',
+                  type: 'call',
+                  title: '节日回访',
+                  detail: '元旦节关怀电话，聊到科室同事健康问题，情绪波动明显',
+                },
+                {
+                  date: '2025/01',
+                  type: 'renewal',
+                  title: '续保成功',
+                  detail: '医疗险顺利续保，客户主动咨询是否需要升级版本',
+                },
+                {
+                  date: '2025/03',
+                  type: 'visit',
+                  title: '保单周年拜访',
+                  detail: '本次拜访：情绪积极，主动提及丈夫保障需求，成交信号强烈',
+                },
+              ],
+              nextStrategy: '3月13日回访：呈现家庭联合重疾险方案（李美琳+丈夫），利用联合投保折扣推动双单成交。成功后启动家庭保障全检视，探索子女医疗险需求，逐步发展为高价值家庭客户。',
+            },
+            delay: 600,
+          },
+        ],
+        quickReplies: [
+          { label: '查看下阶段经营计划', value: 'v2-next-plan' },
+          { label: '一键发起回访提醒', value: 'v2-set-followup' },
+        ],
+      },
+      // Step 1: 下阶段经营策略总结
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '基于李美琳 **2年经营档案**，AI 为您总结如下经营建议：\n\n**近期（1-2周）**\n• 回访推动丈夫联合重疾险，争取双单\n• 发送家庭保障全景图，触发子女医疗险需求\n\n**中期（1-3月）**\n• 丈夫成单后启动子女医疗险方案\n• 培养转介绍意识，推荐医院同事客群\n\n**长期（6月+）**\n• 家庭年金/教育金规划（客户35岁，子女3岁，10年窗口期）\n• 持续经营至高价值家庭客户（预估终身价值 **50万+**）\n\n✅ 档案已同步最新拜访记录，下次触访时 AI 将自动读取历史洞察。',
+            speechText: '李美琳近期策略是推动丈夫联合重疾险双单成交，中期培养转介绍，长期发展为高价值家庭客户，预估终身价值超过50万。',
+          },
+        ],
+        quickReplies: [
+          { label: '返回客群推荐', value: 'v2-back-to-targets' },
+          { label: '完成，收到', value: 'back' },
+        ],
+      },
+    ],
+  },
 ];
