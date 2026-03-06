@@ -23,7 +23,18 @@ export type MessageContentType =
   | 'visit-strategy'
   | 'ability-analysis'
   | 'coaching-plan'
-  | 'learning-plan';
+  | 'learning-plan'
+  | 'moment-preview'
+  | 'wechat-preview'
+  | 'ai-analysis'
+  | 'reply-preview'
+  | 'customer-insight'
+  | 'demand-analysis'
+  | 'script-recommend'
+  | 'gap-diagnosis'
+  | 'commission-calc'
+  | 'materials-pack'
+  | 'persona-card';
 
 export interface Message {
   id: string;
@@ -50,6 +61,8 @@ export interface ScenarioStep {
     speechText?: string;
     data?: Record<string, unknown>;
     delay?: number;
+    /** 模拟用户消息（如小李的对话），不填则为 AI */
+    role?: 'ai' | 'user';
   }>;
   quickReplies?: QuickReply[];
   quickReplyDelay?: number;
@@ -115,6 +128,8 @@ export interface TeamMember {
   issues?: string[];
 }
 
+export type StoryLine = 'timeline' | 'customer';
+
 export interface ChatState {
   messages: Message[];
   isTyping: boolean;
@@ -123,4 +138,5 @@ export interface ChatState {
   quickReplies: QuickReply[];
   isListening: boolean;
   isSpeaking: boolean;
+  storyLine: StoryLine;
 }

@@ -23,6 +23,17 @@ import { VisitStrategyCard } from './cards/VisitStrategyCard';
 import { AbilityAnalysisCard } from './cards/AbilityAnalysisCard';
 import { CoachingPlanCard } from './cards/CoachingPlanCard';
 import { LearningPlanCard } from './cards/LearningPlanCard';
+import { MomentPreviewCard } from './cards/MomentPreviewCard';
+import { WechatPreviewCard } from './cards/WechatPreviewCard';
+import { AIAnalysisCard } from './cards/AIAnalysisCard';
+import { ReplyPreviewCard } from './cards/ReplyPreviewCard';
+import { CustomerInsightCard } from './cards/CustomerInsightCard';
+import { DemandAnalysisCard } from './cards/DemandAnalysisCard';
+import { ScriptRecommendCard } from './cards/ScriptRecommendCard';
+import { GapDiagnosisCard } from './cards/GapDiagnosisCard';
+import { CommissionCalcCard } from './cards/CommissionCalcCard';
+import { MaterialsPackCard } from './cards/MaterialsPackCard';
+import { PersonaCard } from './cards/PersonaCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -163,6 +174,28 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <CoachingPlanCard data={message.data as Record<string, unknown>} />;
       case 'learning-plan':
         return <LearningPlanCard data={message.data as Record<string, unknown>} />;
+      case 'moment-preview':
+        return <MomentPreviewCard data={message.data as Record<string, unknown>} />;
+      case 'wechat-preview':
+        return <WechatPreviewCard data={message.data as Record<string, unknown>} />;
+      case 'ai-analysis':
+        return <AIAnalysisCard data={message.data as Record<string, unknown>} />;
+      case 'reply-preview':
+        return <ReplyPreviewCard data={message.data as Record<string, unknown>} />;
+      case 'customer-insight':
+        return <CustomerInsightCard data={message.data as Record<string, unknown>} />;
+      case 'demand-analysis':
+        return <DemandAnalysisCard data={message.data as Record<string, unknown>} />;
+      case 'script-recommend':
+        return <ScriptRecommendCard data={message.data as Record<string, unknown>} />;
+      case 'gap-diagnosis':
+        return <GapDiagnosisCard data={message.data as Record<string, unknown>} />;
+      case 'commission-calc':
+        return <CommissionCalcCard data={message.data as Record<string, unknown>} />;
+      case 'materials-pack':
+        return <MaterialsPackCard data={message.data as Record<string, unknown>} />;
+      case 'persona-card':
+        return <PersonaCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

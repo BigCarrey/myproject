@@ -9,10 +9,7 @@ export function Header({ isSpeaking, onStopSpeaking, autoSpeak, onToggleAutoSpea
   return (
     <header className="bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8] pt-10 pb-4 px-5 relative z-10 shadow-lg">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2.5">
-          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
+        <div className="flex items-center">
           <h1
             className="text-[18px] font-black tracking-wider text-white"
             style={{ fontFamily: '"Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", serif' }}

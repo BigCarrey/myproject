@@ -26,7 +26,7 @@ export function ScheduleCard({ data }: ScheduleCardProps) {
     visit: 'border-l-[#3B82F6] bg-[#EFF6FF]',
     call: 'border-l-[#6366F1] bg-[#EEF2FF]',
     prepare: 'border-l-[#10B981] bg-[#F0FDF4]',
-    meeting: 'border-l-[#8B5CF6] bg-[#F5F3FF]',
+    meeting: 'border-l-[#3B82F6] bg-[#EFF6FF]',
   };
 
   return (

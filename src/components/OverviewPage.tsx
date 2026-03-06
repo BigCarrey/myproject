@@ -1,78 +1,79 @@
-import { useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 
 const OVERVIEW_NARRATION =
-  '欢迎体验"万能营销助手"。' +
-  '一位资深代理人，每天面对几十位客户、无数待办，传统方式靠记忆、靠表格，效率低、易遗漏。' +
-  '今天，我们重新思考：当AI深度融入展业全流程，会发生什么？' +
-  '我们打造了四大核心能力。' +
-  '深度可视化：保障缺口一目了然，需求洞察如影随形。' +
-  '服务被动转主动：计划自动驱动，提醒走在行动之前。' +
-  '对话即交易：语音实时交互，异议处理与拜访总结，秒级完成。' +
-  '闭环式成交：从盘点到复盘，业绩全链路智能驱动。' +
-  '从月初客户盘点、周初经营计划，到每日拜访前的方案准备、拜访后的精准记录，当晚的团队辅导，周末与月末的高效复盘。' +
-  '全时段、全场景、全闭环。' +
-  '下面，让我们看看，一位代理人的一天，如何被AI彻底改变。';
+  '传统代理人靠记忆、靠表格、靠人力堆砌。效率低、易遗漏、客户一多就顾不过来。' +
+  '万能营销助手，基于 OpenClaw 智能体架构，实现自动感知、主动触达、自主规划、智能执行四大能力。' +
+  '自动感知：识别客户私信、朋友圈动态、情绪与意向，无需你主动搜索。主动触达：月初提醒盘点、每周推送计划、拜访前推送方案，无需你触发，AI 主动推送。自主规划：将目标拆解为可执行动作，保障检视、话术推荐、缺口诊断一气呵成。智能执行：今日待办、回访提醒、学习计划、收入追踪，任务自动编排，全天候在线。' +
+  '从靠人力到靠智能，这就是代际鸿沟。' +
+  '点击开始演示，亲眼见证颠覆。';
 
 interface OverviewPageProps {
   onStart: () => void;
   narrate: (text: string, onEnd?: () => void) => void;
 }
 
-const pillars = [
+/** OpenClaw 技术特性 × 代理人业务场景（面向业务领导） */
+const openClawCapabilities = [
   {
-    icon: '📊',
-    title: '深度可视化',
-    color: '#3B82F6',
-    gradient: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
-    points: [
-      '客户画像多维分析，精准定位客群',
-      '保障缺口可视化，量化需求差距',
-      '团队经营数据仪表盘，实时掌握全局',
-    ],
+    name: '自动感知',
+    desc: '识别私信意图、朋友圈动态、客户情绪与意向阶段',
+    scene: '无需你搜，AI 先懂',
+    icon: '👁',
+    color: '#6366F1',
   },
   {
-    icon: '🔔',
-    title: '服务被动转主动',
-    color: '#2563EB',
-    gradient: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-    points: [
-      '每月自动提醒盘点客户，生成经营计划',
-      '每周推送行事历，持续跟进不遗漏',
-      '拜访前主动提醒，提前准备方案',
-    ],
-  },
-  {
-    icon: '💬',
-    title: '对话即交易',
-    color: '#0EA5E9',
-    gradient: 'linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%)',
-    points: [
-      '对话式定制产品方案，自然流畅',
-      '语音智能记录拜访，自动生成总结',
-      '实时推送销售攻略与异议处理话术',
-    ],
-  },
-  {
-    icon: '🎯',
-    title: '闭环式成交',
+    name: '主动触达',
+    desc: '月初提醒盘点、每周推送计划、拜访前推送方案',
+    scene: '无需你触发，AI 主动推送',
+    icon: '🚀',
     color: '#10B981',
-    gradient: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-    points: [
-      '盘点→计划→拜访→复盘，全流程闭环',
-      '智能推荐附近客户，提升拜访效率',
-      '收入激励追踪，驱动目标达成',
-    ],
+  },
+  {
+    name: '自主规划',
+    desc: '目标拆解为可执行动作，保障检视→话术→缺口一气呵成',
+    scene: '感知→规划→行动→反馈',
+    icon: '📐',
+    color: '#3B82F6',
+  },
+  {
+    name: '智能执行',
+    desc: '今日待办、回访提醒、学习计划、收入追踪，任务自动编排',
+    scene: '全天候在线，只等你确认',
+    icon: '📋',
+    color: '#3B82F6',
   },
 ];
 
-const timeline = [
-  { icon: '📋', label: '每月初', desc: '盘点客户', color: '#3B82F6' },
-  { icon: '📅', label: '每周初', desc: '经营计划', color: '#2563EB' },
-  { icon: '💼', label: '拜访前', desc: '方案准备', color: '#60A5FA' },
-  { icon: '📝', label: '拜访后', desc: '智能记录', color: '#6366F1' },
-  { icon: '👥', label: '当晚', desc: '辅导下属', color: '#8B5CF6' },
-  { icon: '📊', label: '每周末', desc: '周工作总结', color: '#0EA5E9' },
-  { icon: '📈', label: '每月末', desc: '月度复盘', color: '#10B981' },
+/** 传统 vs AI 对比，第一屏抓眼球 */
+const contrastItems = [
+  {
+    scene: '朋友圈发什么',
+    traditional: '自己想半天，复制粘贴',
+    ai: '秒级生成，人设+热点+城市融合',
+    icon: '📱',
+    color: '#07C160',
+  },
+  {
+    scene: '客户私信来了',
+    traditional: '查资料、想话术、怕说错',
+    ai: '先分析情绪再生成，一键发送',
+    icon: '💬',
+    color: '#6366F1',
+  },
+  {
+    scene: '拜访前准备',
+    traditional: '翻档案、做方案、半小时起',
+    ai: 'AI 主动推送，保障检视+方案自动生成',
+    icon: '💼',
+    color: '#4F6BF6',
+  },
+  {
+    scene: '拜访后记录',
+    traditional: '写半天总结，容易忘细节',
+    ai: '说话即记录，秒变总结+跟进计划',
+    icon: '📝',
+    color: '#4F6BF6',
+  },
 ];
 
 export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
@@ -82,7 +83,7 @@ export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
-      if ((e.target as HTMLElement).closest('.overview-start-btn')) return;
+      if ((e.target as HTMLElement).closest('.overview-start-btn') || (e.target as HTMLElement).closest('.overview-contrast-card') || (e.target as HTMLElement).closest('.overview-capability-card')) return;
       const synth = window.speechSynthesis;
       if (synth && !synth.speaking && !synth.pending) {
         narrate(OVERVIEW_NARRATION);
@@ -96,7 +97,7 @@ export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
       {/* 噪点纹理覆盖层 */}
       <div className="noise-overlay" aria-hidden="true" />
 
-      {/* Hero - 纯文字品牌，无 Logo 图标，点击播放 TTS */}
+      {/* Hero */}
       <div className="overview-hero">
         <h1
           className="overview-title cursor-pointer select-none hover:opacity-90 active:scale-[0.98] transition-all"
@@ -109,54 +110,87 @@ export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
           万能营销
         </h1>
         <p className="overview-subtitle">AI 驱动的智能保险销售全流程解决方案</p>
+        <p className="text-[12px] font-semibold text-[#1E3A8A] tracking-wide mt-0.5">
+          从靠记忆到靠智能 · 从靠人力到靠 AI
+        </p>
       </div>
 
-      {/* 4 Pillars - Crystal 风格 */}
-      <div className="overview-pillars">
-        {pillars.map((p) => (
-          <div key={p.title} className="overview-pillar-card">
+      {/* 代际鸿沟金句 */}
+      <div className="overview-quote-block crystal rounded-[16px] border border-white/80">
+        <p className="text-[12px] font-medium text-[#0F172A] text-center">
+          传统代理人靠人力堆砌 · AI 代理人靠智能赋能
+        </p>
+        <p className="text-[16px] font-bold text-[#1D4ED8] mt-0.5 text-center tracking-wide">
+          这就是代际鸿沟
+        </p>
+      </div>
+
+      {/* 传统 vs AI 对比 - 2x2 对称网格 */}
+      <div className="overview-section">
+        <h3 className="overview-section-title">
+          <span className="text-[#94a3b8]">传统方式</span>
+          <span className="mx-2 text-[#64748B]">→</span>
+          <span className="text-[#1E3A8A]">万能营销</span>
+        </h3>
+        <div className="overview-grid-2x2">
+          {contrastItems.map((c) => (
             <div
-              className="overview-pillar-icon"
-              style={{ background: p.gradient }}
+              key={c.scene}
+              className="overview-contrast-card crystal rounded-[14px] border border-white/80 p-2.5"
             >
-              {p.icon}
-            </div>
-            <h3 className="overview-pillar-title" style={{ color: p.color }}>
-              {p.title}
-            </h3>
-            <ul className="overview-pillar-points">
-              {p.points.map((pt, i) => (
-                <li key={i}>{pt}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-
-      {/* Timeline - 毛玻璃背景，科技蓝圆点 */}
-      <div className="overview-timeline-section">
-        <h2 className="overview-section-title">全场景演示流程</h2>
-        <div className="overview-timeline">
-          {timeline.map((t, i) => (
-            <div key={i} className="overview-timeline-item">
-              <div
-                className="overview-timeline-dot"
-                style={{ background: t.color }}
-              >
-                {t.icon}
+              <div className="flex items-center gap-1.5 mb-1">
+                <span
+                  className="w-7 h-7 rounded-lg flex items-center justify-center text-sm flex-shrink-0"
+                  style={{ background: `${c.color}22`, color: c.color }}
+                >
+                  {c.icon}
+                </span>
+                <span className="font-semibold text-[12px] text-[#0F172A] truncate">{c.scene}</span>
               </div>
-              <div className="overview-timeline-label">{t.label}</div>
-              <div className="overview-timeline-desc">{t.desc}</div>
-              {i < timeline.length - 1 && (
-                <div className="overview-timeline-connector" />
-              )}
+              <div className="space-y-0.5 text-[11px]">
+                <div className="flex items-start gap-1">
+                  <span className="text-[#94a3b8] flex-shrink-0 w-6">传统</span>
+                  <span className="text-[#64748B] line-through truncate">{c.traditional}</span>
+                </div>
+                <div className="flex items-start gap-1">
+                  <span className="font-medium flex-shrink-0 w-6" style={{ color: c.color }}>AI</span>
+                  <span className="text-[#0F172A] font-medium truncate">{c.ai}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Start Button - 科技蓝渐变 + 扫光 */}
-      <div className="overview-start-area">
+      {/* 智能体四大能力 - 2x2 对称网格 */}
+      <div className="overview-section">
+        <h3 className="overview-section-title">智能体四大能力</h3>
+        <div className="overview-grid-2x2">
+          {openClawCapabilities.map((cap) => (
+            <div
+              key={cap.name}
+              className="overview-capability-card crystal rounded-[14px] border border-white/80 p-2.5"
+            >
+              <div className="flex items-start gap-2">
+                <span
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+                  style={{ background: `${cap.color}22`, color: cap.color }}
+                >
+                  {cap.icon}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-[12px] text-[#0F172A]">{cap.name}</p>
+                  <p className="text-[10px] text-[#64748B] mt-0.5 leading-tight line-clamp-2">{cap.desc}</p>
+                  <p className="text-[10px] font-medium mt-0.5" style={{ color: cap.color }}>{cap.scene}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* CTA */}
+      <div className="overview-cta">
         <button className="overview-start-btn group shimmer" onClick={onStart}>
           开始演示
         </button>

@@ -30,18 +30,18 @@ const gridData: GridCell[][] = [
     { label: '富裕颐年', color: 'bg-indigo-50 text-indigo-500' },
   ],
   [
-    { label: '高净值青年', color: 'bg-violet-50 text-violet-500' },
-    { label: '高净值壮年', color: 'bg-violet-100 text-violet-600' },
-    { label: '社会中坚', color: 'bg-violet-200 text-violet-700' },
-    { label: '高净值盛年', color: 'bg-violet-100 text-violet-600' },
-    { label: '高净值颐年', color: 'bg-violet-50 text-violet-500' },
+    { label: '高净值青年', color: 'bg-blue-50 text-blue-500' },
+    { label: '高净值壮年', color: 'bg-blue-100 text-blue-600' },
+    { label: '社会中坚', color: 'bg-blue-200 text-blue-700' },
+    { label: '高净值盛年', color: 'bg-blue-100 text-blue-600' },
+    { label: '高净值颐年', color: 'bg-blue-50 text-blue-500' },
   ],
   [
-    { label: '超高青年', color: 'bg-purple-50 text-purple-400' },
-    { label: '超高壮年', color: 'bg-purple-100 text-purple-600' },
-    { label: '超高中年', color: 'bg-purple-200 text-purple-700' },
-    { label: '超高盛年', color: 'bg-purple-100 text-purple-600' },
-    { label: '超高颐年', color: 'bg-purple-50 text-purple-400' },
+    { label: '超高青年', color: 'bg-sky-50 text-sky-500' },
+    { label: '超高壮年', color: 'bg-sky-100 text-sky-600' },
+    { label: '超高中年', color: 'bg-sky-200 text-sky-700' },
+    { label: '超高盛年', color: 'bg-sky-100 text-sky-600' },
+    { label: '超高颐年', color: 'bg-sky-50 text-sky-500' },
   ],
 ];
 

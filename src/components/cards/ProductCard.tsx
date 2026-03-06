@@ -15,7 +15,7 @@ export function ProductCard({ data }: ProductCardProps) {
     '重疾险': 'from-[#6366F1] to-[#4F46E5]',
     '年金险': 'from-[#0EA5E9] to-[#0284C7]',
     '医疗险': 'from-[#10B981] to-[#059669]',
-    '万能险': 'from-[#8B5CF6] to-[#6D28D9]',
+    '万能险': 'from-[#0EA5E9] to-[#0284C7]',
   };
 
   return (

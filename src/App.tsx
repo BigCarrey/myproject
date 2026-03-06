@@ -7,11 +7,13 @@ import { TypingIndicator } from './components/TypingIndicator';
 import { OverviewPage } from './components/OverviewPage';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
-import { scenarios } from './data/scenarios';
+import { scenariosByStoryLine } from './data';
+import type { StoryLine } from './types';
 
-const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七', '八'];
+const SCENE_NUMS_TIMELINE = ['一', '二', '三', '四', '五', '六', '七', '八'];
+const SCENE_NUMS_CUSTOMER = ['一', '二', '三', '四', '五', '六', '七'];
 
-const modulesMeta = [
+const modulesMetaTimeline = [
   {
     id: 'monthly-review',
     name: '每月初，提醒代理人盘点客户',
@@ -41,7 +43,7 @@ const modulesMeta = [
     name: '某天，客户拜访后',
     timing: '拜访后',
     icon: '📝',
-    color: '#7C3AED',
+    color: '#4F6BF6',
     narration: '场景四，拜访后，AI语音记录拜访并生成总结与跟进计划。',
   },
   {
@@ -49,7 +51,7 @@ const modulesMeta = [
     name: '某天晚上：辅导下属',
     timing: '晚上',
     icon: '👥',
-    color: '#A78BFA',
+    color: '#6366F1',
     narration: '场景五，当天晚上，AI辅助主管精准辅导下属。',
   },
   {
@@ -73,9 +75,19 @@ const modulesMeta = [
     name: '拍照识别保单/客户档案',
     timing: '拍照',
     icon: '📷',
-    color: '#EC4899',
+    color: '#0EA5E9',
     narration: '场景八，拍照上传保单或身份证，AI智能识别并自动补充客户档案。',
   },
+];
+
+const modulesMetaCustomer = [
+  { id: 'persona-setup', name: '人设打造', timing: '人设', icon: '👤', color: '#3B82F6', narration: '传统代理人发朋友圈，憋三小时写不出两句。小李定下人设后，30秒生成，直接可发。' },
+  { id: 'moment-custom', name: '朋友圈个性定制', timing: '朋友圈', icon: '📱', color: '#07C160', narration: '传统代理人自己想半天、复制粘贴。小李：人设加热点加城市，秒级生成。' },
+  { id: 'smart-reply', name: '问题智能回复', timing: '私信', icon: '💬', color: '#6366F1', narration: '传统代理人查资料、想话术、怕说错。AI 先读懂再帮回，意图、情绪、阶段三维分析，一键发送。' },
+  { id: 'insight-demand', name: '兴趣洞察+需求解析', timing: '洞察', icon: '🔍', color: '#3B82F6', narration: '传统代理人翻档案、猜需求。AI 扫朋友圈，隐私合规前提下秒出完整画像与需求优先级。' },
+  { id: 'script-gap', name: '话术与缺口', timing: '话术', icon: '📋', color: '#F59E0B', narration: '团险风险提示、缺口量化、窗口期紧迫性，一句话戳中痛点。自然切入、不尬聊，一键发送。' },
+  { id: 'match-commission', name: '方案与收益', timing: '方案', icon: '💰', color: '#10B981', narration: '方案、策略、佣金一体化。王哥决策型人格，给两个选项比给一个更容易成交。代理人心里有数、推得有底气。' },
+  { id: 'materials-send', name: '素材生成与发送', timing: '素材', icon: '📤', color: '#0EA5E9', narration: '传统代理人自己做PPT、找案例、写说明。小李：四份专业材料秒级生成，确认即可，一键全部发送。' },
 ];
 
 function App() {
@@ -83,15 +95,11 @@ function App() {
   const speech = useSpeech();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const hasAddedDemoWelcome = useRef(false);
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [showOverview, setShowOverview] = useState(true);
   const [transition, setTransition] = useState<{ icon: string; label: string } | null>(null);
-
-  useEffect(() => {
-    chat.initChat();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // Register speak callbacks so useChat triggers speech synchronously with messages
   useEffect(() => {
@@ -101,6 +109,15 @@ function App() {
       autoSpeak ? speech.enqueueSpeak : noop
     );
   }, [autoSpeak, speech.speak, speech.enqueueSpeak, chat.registerSpeak]);
+
+  // 进入演示后：自动启动「人设打造」场景，让用户立即看到效果
+  useEffect(() => {
+    if (!showOverview && !hasAddedDemoWelcome.current && chat.messages.length === 0) {
+      hasAddedDemoWelcome.current = true;
+      setActiveModule('persona-setup');
+      chat.resetAndStartScenario('persona-setup', 'customer');
+    }
+  }, [showOverview, chat.messages.length, chat.resetAndStartScenario]);
 
   // Auto scroll to bottom
   useEffect(() => {
@@ -120,45 +137,65 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [speech.isListening]);
 
-  const startModuleWithNarration = useCallback(
+  const handleBackToStorySelect = useCallback(() => {
+    setShowOverview(true);
+    setActiveModule(null);
+    setTransition(null);
+    chat.clearChat();
+  }, [chat]);
+
+  const handleStartDemo = useCallback(() => {
+    setShowOverview(false);
+    hasAddedDemoWelcome.current = false;
+  }, []);
+
+  const getStoryLineForModule = useCallback((moduleId: string): StoryLine => {
+    if (modulesMetaTimeline.some((m) => m.id === moduleId)) return 'timeline';
+    return 'customer';
+  }, []);
+
+  const startModuleFromSidebar = useCallback(
     (moduleId: string) => {
-      const idx = modulesMeta.findIndex((m) => m.id === moduleId);
-      const mod = modulesMeta[idx];
+      const scenarioId = moduleId;
+      const line = getStoryLineForModule(moduleId);
+      const meta = line === 'timeline' ? modulesMetaTimeline : modulesMetaCustomer;
+      const idx = meta.findIndex((m) => m.id === moduleId);
+      const mod = meta[idx];
       if (!mod) return;
 
-      setActiveModule(moduleId);
-      const label = `场景${SCENE_NUMS[idx]}：${mod.name}`;
+      setActiveModule(scenarioId);
+      const sceneNums = line === 'timeline' ? SCENE_NUMS_TIMELINE : SCENE_NUMS_CUSTOMER;
+      const label = `场景${sceneNums[idx]}：${mod.name}`;
 
       if (autoSpeak && mod.narration) {
         setTransition({ icon: mod.icon, label });
         speech.narrate(mod.narration, () => {
           setTransition(null);
-          chat.resetAndStartScenario(moduleId);
+          chat.resetAndStartScenario(scenarioId, line);
         });
       } else {
-        chat.resetAndStartScenario(moduleId);
+        chat.resetAndStartScenario(scenarioId, line);
       }
     },
-    [chat, speech, autoSpeak]
+    [chat, speech, autoSpeak, getStoryLineForModule]
   );
-
-  const handleStartDemo = useCallback(() => {
-    setShowOverview(false);
-    startModuleWithNarration(modulesMeta[0].id);
-  }, [startModuleWithNarration]);
 
   const handleModuleClick = useCallback(
     (moduleId: string) => {
-      startModuleWithNarration(moduleId);
+      startModuleFromSidebar(moduleId);
     },
-    [startModuleWithNarration]
+    [startModuleFromSidebar]
   );
 
   const handleQuickReply = useCallback(
     (reply: { label: string; value: string }) => {
-      const scenario = scenarios.find((s) => s.id === reply.value);
-      if (scenario) {
+      const timelineScenario = scenariosByStoryLine.timeline.find((s) => s.id === reply.value);
+      const customerScenario = scenariosByStoryLine.customer.find((s) => s.id === reply.value);
+      const scenario = timelineScenario || customerScenario;
+      const line = timelineScenario ? 'timeline' : customerScenario ? 'customer' : null;
+      if (scenario && line) {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
+        chat.setStoryLine(line);
         chat.startScenario(scenario.id);
         setActiveModule(scenario.id);
       } else {
@@ -202,37 +239,90 @@ function App() {
           </div>
         </div>
 
-        <div className="sidebar-label">业务场景模块</div>
+        <div className="sidebar-label">选择场景体验</div>
 
         <nav className="sidebar-nav">
-          {modulesMeta.map((mod) => (
-            <button
-              key={mod.id}
-              className={`sidebar-item ${activeModule === mod.id ? 'sidebar-item-active' : ''}`}
-              onClick={() => handleModuleClick(mod.id)}
+          {/* 个性化经营 - 主推，置顶 */}
+          <div className="mb-3">
+            <div
+              className="sidebar-section-card flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2 cursor-pointer transition-all hover:shadow-md"
+              style={{ background: 'linear-gradient(135deg, rgba(59,130,246,0.12) 0%, rgba(29,78,216,0.06) 100%)', border: '1px solid rgba(59,130,246,0.25)' }}
             >
-              <span
-                className="sidebar-icon"
-                style={{
-                  background: activeModule === mod.id ? mod.color : undefined,
-                }}
-              >
-                {mod.icon}
-              </span>
-              <div className="sidebar-item-text">
-                <span className="sidebar-item-name">{mod.name}</span>
-                <span className="sidebar-item-timing">{mod.timing}</span>
+              <span className="text-xl">👤</span>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-[#0F172A] text-[13px]">个性化经营</div>
+                <div className="text-[11px] text-[#64748B] truncate">小李×王哥 · 人设到素材</div>
               </div>
-              {activeModule === mod.id && (
-                <span className="sidebar-active-dot" style={{ background: mod.color }} />
-              )}
-            </button>
-          ))}
+            </div>
+            <div className="space-y-0.5">
+              {modulesMetaCustomer.map((mod) => {
+                const isActive = (chat.currentScenario ?? activeModule) === mod.id;
+                return (
+                <button
+                  key={mod.id}
+                  className={`sidebar-item w-full ${isActive ? 'sidebar-item-active' : ''}`}
+                  onClick={() => handleModuleClick(mod.id)}
+                >
+                  <span className="sidebar-icon" style={{ background: isActive ? mod.color : undefined }}>
+                    {mod.icon}
+                  </span>
+                  <div className="sidebar-item-text">
+                    <span className="sidebar-item-name">{mod.name}</span>
+                    <span className="sidebar-item-timing">{mod.timing}</span>
+                  </div>
+                  {isActive && <span className="sidebar-active-dot" style={{ background: mod.color }} />}
+                </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 展业全流程 */}
+          <div>
+            <div
+              className="sidebar-section-card flex items-center gap-3 px-3 py-2.5 rounded-xl mb-2 cursor-pointer transition-all hover:shadow-md"
+              style={{ background: 'linear-gradient(135deg, rgba(79,107,246,0.1) 0%, rgba(99,102,241,0.05) 100%)', border: '1px solid rgba(79,107,246,0.2)' }}
+            >
+              <span className="text-xl">📋</span>
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-[#0F172A] text-[13px]">展业全流程</div>
+                <div className="text-[11px] text-[#64748B] truncate">张经理 · 月初到月末</div>
+              </div>
+            </div>
+            <div className="space-y-0.5">
+              {modulesMetaTimeline.map((mod) => {
+                const isActive = (chat.currentScenario ?? activeModule) === mod.id;
+                return (
+                <button
+                  key={mod.id}
+                  className={`sidebar-item w-full ${isActive ? 'sidebar-item-active' : ''}`}
+                  onClick={() => handleModuleClick(mod.id)}
+                >
+                  <span className="sidebar-icon" style={{ background: isActive ? mod.color : undefined }}>
+                    {mod.icon}
+                  </span>
+                  <div className="sidebar-item-text">
+                    <span className="sidebar-item-name">{mod.name}</span>
+                    <span className="sidebar-item-timing">{mod.timing}</span>
+                  </div>
+                  {isActive && <span className="sidebar-active-dot" style={{ background: mod.color }} />}
+                </button>
+                );
+              })}
+            </div>
+          </div>
         </nav>
 
         <div className="sidebar-footer">
           <p>Demo 演示模式</p>
-          <p>点击左侧模块切换场景</p>
+          <p>个性化经营：点「继续故事」连贯演示</p>
+          <button
+            type="button"
+            onClick={handleBackToStorySelect}
+            className="mt-2 w-full py-2 rounded-lg text-[13px] text-[#64748B] hover:bg-[#F1F5F9] hover:text-[#0F172A] transition-colors border border-[#E2E8F0]"
+          >
+            返回首页
+          </button>
         </div>
       </div>
 
