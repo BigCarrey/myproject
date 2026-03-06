@@ -281,8 +281,8 @@ function App() {
 
       setActiveModule(moduleId);
 
-      // V3: no transition overlay, go directly to conversation
-      if (demoMode === 'v3') {
+      // V2 and V3: no transition overlay, go directly to conversation
+      if (demoMode === 'v2' || demoMode === 'v3') {
         chat.resetAndStartScenario(mod.scenarioId);
         return;
       }
@@ -321,15 +321,21 @@ function App() {
       // Map V2 cross-module quick reply values to their scenario IDs
       const v2QuickReplyMap: Record<string, string> = {
         'v2-plan-schedule': 'v2-plan-schedule',
+        'v2-plan-for-customer': 'v2-plan-schedule',
+        'v2-view-schedule': 'v2-plan-schedule',
+        'v2-segment-detail': 'v2-target-customers',
         'v2-prepare-materials': 'v2-visit-materials',
         'v2-view-materials': 'v2-visit-materials',
         'v2-material-li': 'v2-visit-materials',
         'v2-daily-reminder': 'v2-action-reminder',
         'v2-start-review': 'v2-visit-review',
         'v2-post-visit': 'v2-visit-review',
+        'v2-show-review': 'v2-visit-review',
         'v2-archive': 'v2-archive-summary',
         'v2-back-to-targets': 'v2-target-customers',
         'v2-next-plan': 'v2-archive-summary',
+        'v2-set-reminder': 'v2-archive-summary',
+        'v2-spouse-plan': 'v2-archive-summary',
       };
 
       // Map V3 cross-scenario quick reply values to their scenario IDs
