@@ -323,7 +323,6 @@ function App() {
         'v2-plan-schedule': 'v2-plan-schedule',
         'v2-plan-for-customer': 'v2-plan-schedule',
         'v2-view-schedule': 'v2-plan-schedule',
-        'v2-segment-detail': 'v2-target-customers',
         'v2-prepare-materials': 'v2-visit-materials',
         'v2-view-materials': 'v2-visit-materials',
         'v2-material-li': 'v2-visit-materials',
