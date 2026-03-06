@@ -9,7 +9,7 @@ import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios } from './data/scenarios';
 
-const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七'];
+const SCENE_NUMS = ['一', '二', '三', '四', '五', '六', '七', '八', '九'];
 
 interface ModuleMeta {
   id: string;
@@ -144,6 +144,90 @@ const modulesMetaV2: ModuleMeta[] = [
   },
 ];
 
+const modulesMetaV3: ModuleMeta[] = [
+  {
+    id: 'v3-moments-create',
+    scenarioId: 'v3-moments-create',
+    name: '个性内容定制',
+    timing: '朋友圈引流',
+    icon: '✨',
+    color: '#07C160',
+    narration: '功能一，个性内容定制。AI万能营销助手，结合小李运动人设、体育热点和深圳本地信息，一键生成个性化朋友圈内容，精准触达潜在客户。',
+  },
+  {
+    id: 'v3-smart-reply',
+    scenarioId: 'v3-smart-reply',
+    name: '截图智能回复',
+    timing: '输入法AI帮回',
+    icon: '📸',
+    color: '#4F46E5',
+    narration: '功能二，截图智能回复。客户发来微信私信，小李使用输入法AI截图帮回功能，AI识别咨询意图并生成最优回复话术，一键发送。',
+  },
+  {
+    id: 'v3-friend-insights',
+    scenarioId: 'v3-friend-insights',
+    name: '好友兴趣洞察',
+    timing: '朋友圈扫描',
+    icon: '👁️',
+    color: '#0EA5E9',
+    narration: '功能三，好友兴趣洞察。AI扫描王哥的朋友圈公开动态，分析兴趣爱好、消费偏好、家庭线索，生成精准客户画像。',
+  },
+  {
+    id: 'v3-needs-analysis',
+    scenarioId: 'v3-needs-analysis',
+    name: '个性需求解析',
+    timing: '需求深度分析',
+    icon: '🔍',
+    color: '#6366F1',
+    narration: '功能四，个性需求解析。基于客户画像和健康状态，AI解析核心需求与次要需求，量化紧迫程度，为精准方案奠定基础。',
+  },
+  {
+    id: 'v3-script-recommend',
+    scenarioId: 'v3-script-recommend',
+    name: '精准话术推荐',
+    timing: '自然切入询问',
+    icon: '💬',
+    color: '#8B5CF6',
+    narration: '功能五，精准话术推荐。AI生成自然切入的询问话术，引导客户提供现有保障信息，为缺口诊断做准备。',
+  },
+  {
+    id: 'v3-gap-diagnosis',
+    scenarioId: 'v3-gap-diagnosis',
+    name: '保障缺口诊断',
+    timing: '全面风险诊断',
+    icon: '🏥',
+    color: '#EF4444',
+    narration: '功能六，保障缺口诊断。AI结合年龄、健康状况、家庭结构和现有保障，精准定位80万重疾缺口和寿险空白，生成诊断报告。',
+  },
+  {
+    id: 'v3-product-match',
+    scenarioId: 'v3-product-match',
+    name: '产品精准匹配',
+    timing: '双方案策略',
+    icon: '📦',
+    color: '#F59E0B',
+    narration: '功能七，产品精准匹配。AI根据客户画像和缺口分析，自动输出均衡版和尊享版两套方案，提升成交概率。',
+  },
+  {
+    id: 'v3-income-calc',
+    scenarioId: 'v3-income-calc',
+    name: '收益分析测算',
+    timing: '佣金预测',
+    icon: '💰',
+    color: '#059669',
+    narration: '功能八，收益分析测算。AI测算两套方案的首年佣金和续期收益，帮助小李了解收益差异，优化销售策略。',
+  },
+  {
+    id: 'v3-materials-gen',
+    scenarioId: 'v3-materials-gen',
+    name: '讲解素材生成',
+    timing: '一键发送素材',
+    icon: '📄',
+    color: '#7C3AED',
+    narration: '功能九，讲解素材生成。AI自动生成四份定制素材：方案总览、核保说明、理赔动图、脱敏案例，一键全部发送给客户。',
+  },
+];
+
 function App() {
   const chat = useChat();
   const speech = useSpeech();
@@ -153,9 +237,9 @@ function App() {
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [showOverview, setShowOverview] = useState(true);
   const [transition, setTransition] = useState<{ icon: string; label: string } | null>(null);
-  const [demoMode, setDemoMode] = useState<'v1' | 'v2'>('v1');
+  const [demoMode, setDemoMode] = useState<'v1' | 'v2' | 'v3'>('v1');
 
-  const currentModules = demoMode === 'v1' ? modulesMeta : modulesMetaV2;
+  const currentModules = demoMode === 'v1' ? modulesMeta : demoMode === 'v2' ? modulesMetaV2 : modulesMetaV3;
 
   useEffect(() => {
     chat.initChat();
@@ -196,6 +280,13 @@ function App() {
       if (!mod) return;
 
       setActiveModule(moduleId);
+
+      // V3: no transition overlay, go directly to conversation
+      if (demoMode === 'v3') {
+        chat.resetAndStartScenario(mod.scenarioId);
+        return;
+      }
+
       const prefix = demoMode === 'v1' ? '场景' : '模块';
       const label = `${prefix}${SCENE_NUMS[idx]}：${mod.name}`;
 
@@ -241,7 +332,29 @@ function App() {
         'v2-next-plan': 'v2-archive-summary',
       };
 
-      const targetScenarioId = v2QuickReplyMap[reply.value] ?? reply.value;
+      // Map V3 cross-scenario quick reply values to their scenario IDs
+      const v3QuickReplyMap: Record<string, string> = {
+        'v3-smart-reply': 'v3-smart-reply',
+        'v3-friend-insights': 'v3-friend-insights',
+        'v3-needs-analysis': 'v3-needs-analysis',
+        'v3-script-recommend': 'v3-script-recommend',
+        'v3-gap-diagnosis': 'v3-gap-diagnosis',
+        'v3-product-match': 'v3-product-match',
+        'v3-income-calc': 'v3-income-calc',
+        'v3-materials-gen': 'v3-materials-gen',
+        'v3-moments-create': 'v3-moments-create',
+        'v3-done': 'back',
+        'v3-wait': 'back',
+        'v3-confirm-publish': 'v3-confirm-publish',
+        'v3-send-reply': 'v3-send-reply',
+        'v3-script-sent': 'v3-script-sent',
+        'v3-edit-content': 'v3-edit-content',
+        'v3-more-scripts': 'v3-more-scripts',
+        'v3-edit-script': 'v3-edit-script',
+      };
+
+      const targetScenarioId =
+        v2QuickReplyMap[reply.value] ?? v3QuickReplyMap[reply.value] ?? reply.value;
       const scenario = scenarios.find((s) => s.id === targetScenarioId);
       if (scenario) {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
@@ -250,6 +363,9 @@ function App() {
         // Sync sidebar highlight for V2 modules
         const v2Mod = modulesMetaV2.find((m) => m.scenarioId === scenario.id);
         if (v2Mod) setActiveModule(v2Mod.id);
+        // Sync sidebar highlight for V3 modules
+        const v3Mod = modulesMetaV3.find((m) => m.scenarioId === scenario.id);
+        if (v3Mod) setActiveModule(v3Mod.id);
       } else {
         chat.handleQuickReply(reply);
       }
@@ -290,10 +406,10 @@ function App() {
         </div>
 
         <div className="sidebar-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span>{demoMode === 'v1' ? '业务场景模块' : '客户经营智能体'}</span>
+          <span>{demoMode === 'v1' ? '业务场景模块' : demoMode === 'v2' ? '客户经营智能体' : '微信销售智能体'}</span>
           <button
             onClick={() => {
-              const next = demoMode === 'v1' ? 'v2' : 'v1';
+              const next = demoMode === 'v1' ? 'v2' : demoMode === 'v2' ? 'v3' : 'v1';
               setDemoMode(next);
               setActiveModule(null);
               speech.stopSpeaking();
@@ -305,12 +421,13 @@ function App() {
               padding: '2px 8px',
               borderRadius: '10px',
               border: '1px solid #d1d5db',
-              background: '#f3f4f6',
-              color: '#6b7280',
+              background: demoMode === 'v3' ? '#f0fdf4' : '#f3f4f6',
+              color: demoMode === 'v3' ? '#16a34a' : '#6b7280',
               cursor: 'pointer',
+              fontWeight: demoMode === 'v3' ? '600' : 'normal',
             }}
           >
-            {demoMode === 'v1' ? '切换V2' : '切换V1'}
+            {demoMode === 'v1' ? '切换V2' : demoMode === 'v2' ? '切换V3' : '切换V1'}
           </button>
         </div>
 
@@ -341,8 +458,8 @@ function App() {
         </nav>
 
         <div className="sidebar-footer">
-          <p>{demoMode === 'v1' ? 'Demo 演示模式' : '客户经营智能体演示'}</p>
-          <p>点击左侧模块切换场景</p>
+          <p>{demoMode === 'v1' ? 'Demo 演示模式' : demoMode === 'v2' ? '客户经营智能体演示' : '微信互动销售智能体'}</p>
+          <p>{demoMode === 'v3' ? '9个功能串联，点击直接进入' : '点击左侧模块切换场景'}</p>
         </div>
       </div>
 

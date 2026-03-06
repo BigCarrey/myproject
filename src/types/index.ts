@@ -30,7 +30,14 @@ export type MessageContentType =
   | 'v2-material-kit'
   | 'v2-daily-action'
   | 'v2-voice-review'
-  | 'v2-customer-archive';
+  | 'v2-customer-archive'
+  // V3 cards
+  | 'v3-moments-post'
+  | 'v3-screenshot-reply'
+  | 'v3-customer-profile'
+  | 'v3-product-match'
+  | 'v3-income-calc'
+  | 'v3-materials';
 
 export interface Message {
   id: string;

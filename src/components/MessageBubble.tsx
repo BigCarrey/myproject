@@ -29,6 +29,12 @@ import { V2MaterialKitCard } from './cards/V2MaterialKitCard';
 import { V2DailyActionCard } from './cards/V2DailyActionCard';
 import { V2VoiceReviewCard } from './cards/V2VoiceReviewCard';
 import { V2CustomerArchiveCard } from './cards/V2CustomerArchiveCard';
+import { V3MomentsPostCard } from './cards/V3MomentsPostCard';
+import { V3ScreenshotReplyCard } from './cards/V3ScreenshotReplyCard';
+import { V3CustomerProfileCard } from './cards/V3CustomerProfileCard';
+import { V3ProductMatchCard } from './cards/V3ProductMatchCard';
+import { V3IncomeCalcCard } from './cards/V3IncomeCalcCard';
+import { V3MaterialsCard } from './cards/V3MaterialsCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -182,6 +188,19 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <V2VoiceReviewCard data={message.data as Record<string, unknown>} />;
       case 'v2-customer-archive':
         return <V2CustomerArchiveCard data={message.data as Record<string, unknown>} />;
+      // V3 cards
+      case 'v3-moments-post':
+        return <V3MomentsPostCard data={message.data as Record<string, unknown>} />;
+      case 'v3-screenshot-reply':
+        return <V3ScreenshotReplyCard data={message.data as Record<string, unknown>} />;
+      case 'v3-customer-profile':
+        return <V3CustomerProfileCard data={message.data as Record<string, unknown>} />;
+      case 'v3-product-match':
+        return <V3ProductMatchCard data={message.data as Record<string, unknown>} />;
+      case 'v3-income-calc':
+        return <V3IncomeCalcCard data={message.data as Record<string, unknown>} />;
+      case 'v3-materials':
+        return <V3MaterialsCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }
