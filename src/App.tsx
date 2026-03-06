@@ -209,7 +209,8 @@ function App() {
         chat.resetAndStartScenario(mod.scenarioId);
       }
     },
-    [chat, speech, autoSpeak, currentModules]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [chat, speech, autoSpeak, currentModules, demoMode]
   );
 
   const handleStartDemo = useCallback(() => {
