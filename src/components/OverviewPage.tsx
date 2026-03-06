@@ -1,15 +1,5 @@
-import { useCallback } from 'react';
-
-const OVERVIEW_NARRATION =
-  '传统代理人靠记忆、靠表格、靠人力堆砌。效率低、易遗漏、客户一多就顾不过来。' +
-  '万能营销助手，基于 OpenClaw 智能体架构，实现自动感知、主动触达、自主规划、智能执行四大能力。' +
-  '自动感知：识别客户私信、朋友圈动态、情绪与意向，无需你主动搜索。主动触达：月初提醒盘点、每周推送计划、拜访前推送方案，无需你触发，AI 主动推送。自主规划：将目标拆解为可执行动作，保障检视、话术推荐、缺口诊断一气呵成。智能执行：今日待办、回访提醒、学习计划、收入追踪，任务自动编排，全天候在线。' +
-  '从靠人力到靠智能，这就是代际鸿沟。' +
-  '点击开始演示，亲眼见证颠覆。';
-
 interface OverviewPageProps {
   onStart: () => void;
-  narrate: (text: string, onEnd?: () => void) => void;
 }
 
 /** OpenClaw 技术特性 × 代理人业务场景（面向业务领导） */
@@ -76,37 +66,15 @@ const contrastItems = [
   },
 ];
 
-export function OverviewPage({ onStart, narrate }: OverviewPageProps) {
-  const handleTitleClick = useCallback(() => {
-    narrate(OVERVIEW_NARRATION);
-  }, [narrate]);
-
-  const handleClick = useCallback(
-    (e: React.MouseEvent) => {
-      if ((e.target as HTMLElement).closest('.overview-start-btn') || (e.target as HTMLElement).closest('.overview-contrast-card') || (e.target as HTMLElement).closest('.overview-capability-card')) return;
-      const synth = window.speechSynthesis;
-      if (synth && !synth.speaking && !synth.pending) {
-        narrate(OVERVIEW_NARRATION);
-      }
-    },
-    [narrate]
-  );
-
+export function OverviewPage({ onStart }: OverviewPageProps) {
   return (
-    <div className="overview-page relative" onClick={handleClick}>
+    <div className="overview-page relative">
       {/* 噪点纹理覆盖层 */}
       <div className="noise-overlay" aria-hidden="true" />
 
       {/* Hero */}
       <div className="overview-hero">
-        <h1
-          className="overview-title cursor-pointer select-none hover:opacity-90 active:scale-[0.98] transition-all"
-          onClick={handleTitleClick}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === 'Enter' && handleTitleClick()}
-          title="点击播放介绍"
-        >
+        <h1 className="overview-title">
           万能营销
         </h1>
         <p className="overview-subtitle">AI 驱动的智能保险销售全流程解决方案</p>

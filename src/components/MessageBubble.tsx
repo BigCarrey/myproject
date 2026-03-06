@@ -37,7 +37,6 @@ import { PersonaCard } from './cards/PersonaCard';
 
 interface MessageBubbleProps {
   message: Message;
-  onSpeak?: (text: string) => void;
 }
 
 function renderMarkdown(text: string): string {
@@ -56,7 +55,7 @@ function renderMarkdown(text: string): string {
     );
 }
 
-function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: string) => void }) {
+function TextContent({ content }: { content: string }) {
   const hasTable = content.includes('|') && content.includes('---');
   let beforeTable = content;
   let tableHtml = '';
@@ -90,7 +89,7 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
   }
 
   return (
-    <div className="relative group">
+    <div>
       {beforeTable && (
         <div
           className="text-[15px] leading-[1.5] whitespace-pre-wrap text-[#0F172A]"
@@ -106,22 +105,11 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
           dangerouslySetInnerHTML={{ __html: renderMarkdown(afterTable) }}
         />
       )}
-      {onSpeak && (
-        <button
-          onClick={() => onSpeak(content)}
-          className="absolute -bottom-1 -right-1 w-6 h-6 bg-[#EFF6FF] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity border border-[#BFDBFE]/60"
-          title="朗读"
-        >
-          <svg className="w-3 h-3 text-[#3B82F6]" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-          </svg>
-        </button>
-      )}
     </div>
   );
 }
 
-export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
+export function MessageBubble({ message }: MessageBubbleProps) {
   const isAi = message.role === 'ai';
 
   const renderContent = () => {
@@ -197,7 +185,7 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
       case 'persona-card':
         return <PersonaCard data={message.data as Record<string, unknown>} />;
       default:
-        return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
+        return <TextContent content={message.content} />;
     }
   };
 

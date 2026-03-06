@@ -10,9 +10,6 @@ import { useSpeech } from './hooks/useSpeech';
 import { scenariosByStoryLine } from './data';
 import type { StoryLine } from './types';
 
-const SCENE_NUMS_TIMELINE = ['一', '二', '三', '四', '五', '六', '七', '八'];
-const SCENE_NUMS_CUSTOMER = ['一', '二', '三', '四', '五', '六', '七'];
-
 const modulesMetaTimeline = [
   {
     id: 'monthly-review',
@@ -97,18 +94,7 @@ function App() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const hasAddedDemoWelcome = useRef(false);
   const [activeModule, setActiveModule] = useState<string | null>(null);
-  const [autoSpeak, setAutoSpeak] = useState(true);
   const [showOverview, setShowOverview] = useState(true);
-  const [transition, setTransition] = useState<{ icon: string; label: string } | null>(null);
-
-  // Register speak callbacks so useChat triggers speech synchronously with messages
-  useEffect(() => {
-    const noop = () => {};
-    chat.registerSpeak(
-      autoSpeak ? speech.speak : noop,
-      autoSpeak ? speech.enqueueSpeak : noop
-    );
-  }, [autoSpeak, speech.speak, speech.enqueueSpeak, chat.registerSpeak]);
 
   // 进入演示后：自动启动「人设打造」场景，让用户立即看到效果
   useEffect(() => {
@@ -140,7 +126,7 @@ function App() {
   const handleBackToStorySelect = useCallback(() => {
     setShowOverview(true);
     setActiveModule(null);
-    setTransition(null);
+    hasAddedDemoWelcome.current = false;
     chat.clearChat();
   }, [chat]);
 
@@ -156,28 +142,14 @@ function App() {
 
   const startModuleFromSidebar = useCallback(
     (moduleId: string) => {
-      const scenarioId = moduleId;
       const line = getStoryLineForModule(moduleId);
       const meta = line === 'timeline' ? modulesMetaTimeline : modulesMetaCustomer;
-      const idx = meta.findIndex((m) => m.id === moduleId);
-      const mod = meta[idx];
-      if (!mod) return;
+      if (!meta.some((m) => m.id === moduleId)) return;
 
-      setActiveModule(scenarioId);
-      const sceneNums = line === 'timeline' ? SCENE_NUMS_TIMELINE : SCENE_NUMS_CUSTOMER;
-      const label = `场景${sceneNums[idx]}：${mod.name}`;
-
-      if (autoSpeak && mod.narration) {
-        setTransition({ icon: mod.icon, label });
-        speech.narrate(mod.narration, () => {
-          setTransition(null);
-          chat.resetAndStartScenario(scenarioId, line);
-        });
-      } else {
-        chat.resetAndStartScenario(scenarioId, line);
-      }
+      setActiveModule(moduleId);
+      chat.resetAndStartScenario(moduleId, line);
     },
-    [chat, speech, autoSpeak, getStoryLineForModule]
+    [chat, getStoryLineForModule]
   );
 
   const handleModuleClick = useCallback(
@@ -205,23 +177,9 @@ function App() {
     [chat]
   );
 
-  const handleSpeak = useCallback(
-    (text: string) => {
-      if (speech.isSpeaking) {
-        speech.stopSpeaking();
-      } else {
-        speech.speak(text);
-      }
-    },
-    [speech]
-  );
-
   if (showOverview) {
     return (
-      <OverviewPage
-        onStart={handleStartDemo}
-        narrate={autoSpeak ? speech.narrate : () => {}}
-      />
+      <OverviewPage onStart={handleStartDemo} />
     );
   }
 
@@ -330,57 +288,38 @@ function App() {
       <div className="phone-frame">
         <div className="phone-notch" />
         <div className="phone-screen">
-          {transition ? (
-            <div className="scene-transition">
-              <div className="scene-transition-icon">{transition.icon}</div>
-              <div className="scene-transition-label">{transition.label}</div>
-            </div>
-          ) : (
-            <>
-              <Header
-                isSpeaking={speech.isSpeaking}
-                onStopSpeaking={speech.stopSpeaking}
-                autoSpeak={autoSpeak}
-                onToggleAutoSpeak={() => {
-                  setAutoSpeak((v) => {
-                    if (v) speech.stopSpeaking();
-                    return !v;
-                  });
-                }}
-              />
+          <Header />
 
-              {/* Chat messages area */}
-              <div
-                ref={chatContainerRef}
-                className="flex-1 overflow-y-auto scrollbar-hide pt-4 pb-4"
-                style={{ WebkitOverflowScrolling: 'touch' }}
-              >
-                {chat.messages.map((msg) => (
-                  <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
-                ))}
+          {/* Chat messages area */}
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto scrollbar-hide pt-4 pb-4"
+            style={{ WebkitOverflowScrolling: 'touch' }}
+          >
+            {chat.messages.map((msg) => (
+              <MessageBubble key={msg.id} message={msg} />
+            ))}
 
-                {chat.isTyping && <TypingIndicator />}
+            {chat.isTyping && <TypingIndicator />}
 
-                {/* Quick replies */}
-                {chat.quickReplies.length > 0 && !chat.isTyping && (
-                  <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
-                )}
+            {/* Quick replies */}
+            {chat.quickReplies.length > 0 && !chat.isTyping && (
+              <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
+            )}
 
-                <div ref={messagesEndRef} />
-              </div>
+            <div ref={messagesEndRef} />
+          </div>
 
-              {/* Input area */}
-              <InputBar
-                onSend={chat.handleUserMessage}
-                onSendImage={chat.handleUserImage}
-                onVoiceStart={speech.startListening}
-                onVoiceStop={speech.stopListening}
-                isListening={speech.isListening}
-                transcript={speech.transcript}
-                disabled={chat.isTyping}
-              />
-            </>
-          )}
+          {/* Input area */}
+          <InputBar
+            onSend={chat.handleUserMessage}
+            onSendImage={chat.handleUserImage}
+            onVoiceStart={speech.startListening}
+            onVoiceStop={speech.stopListening}
+            isListening={speech.isListening}
+            transcript={speech.transcript}
+            disabled={chat.isTyping}
+          />
         </div>
       </div>
     </div>

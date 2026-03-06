@@ -21,16 +21,6 @@ export function useChat() {
 
   const timeoutRefs = useRef<number[]>([]);
   const sessionRef = useRef(0);
-  const speakFnRef = useRef<((text: string) => void) | null>(null);
-  const enqueueSpeakFnRef = useRef<((text: string) => void) | null>(null);
-
-  const registerSpeak = useCallback(
-    (fn: (text: string) => void, enqueueFn: (text: string) => void) => {
-      speakFnRef.current = fn;
-      enqueueSpeakFnRef.current = enqueueFn;
-    },
-    []
-  );
 
   const clearTimeouts = useCallback(() => {
     timeoutRefs.current.forEach((t) => window.clearTimeout(t));
@@ -47,9 +37,6 @@ export function useChat() {
       ...prev,
       messages: [...prev.messages, newMsg],
     }));
-    if (msg.speechText && speakFnRef.current) {
-      speakFnRef.current(msg.speechText);
-    }
     return newMsg;
   }, []);
 
@@ -73,12 +60,6 @@ export function useChat() {
       clearTimeouts();
       setQuickReplies([]);
       setTyping(true);
-
-      // Cancel leftover speech from the previous step so it doesn't
-      // overlap with this step's per-message enqueued speech.
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
 
       const currentSession = sessionRef.current;
 
@@ -111,12 +92,6 @@ export function useChat() {
               },
             ],
           }));
-
-          // Enqueue speech per message (no cancel) so each component's
-          // voice plays exactly when that component appears on screen.
-          if (!isUser && msg.speechText && enqueueSpeakFnRef.current) {
-            enqueueSpeakFnRef.current(msg.speechText);
-          }
 
           if (index === messageCallbacks.length - 1 && step.quickReplies) {
             const qrTimeout = window.setTimeout(() => {
@@ -379,11 +354,6 @@ export function useChat() {
         storyLineRef.current = storyLine;
       }
       clearTimeouts();
-      // Cancel any ongoing speech immediately so switching modules
-      // doesn't cause overlapping audio during the 100ms state-reset gap.
-      if (typeof window !== 'undefined' && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
       sessionRef.current += 1;
       setState((prev) => ({
         ...prev,
@@ -439,9 +409,6 @@ export function useChat() {
           ]
         : scenarios.map((s) => ({ label: `${s.icon} ${s.name}`, value: s.id })),
     }));
-    if (welcomeMsg.speechText && speakFnRef.current) {
-      speakFnRef.current(welcomeMsg.speechText);
-    }
   }, []);
 
   const handleUserImage = useCallback(
@@ -466,9 +433,6 @@ export function useChat() {
 
   const clearChat = useCallback(() => {
     clearTimeouts();
-    if (typeof window !== 'undefined' && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
     setState((prev) => ({
       ...prev,
       messages: [],
@@ -490,6 +454,5 @@ export function useChat() {
     initChat,
     setStoryLine,
     clearChat,
-    registerSpeak,
   };
 }
