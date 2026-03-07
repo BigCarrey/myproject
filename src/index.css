@@ -1192,7 +1192,6 @@ html, body, #root {
   border-radius: 24px;
   box-shadow: 0 8px 30px rgba(37, 99, 235, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.80);
-  margin-right: 24px;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -1887,30 +1886,41 @@ html, body, #root {
   transform: translateY(0);
 }
 
-/* ========== Field Mode Phone Container with Swap ========== */
-.field-phones-container {
+/* ========== Field Mode Fixed 3-Column Layout ========== */
+.field-layout {
   display: flex;
+  align-items: flex-start;
   gap: 20px;
   height: 100%;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.field-phone-dialog {
-  order: 1;
-  transition: order 0s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+.field-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
 }
 
-.field-phone-execution {
-  order: 2;
-  transition: order 0s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+.field-col-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(30, 41, 59, 0.40);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 2px 0;
 }
 
-.field-phones-container.swapped .field-phone-dialog {
-  order: 2;
-  transform: translateX(0);
+.field-col > .phone-frame {
+  flex: 1;
+  min-height: 0;
+  height: auto;
 }
 
-.field-phones-container.swapped .field-phone-execution {
-  order: 1;
-  transform: translateX(0);
+.field-col > .memory-panel {
+  flex: 1;
+  min-height: 0;
+  height: auto;
 }

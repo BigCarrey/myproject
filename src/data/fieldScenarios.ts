@@ -7,27 +7,13 @@ export const memoryCollectionScenario: Scenario = {
   icon: '🧠',
   description: '收集代理人记忆',
   steps: [
-    // Step 0: AI greeting
+    // Step 0: Greeting + Q1 (merged, no "准备好了" button)
     {
       aiMessages: [
         {
           type: 'text',
-          content: '小李你好！👋\n\n我是你的AI营销助理，在正式开始之前，我想先了解你。\n\n只有真正理解你，我才能成为一个**懂你的**助手。\n\n接下来我会问你几个问题，你准备好了吗？',
-          speechText: '小李你好！我是你的AI营销助理。在正式开始之前，我想先了解你。接下来我会问你几个问题，你准备好了吗？',
-        },
-      ],
-      quickReplies: [
-        { label: '准备好了', value: 'ready' },
-      ],
-      quickReplyDelay: 500,
-    },
-    // Step 1: Ask about interests
-    {
-      aiMessages: [
-        {
-          type: 'text',
-          content: '很好！😊\n\n**第一个问题：**\n你平时有什么兴趣爱好？比如运动、读书、旅行……什么都可以聊聊。',
-          speechText: '很好！第一个问题，你平时有什么兴趣爱好？',
+          content: '嗨小李！👋 我是你的AI营销助理，以后我们就是最默契的搭档了。\n\n在正式帮你拓客之前，想先聊聊你这个人——真正懂你，我才能给你最贴合的支持，而不是甩给你一堆通用模板。\n\n先来个轻松的：**你平时有啥爱好？**运动、读书、刷剧……什么都行，随便聊聊～',
+          speechText: '嗨小李！我是你的AI营销助理，以后我们就是最默契的搭档了。先来个轻松的，你平时有啥爱好？',
           wechatEvents: [
             {
               type: 'update-memory',
@@ -37,17 +23,17 @@ export const memoryCollectionScenario: Scenario = {
         },
       ],
       quickReplies: [
-        { label: '我喜欢跑步和健身，偶尔打打篮球', value: 'interests-sport' },
+        { label: '跑步健身，偶尔打打篮球', value: 'interests-sport' },
       ],
-      quickReplyDelay: 300,
+      quickReplyDelay: 500,
     },
-    // Step 2: Respond + ask social circle
+    // Step 1: Ack interests + ask social circle
     {
       aiMessages: [
         {
           type: 'text',
-          content: '运动达人！跑步和健身都是很棒的爱好，能保持好状态也是做好工作的基础 🏃‍♂️\n\n**第二个问题：**\n你平时的社交圈子是什么样的？朋友多不多？经常一起活动吗？',
-          speechText: '运动达人！跑步健身很棒。第二个问题，你平时的社交圈子是什么样的？',
+          content: '哇，运动达人！跑步健身还打篮球，状态肯定不错 🏃‍♂️\n\n那聊聊你的圈子——**平时主要和哪些人来往？**同事、老同学、还是有自己的小圈子？',
+          speechText: '哇，运动达人！那聊聊你的圈子，平时主要和哪些人来往？',
           wechatEvents: [
             {
               type: 'update-memory',
@@ -64,17 +50,17 @@ export const memoryCollectionScenario: Scenario = {
         },
       ],
       quickReplies: [
-        { label: '主要是同事和几个大学同学，圈子不算大', value: 'social-small' },
+        { label: '主要是同事和几个大学同学', value: 'social-small' },
       ],
       quickReplyDelay: 300,
     },
-    // Step 3: Respond + ask goals
+    // Step 2: Ack social + ask goals
     {
       aiMessages: [
         {
           type: 'text',
-          content: '了解了，同事和老同学是最真实的关系。有时候圈子不在大，在精 💪\n\n**第三个问题：**\n你做保险代理人的目标是什么？对自己的未来有什么规划？',
-          speechText: '了解了。第三个问题，你做代理人的目标是什么？对未来有什么规划？',
+          content: '同事和老同学，这种关系最真实！圈子不在大，在精 💪\n\n**做代理人，你心里有个什么目标？**随便说说，不用那么正式～',
+          speechText: '同事和老同学，这种关系最真实！做代理人，你心里有个什么目标？',
           wechatEvents: [
             {
               type: 'update-memory',
@@ -91,17 +77,17 @@ export const memoryCollectionScenario: Scenario = {
         },
       ],
       quickReplies: [
-        { label: '希望三年内做到团队主管，年收入突破30万', value: 'goal-leader' },
+        { label: '三年内做到主管，年收入30万以上', value: 'goal-leader' },
       ],
       quickReplyDelay: 300,
     },
-    // Step 4: Respond + ask challenges
+    // Step 3: Ack goals + ask challenges
     {
       aiMessages: [
         {
           type: 'text',
-          content: '三年团队主管、年入30万，目标清晰又有野心，我喜欢！🎯\n\n**最后一个问题：**\n你目前工作中最大的困难或痛点是什么？哪些事情让你最头疼？',
-          speechText: '目标很清晰！最后一个问题，你工作中最大的困难是什么？',
+          content: '三年主管、年入30万，清晰又有冲劲，我喜欢这个！🎯\n\n那**说说现在最头疼的事**——什么让你觉得最难突破？',
+          speechText: '三年主管年入30万，清晰又有冲劲！那说说现在最头疼的事，什么让你觉得最难突破？',
           wechatEvents: [
             {
               type: 'update-memory',
@@ -118,17 +104,17 @@ export const memoryCollectionScenario: Scenario = {
         },
       ],
       quickReplies: [
-        { label: '获客太难了，不知道怎么自然地和客户聊保险', value: 'challenge-leads' },
+        { label: '获客太难了，不知道怎么自然地切入保险话题', value: 'challenge-leads' },
       ],
       quickReplyDelay: 300,
     },
-    // Step 5: Summary + show ceremony button
+    // Step 4: Summary + ceremony button
     {
       aiMessages: [
         {
           type: 'text',
-          content: '我记住了。获客和自然切入是很多代理人的痛点，也正是我最擅长帮你解决的。\n\n✅ **我已经了解了你：**\n• 你爱运动——跑步、健身、篮球\n• 社交圈以同事和老同学为主\n• 目标是三年做到主管、年入30万\n• 最大痛点是获客和话术\n\n我会基于这些认知，为你提供**真正个性化**的营销支持。\n\n准备好了吗？让我们正式开始！',
-          speechText: '我记住了。我会基于对你的了解，提供真正个性化的营销支持。准备好了吗？让我们正式开始！',
+          content: '记下来了。获客和自然切入，正好是我最擅长帮你解决的 💪\n\n聊了几分钟，我对你有了初步认识：\n• 爱运动、有活力，这是你天然的人设资产\n• 圈子精而深，老关系值得好好经营\n• 目标清晰，三年冲主管\n• 当前最需要突破的是获客和话术\n\n基于这些，我会为你定制真正个性化的营销策略。一起出发吧！✨',
+          speechText: '记下来了。基于对你的了解，我会为你定制真正个性化的营销策略。一起出发吧！',
           wechatEvents: [
             {
               type: 'update-memory',
@@ -160,27 +146,19 @@ export const fieldScenarios: Scenario[] = [
     icon: '🤖',
     description: '主流程',
     steps: [
-      // Step 0: AI intro after ceremony
+      // Step 0: AI intro + show moments post (merged, no "看看内容" button)
       {
         aiMessages: [
           {
             type: 'text',
-            content: '🤖 **你好小李，我是你的AI营销助理。**\n\n我已经了解了你——爱运动、目标明确、最需要解决获客问题。\n\n**我能帮你做什么？**\n• 📱 **朋友圈营销** — 结合你的人设定制内容\n• 💬 **客户沟通** — 智能回复、话术推荐\n• 📊 **客户分析** — 洞察需求、诊断保障缺口\n• 📋 **方案匹配** — 精准产品推荐、收益测算\n• 📦 **材料生成** — 一键制作专业讲解资料\n\n既然获客是你的痛点，我们先从**朋友圈营销**开始吧。我已经为你定制了一条内容👇',
-            speechText: '你好小李，我是你的AI营销助理。我已经了解了你。既然获客是你的痛点，我们先从朋友圈营销开始。',
+            content: '小李，我准备好了 😊\n\n我已经了解了你——爱运动、目标明确、最需要突破获客。\n\n我能帮你做的事有很多：朋友圈内容、客户沟通、需求分析、方案匹配……但咱们先从你最头疼的**获客**开始。\n\n我结合你爱运动的人设和近期热点，给你定制了一条朋友圈内容，你看看 👇',
+            speechText: '小李，我准备好了。我已经了解了你，咱们先从获客开始。我给你定制了一条朋友圈内容，你看看。',
           },
-        ],
-        quickReplies: [
-          { label: '看看内容', value: 'view-moments-content' },
-        ],
-        quickReplyDelay: 600,
-      },
-      // Step 1: Show moments content card
-      {
-        aiMessages: [
           {
             type: 'field-moments-post',
             content: '已为您定制个性化朋友圈内容',
-            speechText: '我结合你爱运动的人设和近期体育新闻，为你定制了一条朋友圈内容。',
+            speechText: '我结合你爱运动的人设和近期体育新闻，为你定制了这条内容。',
+            delay: 600,
             data: {
               author: '小李',
               avatar: '🏃',
@@ -201,16 +179,16 @@ export const fieldScenarios: Scenario[] = [
         quickReplies: [
           { label: '确认并授权发布', value: 'confirm-post' },
         ],
+        quickReplyDelay: 600,
       },
-      // Step 2: Moments published → execution panel shows moments → Wang Ge comments
+      // Step 1: Moments published → execution panel shows moments → Wang Ge comments
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **朋友圈发布成功！10:32**\n\n系统已自动完成：\n• 朋友圈内容已发布\n• 附图已自动排版优化\n• 可见范围：全部好友\n\n📊 **预期效果：**\n• 预计覆盖好友 800+\n• 目标互动率 5%-8%\n\n💡 系统将持续监测互动数据...',
-            speechText: '朋友圈已于10点32分发布成功，系统将持续监测互动数据。',
+            content: '✅ **朋友圈发布成功！10:32**\n\n已自动完成排版优化，可见范围全部好友，预计覆盖 800+ 人。\n\n💡 系统持续监测互动数据中……',
+            speechText: '朋友圈已于10点32分发布成功，系统持续监测互动数据中。',
             wechatEvents: [
-              { type: 'swap-panels', data: null },
               { type: 'switch-app', data: 'wechat-moments' },
               {
                 type: 'set-moments',
@@ -240,13 +218,13 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplyDelay: 1200,
       },
-      // Step 3: Wang Ge sends private message about insurance → AI analysis → screenshot helper
+      // Step 2: Wang Ge sends private message about insurance → AI analysis → screenshot helper
       {
         aiMessages: [
           {
             type: 'field-ai-analysis',
             content: '收到王哥微信私信，AI已完成智能分析',
-            speechText: '收到王哥关于三高能否买保险的咨询，AI分析建议先安抚再引导预约。',
+            speechText: '王哥关于三高能否买保险的咨询来了，AI分析建议先安抚再引导预约。',
             data: {
               incomingMessage: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？',
               sender: '王哥',
@@ -259,7 +237,6 @@ export const fieldScenarios: Scenario[] = [
               ],
             },
             wechatEvents: [
-              { type: 'unswap-panels', data: null },
               { type: 'switch-app', data: 'wechat-chat' },
               {
                 type: 'set-chat-messages',
@@ -283,16 +260,15 @@ export const fieldScenarios: Scenario[] = [
           { label: '📲 发送推荐回复', value: 'send-ai-reply' },
         ],
       },
-      // Step 4: Reply sent → Wang Ge agrees to meet Saturday 3pm
+      // Step 3: Reply sent → Wang Ge agrees to meet Saturday 3pm
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ 回复已发送给王哥\n\n📩 **王哥回复：**\n"行啊，那咱们约个时间。周六下午3点怎么样？在南山那边的星巴克聊聊？"\n\n💡 **AI建议：**\n王哥表现出明确的面谈意愿！建议立即确认并同步录入日历。',
-            speechText: '王哥同意周六下午3点在南山星巴克面谈。建议立即确认并录入日历。',
+            content: '✅ 回复已发出\n\n📩 **王哥回复：**\n"行啊，那咱们约个时间。周六下午3点怎么样？在南山那边的星巴克聊聊？"\n\n王哥表现出明确的面谈意愿，趁热打铁，确认时间并同步录入日历吧。',
+            speechText: '王哥同意周六下午3点在南山星巴克面谈，趁热打铁确认下来吧。',
             wechatEvents: [
               { type: 'hide-screenshot-helper', data: null },
-              { type: 'swap-panels', data: null },
               {
                 type: 'add-chat',
                 data: { sender: 'xiaoli', content: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊 很多客户和你情况类似，最后都顺利配置了适合自己的方案。你方便的话咱们约个时间当面细聊聊？我帮你做个专属评估，给你一个明确的答复，不让你白等～', timestamp: '10:53' },
@@ -334,15 +310,14 @@ export const fieldScenarios: Scenario[] = [
           { label: '确认并记录日历', value: 'confirm-calendar' },
         ],
       },
-      // Step 5: Calendar event created
+      // Step 4: Calendar event created
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **已完成：**\n\n📅 **日历已更新**\n• 周六下午 3:00 — 与王哥面访\n• 地点：南山星巴克\n\n📩 **已自动回复王哥：**\n"好的王哥，周六下午3点南山星巴克，我准时到！"\n\n⏰ **AI将自动为你：**\n• 周六上午 → 抓取王哥朋友圈，分析画像\n• 周六上午 → 推送面访提醒 + 沟通策略\n• 周六下午3点 → 自动开启录音\n\n放心，一切交给我。',
-            speechText: '日历已更新，周六下午3点与王哥面访。AI将在周六上午自动为你准备面访策略。',
+            content: '✅ 搞定！\n\n📅 **日历已更新** — 周六 15:00，与王哥面访，南山星巴克\n\n📩 **已自动回复王哥：**\n"好的王哥，周六下午3点南山星巴克，我准时到！"\n\n周六上午我会帮你抓取王哥的朋友圈数据，生成客户画像和沟通策略。你只需要准时出现就好 😊',
+            speechText: '搞定！日历已更新，已自动回复王哥。周六上午我会帮你准备好一切。',
             wechatEvents: [
-              { type: 'unswap-panels', data: null },
               {
                 type: 'add-chat',
                 data: { sender: 'xiaoli', content: '好的王哥，周六下午3点南山星巴克，我准时到！', timestamp: '10:56' },
@@ -366,13 +341,13 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplyDelay: 800,
       },
-      // Step 6: Saturday morning → AI reminder + profile + strategy
+      // Step 5: Saturday morning → AI reminder + profile + strategy
       {
         aiMessages: [
           {
             type: 'text',
-            content: '☀️ **周六上午 9:30**\n\n小李，今天下午3点你和王哥的面访，我已经帮你做好了全部准备。\n\n📱 我已抓取王哥最近的朋友圈动态，生成了客户画像👇',
-            speechText: '周六上午，今天下午3点你和王哥的面访，我已经帮你做好了全部准备。',
+            content: '☀️ **周六上午 9:30**\n\n小李，今天下午3点和王哥的面访，一切都准备好了。\n\n我已经抓取了王哥最近的朋友圈，给你生成了客户画像 👇',
+            speechText: '周六上午，今天下午3点和王哥的面访，一切都准备好了。',
             wechatEvents: [
               { type: 'switch-app', data: 'wechat-moments' },
               {
@@ -409,7 +384,7 @@ export const fieldScenarios: Scenario[] = [
           {
             type: 'field-customer-profile',
             content: 'AI已扫描王哥朋友圈，输出客户画像',
-            speechText: '已完成王哥朋友圈分析。王哥约42到48岁，企业中高层，爱好高尔夫和养生，孩子约10岁。',
+            speechText: '王哥约42到48岁，企业中高层，爱好高尔夫和养生，孩子约10岁。',
             delay: 800,
             data: {
               customerName: '王哥',
@@ -446,18 +421,11 @@ export const fieldScenarios: Scenario[] = [
               },
             ],
           },
-        ],
-        quickReplies: [
-          { label: '查看沟通策略', value: 'view-strategy' },
-        ],
-      },
-      // Step 7: Communication strategy
-      {
-        aiMessages: [
           {
             type: 'text',
-            content: '🎯 **今日面访沟通策略**\n\n**核心目标：** 了解王哥的保障现状和真实需求\n\n**沟通要点：**\n\n1️⃣ **破冰（5分钟）**\n聊高尔夫、孩子 → 拉近距离\n\n2️⃣ **信息收集（15分钟）**\n• 了解王哥目前有哪些保障\n• 了解家庭成员保障情况\n• 了解三高具体指标\n\n3️⃣ **需求激发（10分钟）**\n• 引导王哥思考保障缺口\n• "如果有一天..."的场景化引导\n\n4️⃣ **留下钩子**\n• 不急于推产品，承诺做专属分析\n\n⚠️ **注意事项：**\n• 王哥决策型人格，不喜欢啰嗦\n• 对品质敏感，对价格不敏感\n• 三高话题先安抚再专业分析',
-            speechText: '面访沟通策略已准备好。核心是了解保障现状和真实需求，分为四个阶段。',
+            content: '🎯 **今日面访策略**\n\n**核心目标：** 了解保障现状和真实需求\n\n1️⃣ **破冰（5分钟）** — 聊高尔夫、聊孩子，先拉近距离\n\n2️⃣ **信息收集（15分钟）** — 了解现有保障、家庭情况、三高具体指标\n\n3️⃣ **需求激发（10分钟）** — 引导王哥思考保障缺口\n\n4️⃣ **留下钩子** — 不急推产品，承诺做专属分析后跟进\n\n⚠️ **小提示：** 王哥决策型人格，不喜欢啰嗦；对品质敏感，对价格不敏感。',
+            delay: 600,
+            speechText: '面访策略已准备好，分四个阶段。王哥决策型人格，不喜欢啰嗦。',
             wechatEvents: [
               { type: 'switch-app', data: 'home' },
               {
@@ -477,15 +445,14 @@ export const fieldScenarios: Scenario[] = [
           { label: '⏩ 到下午3点面访', value: 'skip-to-meeting' },
         ],
       },
-      // Step 8: 3pm → Recording starts, meeting content
+      // Step 6: 3pm → Recording starts, meeting content
       {
         aiMessages: [
           {
             type: 'text',
-            content: '⏰ **周六下午 3:00 — 面访开始**\n\n🎙️ **录音已自动开启**\n\n我会实时分析对话内容，为你提供支持。\n\n---\n\n📝 **实时记录：**\n\n🗣️ 小李："王哥，上次说的三高情况，具体指标怎么样？"\n\n👤 王哥："血压140多，血糖偏高但没到糖尿病，血脂也有点高。公司团险买了意外险和医疗险，重疾险之前买过一份，好像是20万保额，其他就没有了。"\n\n🗣️ 小李："了解了。那嫂子和孩子呢？有没有配置什么保障？"\n\n👤 王哥："孩子有个学平险，其他就没有了。"',
+            content: '⏰ **周六下午 3:00 — 面访开始**\n\n🎙️ **录音已自动开启**，我会实时分析对话内容。\n\n---\n\n📝 **实时记录：**\n\n🗣️ 小李："王哥，上次说的三高情况，具体指标怎么样？"\n\n👤 王哥："血压140多，血糖偏高但没到糖尿病，血脂也有点高。公司团险买了意外险和医疗险，重疾险之前买过一份，好像是20万保额，其他就没有了。"\n\n🗣️ 小李："了解了。那嫂子和孩子呢？"\n\n👤 王哥："孩子有个学平险，其他就没有了。"',
             speechText: '面访已开始，录音已自动开启。王哥透露了保障现状。',
             wechatEvents: [
-              { type: 'swap-panels', data: null },
               { type: 'switch-app', data: 'recorder' },
               { type: 'start-recording', data: null },
               {
@@ -505,7 +472,7 @@ export const fieldScenarios: Scenario[] = [
           { label: '查看实时分析', value: 'view-analysis' },
         ],
       },
-      // Step 9: Real-time analysis → needs + gap diagnosis
+      // Step 7: Real-time analysis → needs + gap diagnosis
       {
         aiMessages: [
           {
@@ -564,16 +531,15 @@ export const fieldScenarios: Scenario[] = [
           { label: '面访结束，生成方案', value: 'end-meeting' },
         ],
       },
-      // Step 10: Meeting ends → 2 plans
+      // Step 8: Meeting ends → 2 plans
       {
         aiMessages: [
           {
             type: 'text',
-            content: '🎙️ **录音已结束** | 时长 42分钟\n\n面访内容已完整记录并分析。根据王哥的情况，我为你生成了两套方案👇',
+            content: '🎙️ **录音结束** | 时长 42分钟\n\n面访内容已完整记录并分析。根据王哥的情况，给你生成了两套方案 👇',
             speechText: '面访录音结束，为你生成两套方案。',
             wechatEvents: [
               { type: 'stop-recording', data: null },
-              { type: 'unswap-panels', data: null },
               { type: 'switch-app', data: 'home' },
             ],
           },
@@ -610,10 +576,10 @@ export const fieldScenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '帮我算一下这两个方案我能拿多少佣金', value: 'calc-commission' },
+          { label: '帮我算一下佣金', value: 'calc-commission' },
         ],
       },
-      // Step 11: Commission calculation
+      // Step 9: Commission calculation
       {
         aiMessages: [
           {
@@ -646,10 +612,10 @@ export const fieldScenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '选择均衡版，生成材料', value: 'select-balanced' },
+          { label: '选均衡版，生成材料', value: 'select-balanced' },
         ],
       },
-      // Step 12: Generate 4 materials + script
+      // Step 10: Generate 4 materials + script
       {
         aiMessages: [
           {
@@ -704,7 +670,7 @@ export const fieldScenarios: Scenario[] = [
           { label: '📤 一键全部发送给王哥', value: 'send-all' },
         ],
       },
-      // Step 13: Sent → Wang Ge responds
+      // Step 11: Sent → Wang Ge responds
       {
         aiMessages: [
           {
@@ -712,7 +678,6 @@ export const fieldScenarios: Scenario[] = [
             content: '✅ **四份材料 + 话术已全部发送给王哥**',
             speechText: '材料已发送。',
             wechatEvents: [
-              { type: 'swap-panels', data: null },
               { type: 'switch-app', data: 'wechat-chat' },
               {
                 type: 'add-chat',
@@ -746,15 +711,14 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplyDelay: 800,
       },
-      // Step 14: Next day → Wang Ge decides to buy
+      // Step 12: Next day → Wang Ge decides to buy
       {
         aiMessages: [
           {
             type: 'text',
-            content: '📩 **王哥来消息了！**\n\n👤 王哥：\n"小李，昨晚和老婆研究了一下，你那个均衡版方案挺合适的。核保需要什么材料，你列个清单给我？"\n\n🎉 **恭喜！王哥决定投保均衡版方案！**\n\n💡 AI已自动生成核保材料清单并发送给王哥。',
+            content: '📩 **王哥来消息了！**\n\n👤 王哥：\n"小李，昨晚和老婆研究了一下，你那个均衡版方案挺合适的。核保需要什么材料，你列个清单给我？"\n\n🎉 **成了！王哥决定投保均衡版！**\n\nAI已自动生成核保材料清单，发给王哥了。',
             speechText: '恭喜！王哥决定投保均衡版方案！',
             wechatEvents: [
-              { type: 'unswap-panels', data: null },
               {
                 type: 'update-memory',
                 data: {
@@ -780,7 +744,7 @@ export const fieldScenarios: Scenario[] = [
           },
           {
             type: 'text',
-            content: '📊 **本次服务全流程总结：**\n\n| 阶段 | 完成情况 |\n| --- | --- |\n| 朋友圈获客 | ✅ 个性化内容引发互动 |\n| 智能回复 | ✅ 截图帮回快速响应 |\n| 面访约定 | ✅ 周六下午3点 |\n| 客户画像 | ✅ 朋友圈+面访双重分析 |\n| 缺口诊断 | ✅ 重疾+寿险缺口明确 |\n| 方案匹配 | ✅ 均衡版成交 |\n| 佣金预期 | 💰 首年1.12万，续期1.8万 |\n\n🎯 从朋友圈发布到成交确认，全流程AI协同完成。\n\n**代理人记忆了解度已更新至 19%** — AI将持续学习和了解你。',
+            content: '📊 **全流程回顾：**\n\n| 阶段 | 完成情况 |\n| --- | --- |\n| 朋友圈获客 | ✅ 个性化内容引发互动 |\n| 智能回复 | ✅ 截图帮回快速响应 |\n| 面访约定 | ✅ 周六下午3点 |\n| 客户画像 | ✅ 朋友圈+面访双重分析 |\n| 缺口诊断 | ✅ 重疾+寿险缺口明确 |\n| 方案匹配 | ✅ 均衡版成交 |\n| 佣金预期 | 💰 首年1.12万，续期1.8万 |\n\n🎯 从朋友圈发布到成交，全流程AI协同完成。\n\n**代理人记忆了解度已更新至 19%** — 我会持续了解你，越来越懂你 😊',
             delay: 600,
             speechText: '全流程完成！从朋友圈获客到成交，AI全程协同。',
           },

@@ -64,7 +64,6 @@ function App() {
   const [fieldPhase, setFieldPhase] = useState<FieldPhase>('memory-collection');
   const [agentMemory, setAgentMemory] = useState<AgentMemory>(initialAgentMemory);
   const [executionPanel, setExecutionPanel] = useState<ExecutionPanelState>(initialExecutionPanel);
-  const [panelsSwapped, setPanelsSwapped] = useState(false);
 
   const currentScenarios = useMemo(() => {
     if (mode === 'backoffice') return backofficeScenarioData;
@@ -164,8 +163,7 @@ function App() {
       if (evt.type === 'update-memory') { handleMemoryUpdate(evt.data as Record<string, unknown>); return; }
       if (evt.type === 'add-client') { handleAddClient(evt.data as Record<string, unknown>); return; }
       if (evt.type === 'update-client') { handleUpdateClient(evt.data as Record<string, unknown>); return; }
-      if (evt.type === 'swap-panels') { setPanelsSwapped(true); return; }
-      if (evt.type === 'unswap-panels') { setPanelsSwapped(false); return; }
+      if (evt.type === 'swap-panels' || evt.type === 'unswap-panels') { return; }
       if (evt.type === 'switch-app') { setExecutionPanel(prev => ({ ...prev, currentApp: evt.data as ExecutionPanelState['currentApp'] })); return; }
       if (evt.type === 'add-calendar-event') { setExecutionPanel(prev => ({ ...prev, calendarEvents: [...prev.calendarEvents, evt.data as CalendarEvent] })); return; }
       if (evt.type === 'start-recording') { setExecutionPanel(prev => ({ ...prev, isRecording: true, recordingDuration: 0 })); return; }
@@ -289,7 +287,6 @@ function App() {
     setActiveModule(null);
     speech.stopSpeaking();
     setTransition(null);
-    setPanelsSwapped(false);
     setFollowUpReminder(null);
     setWechatState({ currentView: 'chat', chatMessages: [], moments: [], screenshotHelper: null });
     setExecutionPanel(initialExecutionPanel);
@@ -427,48 +424,35 @@ function App() {
 
   // ========== FIELD MODE ==========
   if (mode === 'field') {
-    if (fieldPhase === 'ceremony') {
-      return (
-        <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
-          <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
-          <div className="phone-frame">
-            <div className="phone-screen">
-              <CeremonyTransition onComplete={handleCeremonyComplete} />
-            </div>
-          </div>
-        </div>
-      );
-    }
+    const centerContent = fieldPhase === 'ceremony'
+      ? <CeremonyTransition onComplete={handleCeremonyComplete} />
+      : renderChatPhone();
 
-    if (fieldPhase === 'memory-collection') {
-      return (
-        <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
-          <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
-          <div className="phone-frame">
-            <div className="phone-notch" />
-            <div className="phone-screen">{renderChatPhone()}</div>
-          </div>
-        </div>
-      );
-    }
-
-    // Main phase
     return (
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
-        <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
-        <div className={`field-phones-container ${panelsSwapped ? 'swapped' : ''}`}>
-          <div className="phone-frame field-phone-dialog">
-            <div className="phone-notch" />
-            <div className="phone-screen">{renderChatPhone()}</div>
+        <div className="field-layout">
+          <div className="field-col">
+            <div className="field-col-header">代理人记忆</div>
+            <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
           </div>
-          <div className="phone-frame field-phone-execution">
-            <div className="phone-notch" />
-            <div className="phone-screen" style={{
-              background: executionPanel.currentApp === 'recorder' ? '#1a1a2e'
-                : executionPanel.currentApp === 'home' ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)'
-                : '#EDEDED'
-            }}>
-              {renderExecutionPanel()}
+          <div className="field-col">
+            <div className="field-col-header">对话调度</div>
+            <div className="phone-frame">
+              <div className="phone-notch" />
+              <div className="phone-screen">{centerContent}</div>
+            </div>
+          </div>
+          <div className="field-col">
+            <div className="field-col-header">执行面板</div>
+            <div className="phone-frame">
+              <div className="phone-notch" />
+              <div className="phone-screen" style={{
+                background: executionPanel.currentApp === 'recorder' ? '#1a1a2e'
+                  : executionPanel.currentApp === 'home' ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)'
+                  : '#EDEDED'
+              }}>
+                {renderExecutionPanel()}
+              </div>
             </div>
           </div>
         </div>
