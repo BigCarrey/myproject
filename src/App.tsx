@@ -174,7 +174,7 @@ const DISPATCH_TYPES: MessageContentType[] = [
 
 
 function App() {
-  const [mode, setMode] = useState<'backoffice' | 'field'>('backoffice');
+  const [mode, setMode] = useState<'backoffice' | 'field'>('field');
 
   const currentModules = mode === 'backoffice' ? backofficeModules : fieldModules;
   const currentScenarios = useMemo(
@@ -259,7 +259,10 @@ function App() {
   }, []);
 
   useEffect(() => {
-    chat.initChat();
+    chat.initChat(
+      '小李您好！我是您的AI销售助理\n\n我将全程协助您拓展客户、精准营销。让我们开始今天的工作吧！\n\n📌 待跟进客户：\n• 王哥 — 三高体况，健康险咨询意向\n• 朋友圈营销内容待发布\n\n请选择您需要的服务：',
+      '小李您好！我是您的AI销售助理，让我们开始今天的工作。'
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -408,53 +411,14 @@ function App() {
 
     return (
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
-        {/* Left Sidebar Navigation */}
-        <div className="sidebar sidebar-compact">
-          <div className="sidebar-header">
-            <div>
-              <h2 className="sidebar-title" style={{ fontSize: 17 }}>万能营销</h2>
-              <span style={{ fontSize: '11px', color: '#D4AF37', letterSpacing: '0.15em', fontWeight: 600 }}>PRO</span>
-            </div>
-          </div>
-          <div className="sidebar-label">外勤场景</div>
-          <nav className="sidebar-nav">
-            {fieldModules.map((mod) => (
-              <button
-                key={mod.id}
-                className={`sidebar-item ${activeModule === mod.id ? 'sidebar-item-active' : ''}`}
-                onClick={() => handleModuleClick(mod.id)}
-              >
-                <span
-                  className="sidebar-icon"
-                  style={{ background: activeModule === mod.id ? mod.color : undefined }}
-                >
-                  {mod.icon}
-                </span>
-                <div className="sidebar-item-text">
-                  <span className="sidebar-item-name" style={{ fontSize: 12 }}>{mod.name}</span>
-                  <span className="sidebar-item-timing">{mod.timing}</span>
-                </div>
-                {activeModule === mod.id && (
-                  <span className="sidebar-active-dot" style={{ background: mod.color }} />
-                )}
-              </button>
-            ))}
-          </nav>
-          <div className="sidebar-footer">
-            <p>智能销售助手</p>
-            <p>点击场景开始演示</p>
-          </div>
-          <button
-            className="mode-toggle-tab"
-            onClick={handleModeToggle}
-            title="切换到内勤场景"
-          >
-            内勤
-          </button>
-        </div>
-
-        {/* 3-Column Field Layout */}
+        {/* 3-Column Field Layout: 代理人记忆 - 对话调度 - 执行面板 */}
         <div className="field-columns-wrapper">
+          {/* ── 代理人记忆 ── */}
+          <div className="field-column">
+            <div className="field-panel-label">代理人记忆</div>
+            <FieldMemoryPanel messages={allMessages} onSpeak={handleSpeak} />
+          </div>
+
           {/* ── 对话调度 ── */}
           <div className="field-column">
             <div className="field-panel-label">对话调度</div>
@@ -505,12 +469,6 @@ function App() {
                 )}
               </div>
             </div>
-          </div>
-
-          {/* ── 代理人记忆 ── */}
-          <div className="field-column">
-            <div className="field-panel-label">代理人记忆</div>
-            <FieldMemoryPanel messages={allMessages} onSpeak={handleSpeak} />
           </div>
 
           {/* ── 执行面板 ── */}
