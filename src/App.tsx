@@ -432,18 +432,36 @@ function App() {
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
         <div className="field-layout">
           <div className="field-col">
-            <div className="field-col-header">代理人记忆</div>
+            <div className="field-col-header">
+              <div className="field-col-header-icon" style={{ background: 'linear-gradient(145deg, #a78bfa, #7c3aed)' }}>🧠</div>
+              <div className="field-col-header-text">
+                <div className="field-col-header-title">代理人记忆</div>
+                <div className="field-col-header-subtitle">Agent Memory</div>
+              </div>
+            </div>
             <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
           </div>
           <div className="field-col">
-            <div className="field-col-header">对话调度</div>
+            <div className="field-col-header">
+              <div className="field-col-header-icon" style={{ background: 'linear-gradient(145deg, #60a5fa, #2563eb)' }}>💬</div>
+              <div className="field-col-header-text">
+                <div className="field-col-header-title">对话调度</div>
+                <div className="field-col-header-subtitle">Dialog Control</div>
+              </div>
+            </div>
             <div className="phone-frame">
               <div className="phone-notch" />
               <div className="phone-screen">{centerContent}</div>
             </div>
           </div>
           <div className="field-col">
-            <div className="field-col-header">执行面板</div>
+            <div className="field-col-header">
+              <div className="field-col-header-icon" style={{ background: 'linear-gradient(145deg, #34d399, #059669)' }}>📱</div>
+              <div className="field-col-header-text">
+                <div className="field-col-header-title">执行面板</div>
+                <div className="field-col-header-subtitle">Execution Panel</div>
+              </div>
+            </div>
             <div className="phone-frame">
               <div className="phone-notch" />
               <div className="phone-screen" style={{
