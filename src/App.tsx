@@ -7,6 +7,7 @@ import { TypingIndicator } from './components/TypingIndicator';
 import { OverviewPage } from './components/OverviewPage';
 import { AgentMemoryPanel } from './components/AgentMemoryPanel';
 import { ExecutionPanel } from './components/ExecutionPanel';
+import { LaunchCeremony } from './components/LaunchCeremony';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios as backofficeScenarioData } from './data/scenarios';
@@ -140,6 +141,7 @@ function App() {
   const [followUpReminder, setFollowUpReminder] = useState<FollowUpReminder | null>(null);
 
   // ===== Field mode specific state =====
+  const [showLaunchCeremony, setShowLaunchCeremony] = useState(false);
   const [memoryFields, setMemoryFields] = useState<AgentMemoryField[]>(initialMemoryFields);
   const [executionTab, setExecutionTab] = useState<ExecutionTab>('chat');
   const [calendarEntries, setCalendarEntries] = useState<CalendarEntry[]>([]);
@@ -318,7 +320,10 @@ function App() {
           chat.handleQuickReply(reply);
         }
       } else {
-        // Field mode: just advance the scenario
+        // Field mode: show launch ceremony on the start-work button
+        if (reply.value === 'start-work') {
+          setShowLaunchCeremony(true);
+        }
         chat.handleQuickReply(reply);
       }
     },
@@ -346,6 +351,7 @@ function App() {
     setWechatState({ currentView: 'chat', chatMessages: [], moments: [], screenshotHelper: null });
     setFollowUpReminder(null);
     // Reset field-specific state
+    setShowLaunchCeremony(false);
     setMemoryFields(initialMemoryFields);
     setExecutionTab('chat');
     setCalendarEntries([]);
@@ -467,6 +473,11 @@ function App() {
         >
           内勤
         </button>
+
+        {/* Launch Ceremony Overlay */}
+        {showLaunchCeremony && (
+          <LaunchCeremony onComplete={() => setShowLaunchCeremony(false)} />
+        )}
 
         {/* Follow-up Reminder Popup */}
         {followUpReminder && (

@@ -46,6 +46,7 @@ export interface QuickReply {
   label: string;
   value: string;
   icon?: string;
+  primary?: boolean;
 }
 
 export interface WeChatChatMessage {

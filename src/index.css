@@ -1736,3 +1736,85 @@ html, body, #root {
   line-height: 1.5;
   margin-top: 2px;
 }
+
+/* ===== Launch Ceremony Overlay ===== */
+.launch-ceremony-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #E4EBF8 0%, #D0DDEE 25%, #C8D6F0 55%, #D8E6F8 100%);
+  animation: lcFadeIn 0.45s ease-out forwards, lcFadeOut 0.55s ease-in 2.3s forwards;
+  pointer-events: none;
+}
+
+.launch-ceremony-orb {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.launch-ring-svg {
+  animation: lcRingPulse 2s ease-in-out infinite;
+  filter: drop-shadow(0 0 18px rgba(160, 196, 240, 0.6));
+}
+
+.launch-ceremony-text {
+  margin-top: 44px;
+  font-size: 15px;
+  color: #3d4e6e;
+  letter-spacing: 0.06em;
+  opacity: 0;
+  animation: lcTextFade 0.6s ease-out 0.55s forwards;
+}
+
+@keyframes lcFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes lcFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+@keyframes lcRingPulse {
+  0%,  100% { transform: scale(1);    opacity: 0.88; }
+  50%        { transform: scale(1.06); opacity: 1;    }
+}
+
+@keyframes lcTextFade {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* ===== Primary Quick Reply Button ===== */
+.quick-reply-primary {
+  display: block;
+  width: 100%;
+  padding: 13px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+  border: none;
+  cursor: pointer;
+  letter-spacing: 0.06em;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.38), 0 2px 8px rgba(37, 99, 235, 0.20);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.quick-reply-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.48), 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.quick-reply-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.30);
+}
