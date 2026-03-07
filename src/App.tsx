@@ -88,6 +88,8 @@ function App() {
     currentView: 'chat', chatMessages: [], moments: [], screenshotHelper: null,
   });
   const [followUpReminder, setFollowUpReminder] = useState<FollowUpReminder | null>(null);
+  const [collapseLeft, setCollapseLeft] = useState(false);
+  const [collapseRight, setCollapseRight] = useState(false);
 
   // Recording timer
   const recordingTimerRef = useRef<number | null>(null);
@@ -431,13 +433,20 @@ function App() {
     return (
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
         <div className="field-layout">
-          <div className="field-col">
-            <div className="field-col-header">
-              <div className="field-col-header-title">代理人记忆</div>
-              <div className="field-col-header-subtitle">Agent Memory</div>
+          {collapseLeft ? (
+            <div className="field-col-collapsed">
+              <button className="field-col-expand-btn" onClick={() => setCollapseLeft(false)} title="展开">▶</button>
             </div>
-            <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
-          </div>
+          ) : (
+            <div className="field-col">
+              <div className="field-col-header">
+                <div className="field-col-header-title">代理人记忆</div>
+                <div className="field-col-header-subtitle">Agent Memory</div>
+                <button className="field-col-collapse-btn" onClick={() => setCollapseLeft(true)} title="折叠">◀</button>
+              </div>
+              <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
+            </div>
+          )}
           <div className="field-col">
             <div className="field-col-header">
               <div className="field-col-header-title">AI 助理对话</div>
@@ -448,22 +457,29 @@ function App() {
               <div className="phone-screen">{centerContent}</div>
             </div>
           </div>
-          <div className="field-col">
-            <div className="field-col-header">
-              <div className="field-col-header-title">应用视窗</div>
-              <div className="field-col-header-subtitle">Execution Panel</div>
+          {collapseRight ? (
+            <div className="field-col-collapsed">
+              <button className="field-col-expand-btn" onClick={() => setCollapseRight(false)} title="展开">◀</button>
             </div>
-            <div className="phone-frame">
-              <div className="phone-notch" />
-              <div className="phone-screen" style={{
-                background: executionPanel.currentApp === 'recorder' ? '#1a1a2e'
-                  : executionPanel.currentApp === 'home' ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)'
-                  : '#EDEDED'
-              }}>
-                {renderExecutionPanel()}
+          ) : (
+            <div className="field-col">
+              <div className="field-col-header">
+                <div className="field-col-header-title">应用视窗</div>
+                <div className="field-col-header-subtitle">Execution Panel</div>
+                <button className="field-col-collapse-btn" onClick={() => setCollapseRight(true)} title="折叠">▶</button>
+              </div>
+              <div className="phone-frame">
+                <div className="phone-notch" />
+                <div className="phone-screen" style={{
+                  background: executionPanel.currentApp === 'recorder' ? '#1a1a2e'
+                    : executionPanel.currentApp === 'home' ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)'
+                    : '#EDEDED'
+                }}>
+                  {renderExecutionPanel()}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
         {renderFollowupPopup()}
       </div>

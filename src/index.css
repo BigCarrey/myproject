@@ -1890,6 +1890,7 @@ html, body, #root {
 .field-layout {
   display: flex;
   align-items: flex-start;
+  justify-content: center;
   gap: 20px;
   height: 100%;
 }
@@ -1909,6 +1910,7 @@ html, body, #root {
   gap: 3px;
   flex-shrink: 0;
   padding: 4px 0 12px;
+  position: relative;
 }
 
 .field-col-header-title {
@@ -1937,4 +1939,60 @@ html, body, #root {
   flex: 1;
   min-height: 0;
   height: auto;
+}
+
+.field-col-collapsed {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  flex-shrink: 0;
+  height: 100%;
+}
+
+.field-col-expand-btn {
+  width: 28px;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.field-col-expand-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #334155;
+}
+
+.field-col-header {
+  position: relative;
+}
+
+.field-col-collapse-btn {
+  position: absolute;
+  right: -8px;
+  top: 8px;
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  color: #94A3B8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.field-col-collapse-btn:hover {
+  background: rgba(255, 255, 255, 0.95);
+  color: #334155;
 }
