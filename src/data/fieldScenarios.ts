@@ -61,6 +61,10 @@ export const fieldScenarios: Scenario[] = [
                   ],
                 },
               },
+              {
+                type: 'show-wechat-notification',
+                data: { sender: '王哥', preview: '厉害啊兄弟！半马什么成绩？', visible: true },
+              },
             ],
           },
         ],

@@ -73,8 +73,14 @@ export interface WeChatScreenshotHelper {
   visible: boolean;
 }
 
+export interface WeChatNotification {
+  sender: string;
+  preview: string;
+  visible: boolean;
+}
+
 export interface WeChatEvent {
-  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder';
+  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder' | 'show-wechat-notification' | 'hide-wechat-notification';
   data: unknown;
 }
 
@@ -85,10 +91,11 @@ export interface FollowUpReminder {
 }
 
 export interface WeChatState {
-  currentView: 'chat' | 'moments';
+  currentView: 'home' | 'chat' | 'moments';
   chatMessages: WeChatChatMessage[];
   moments: WeChatMoment[];
   screenshotHelper: WeChatScreenshotHelper | null;
+  notification: WeChatNotification | null;
 }
 
 export interface ScenarioStep {

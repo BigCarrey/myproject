@@ -1039,6 +1039,587 @@ html, body, #root {
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* ===== Field Mode 3-Column Layout ===== */
+.field-columns-wrapper {
+  display: flex;
+  gap: 12px;
+  height: 100%;
+  align-items: stretch;
+}
+
+.field-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.field-panel-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1E3A8A;
+  letter-spacing: 0.08em;
+  padding: 4px 14px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.06);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Compact sidebar for field mode */
+.sidebar-compact {
+  width: 200px;
+  margin-right: 12px;
+  padding: 16px 8px;
+}
+
+/* Smaller phone frames for field mode */
+.phone-frame-field {
+  width: 300px;
+  flex: 1;
+}
+
+.wechat-phone-frame-field {
+  width: 300px;
+  height: 100%;
+  flex: 1;
+  margin-left: 0;
+}
+
+/* ===== Agent Memory Panel ===== */
+.field-memory-panel {
+  width: 280px;
+  flex: 1;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 28px;
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.field-memory-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.field-memory-empty-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.field-memory-empty-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1E3A8A;
+  margin-bottom: 8px;
+}
+
+.field-memory-empty-desc {
+  font-size: 12px;
+  color: #64748B;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.field-memory-empty-hints {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.field-memory-hint-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: rgba(59, 130, 246, 0.06);
+  border-radius: 10px;
+  font-size: 11px;
+  color: #475569;
+  border: 1px solid rgba(59, 130, 246, 0.10);
+}
+
+.field-memory-hint-icon {
+  font-size: 14px;
+}
+
+.field-memory-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ===== Phone Home Screen ===== */
+.phone-home-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  padding: 0;
+}
+
+.phone-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 14px 4px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.phone-status-time {
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.phone-status-icons {
+  display: flex;
+  gap: 4px;
+  font-size: 9px;
+  opacity: 0.8;
+}
+
+.phone-home-date {
+  text-align: center;
+  padding: 12px 0 16px;
+  color: white;
+}
+
+.phone-home-weekday {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-bottom: 2px;
+}
+
+.phone-home-clock {
+  font-size: 40px;
+  font-weight: 200;
+  letter-spacing: 0.05em;
+}
+
+.phone-home-apps-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px 10px;
+  padding: 0 20px;
+  flex: 1;
+  align-content: start;
+}
+
+.phone-home-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 12px;
+  transition: opacity 0.15s;
+}
+
+.phone-home-app:hover {
+  opacity: 0.8;
+}
+
+.phone-home-app-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.phone-home-app-name {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.phone-home-dock {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px 24px 16px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: auto;
+}
+
+/* ===== AI Input Method (keyboard style) ===== */
+.ai-input-method {
+  display: flex;
+  flex-direction: column;
+  background: #D1D5DB;
+  flex-shrink: 0;
+}
+
+.ai-input-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #F3F4F6;
+  padding: 6px 10px;
+  border-top: 1px solid #E5E5E5;
+}
+
+.ai-input-bar-field {
+  flex: 1;
+  height: 30px;
+  background: white;
+  border: 1px solid #D1D5DB;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+}
+
+.ai-input-bar-cursor {
+  width: 1px;
+  height: 16px;
+  background: #333;
+  animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.ai-input-bar-mic,
+.ai-input-bar-emoji,
+.ai-input-bar-plus {
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.ai-screenshot-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 5px 10px;
+  font-size: 11px;
+}
+
+.ai-screenshot-thumb {
+  font-size: 16px;
+}
+
+.ai-screenshot-label {
+  color: rgba(255, 255, 255, 0.7);
+  flex: 1;
+}
+
+.ai-screenshot-arrow {
+  color: #07C160;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+/* AI Suggestion panel (expanded input method) */
+.ai-suggestion-panel {
+  background: #F9FAFB;
+  border-top: 1px solid #E5E7EB;
+  padding: 8px 10px 6px;
+}
+
+.ai-suggestion-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.ai-suggestion-customer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+}
+
+.ai-suggestion-avatar {
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+  background: #5B8DEF;
+  color: white;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-suggestion-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #111;
+}
+
+.ai-suggestion-chevron {
+  font-size: 10px;
+  color: #666;
+}
+
+.ai-suggestion-close {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  font-size: 9px;
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-suggestion-prompt {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 6px;
+  padding: 4px 8px;
+  background: rgba(59, 130, 246, 0.08);
+  border-radius: 6px;
+}
+
+.ai-suggestion-result {
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  border: 1px solid #E5E7EB;
+  margin-bottom: 6px;
+}
+
+.ai-suggestion-result-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #64748B;
+  margin-bottom: 5px;
+}
+
+.ai-suggestion-star {
+  color: #3B82F6;
+  font-size: 12px;
+}
+
+.ai-suggestion-switch {
+  margin-left: auto;
+  color: #3B82F6;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.ai-suggestion-text {
+  font-size: 11px;
+  color: #1F2937;
+  line-height: 1.6;
+  max-height: 60px;
+  overflow-y: auto;
+}
+
+.ai-suggestion-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.ai-suggestion-stop {
+  font-size: 11px;
+  color: #6B7280;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+/* Phone keyboard */
+.phone-keyboard {
+  background: #D1D5DB;
+  padding: 4px 4px 2px;
+}
+
+.phone-keyboard-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.phone-keyboard-key {
+  background: white;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 4px;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  font-family: inherit;
+  color: #111;
+  transition: background 0.1s;
+}
+
+.phone-keyboard-key:active {
+  background: #E5E7EB;
+}
+
+.phone-keyboard-bottom {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.phone-keyboard-key-sym,
+.phone-keyboard-key-lang {
+  background: #AEB5C0;
+  font-size: 10px;
+}
+
+.phone-keyboard-key-space {
+  background: white;
+  font-size: 11px;
+  color: #555;
+}
+
+.phone-keyboard-key-send {
+  background: #2563EB;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.wechat-chat-area-compressed {
+  max-height: 120px;
+  flex: none !important;
+}
+
+/* ===== WeChat Notification Toast ===== */
+.wechat-notification-toast {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  z-index: 20;
+  background: rgba(30, 30, 30, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  animation: slideDownToast 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideDownToast {
+  from { transform: translateY(-100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.wechat-notification-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.wechat-notification-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.wechat-notification-sender {
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1px;
+}
+
+.wechat-notification-preview {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.75);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wechat-notification-dismiss {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ===== Execution Panel Center Overlay ===== */
+.execution-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  animation: fadeInOverlay 0.3s ease;
+}
+
+.execution-overlay-phone {
+  width: 340px;
+  height: 78vh;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 40px;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 1);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  position: relative;
+  animation: phonePopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes phonePopIn {
+  from { transform: scale(0.85) translateY(30px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
 /* ========== Follow-up Reminder Popup ========== */
 .followup-popup-overlay {
   position: fixed;

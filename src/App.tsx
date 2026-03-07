@@ -6,11 +6,12 @@ import { QuickReplies } from './components/QuickReplies';
 import { TypingIndicator } from './components/TypingIndicator';
 import { OverviewPage } from './components/OverviewPage';
 import { WeChatSimulator } from './components/WeChatSimulator';
+import { FieldMemoryPanel } from './components/FieldMemoryPanel';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios as backofficeScenarioData } from './data/scenarios';
 import { fieldScenarios } from './data/fieldScenarios';
-import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder } from './types';
+import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder, WeChatNotification, MessageContentType } from './types';
 
 const backofficeModules = [
   {
@@ -162,6 +163,25 @@ const fieldModules = [
   },
 ];
 
+// Message types shown in 对话调度 (conversation dispatch phone)
+const DISPATCH_TYPES: MessageContentType[] = [
+  'text',
+  'field-moments-post',
+  'field-reply-preview',
+  'field-sales-script',
+  'field-materials',
+];
+
+// Message types shown in 代理人记忆 (agent memory panel)
+const MEMORY_TYPES: MessageContentType[] = [
+  'field-ai-analysis',
+  'field-customer-profile',
+  'field-needs-analysis',
+  'field-gap-diagnosis',
+  'field-product-plans',
+  'field-commission',
+];
+
 function App() {
   const [mode, setMode] = useState<'backoffice' | 'field'>('backoffice');
 
@@ -178,16 +198,20 @@ function App() {
   const lastTranscriptRef = useRef<string>('');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
-  const [showOverview, setShowOverview] = useState(false);  // manual change
+  const [showOverview, setShowOverview] = useState(false);
   const [transition, setTransition] = useState<{ icon: string; label: string } | null>(null);
 
   // WeChat simulator state (only used in field mode)
   const [wechatState, setWechatState] = useState<WeChatState>({
-    currentView: 'chat',
+    currentView: 'home',
     chatMessages: [],
     moments: [],
     screenshotHelper: null,
+    notification: null,
   });
+
+  // Execution panel focus (center overlay) state
+  const [executionFocused, setExecutionFocused] = useState(false);
 
   // Follow-up reminder popup state
   const [followUpReminder, setFollowUpReminder] = useState<FollowUpReminder | null>(null);
@@ -197,6 +221,18 @@ function App() {
     events.forEach((evt) => {
       if (evt.type === 'show-followup-reminder') {
         setFollowUpReminder(evt.data as FollowUpReminder);
+        return;
+      }
+      if (evt.type === 'show-wechat-notification') {
+        const notif = evt.data as WeChatNotification;
+        // Delay notification by 2 seconds after moments view switches
+        setTimeout(() => {
+          setWechatState((prev) => ({ ...prev, notification: notif }));
+        }, 2000);
+        return;
+      }
+      if (evt.type === 'hide-wechat-notification') {
+        setWechatState((prev) => ({ ...prev, notification: null }));
         return;
       }
       setWechatState((prev) => {
@@ -209,8 +245,17 @@ function App() {
             return { ...prev, chatMessages: evt.data as WeChatChatMessage[] };
           case 'set-moments':
             return { ...prev, moments: evt.data as WeChatMoment[] };
-          case 'switch-view':
-            return { ...prev, currentView: evt.data as 'chat' | 'moments' };
+          case 'switch-view': {
+            const newView = evt.data as 'home' | 'chat' | 'moments';
+            // When switching to moments, briefly focus execution panel
+            if (newView === 'moments') {
+              setTimeout(() => {
+                setExecutionFocused(true);
+                setTimeout(() => setExecutionFocused(false), 3500);
+              }, 300);
+            }
+            return { ...prev, currentView: newView };
+          }
           case 'show-screenshot-helper':
             return { ...prev, screenshotHelper: evt.data as WeChatState['screenshotHelper'] };
           case 'hide-screenshot-helper':
@@ -227,7 +272,6 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Register speak callbacks so useChat triggers speech synchronously with messages
   useEffect(() => {
     const noop = () => {};
     chat.registerSpeak(
@@ -236,7 +280,6 @@ function App() {
     );
   }, [autoSpeak, speech.speak, speech.enqueueSpeak, chat.registerSpeak]);
 
-  // Register WeChat event handler for field mode synchronization
   useEffect(() => {
     if (mode === 'field') {
       chat.registerWeChatEvent(handleWeChatEvents);
@@ -245,21 +288,18 @@ function App() {
     }
   }, [mode, chat.registerWeChatEvent, handleWeChatEvents]);
 
-  // Auto scroll to bottom
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chat.messages, chat.isTyping, chat.quickReplies]);
 
-  // Handle voice transcript submission
   useEffect(() => {
     if (speech.isListening) return;
     if (!speech.transcript) return;
     const text = speech.transcript.trim();
     if (!text) return;
     if (text === lastTranscriptRef.current) return;
-
     lastTranscriptRef.current = text;
     chat.handleUserMessage(text);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -269,9 +309,7 @@ function App() {
     (moduleId: string) => {
       const mod = currentModules.find((m) => m.id === moduleId);
       if (!mod) return;
-
       setActiveModule(moduleId);
-
       if (autoSpeak && mod.narration) {
         setTransition({ icon: mod.icon, label: mod.name });
         speech.narrate(mod.narration, () => {
@@ -328,11 +366,10 @@ function App() {
     setActiveModule(null);
     speech.stopSpeaking();
     setTransition(null);
-    // Reset WeChat state
-    setWechatState({ currentView: 'chat', chatMessages: [], moments: [], screenshotHelper: null });
+    setExecutionFocused(false);
+    setWechatState({ currentView: 'home', chatMessages: [], moments: [], screenshotHelper: null, notification: null });
     setFollowUpReminder(null);
 
-    // Reinitialize chat with appropriate welcome after state settles
     setTimeout(() => {
       if (newMode === 'backoffice') {
         chat.initChat();
@@ -345,6 +382,15 @@ function App() {
     }, 50);
   }, [mode, chat, speech]);
 
+  // Dispatch messages – shown in 对话调度 phone
+  const dispatchMessages = useMemo(
+    () => chat.messages.filter((m) => DISPATCH_TYPES.includes(m.type as MessageContentType)),
+    [chat.messages]
+  );
+
+  // All messages – passed to FieldMemoryPanel for memory extraction
+  const allMessages = chat.messages;
+
   if (showOverview) {
     return (
       <OverviewPage
@@ -354,6 +400,183 @@ function App() {
     );
   }
 
+  // ── Field mode layout ─────────────────────────────────────────────────────
+  if (mode === 'field') {
+    const wechatProps = {
+      currentView: wechatState.currentView,
+      chatMessages: wechatState.chatMessages,
+      moments: wechatState.moments,
+      screenshotHelper: wechatState.screenshotHelper,
+      notification: wechatState.notification,
+      onSwitchView: (v: 'home' | 'chat' | 'moments') => setWechatState((prev) => ({ ...prev, currentView: v })),
+      onDismissNotification: () => setWechatState((prev) => ({ ...prev, notification: null })),
+      onNotificationClick: () => {
+        setWechatState((prev) => ({ ...prev, currentView: 'chat', notification: null }));
+      },
+    };
+
+    return (
+      <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
+        {/* Left Sidebar Navigation */}
+        <div className="sidebar sidebar-compact">
+          <div className="sidebar-header">
+            <div>
+              <h2 className="sidebar-title" style={{ fontSize: 17 }}>万能营销</h2>
+              <span style={{ fontSize: '11px', color: '#D4AF37', letterSpacing: '0.15em', fontWeight: 600 }}>PRO</span>
+            </div>
+          </div>
+          <div className="sidebar-label">外勤场景</div>
+          <nav className="sidebar-nav">
+            {fieldModules.map((mod) => (
+              <button
+                key={mod.id}
+                className={`sidebar-item ${activeModule === mod.id ? 'sidebar-item-active' : ''}`}
+                onClick={() => handleModuleClick(mod.id)}
+              >
+                <span
+                  className="sidebar-icon"
+                  style={{ background: activeModule === mod.id ? mod.color : undefined }}
+                >
+                  {mod.icon}
+                </span>
+                <div className="sidebar-item-text">
+                  <span className="sidebar-item-name" style={{ fontSize: 12 }}>{mod.name}</span>
+                  <span className="sidebar-item-timing">{mod.timing}</span>
+                </div>
+                {activeModule === mod.id && (
+                  <span className="sidebar-active-dot" style={{ background: mod.color }} />
+                )}
+              </button>
+            ))}
+          </nav>
+          <div className="sidebar-footer">
+            <p>智能销售助手</p>
+            <p>点击场景开始演示</p>
+          </div>
+          <button
+            className="mode-toggle-tab"
+            onClick={handleModeToggle}
+            title="切换到内勤场景"
+          >
+            内勤
+          </button>
+        </div>
+
+        {/* 3-Column Field Layout */}
+        <div className="field-columns-wrapper">
+          {/* ── 对话调度 ── */}
+          <div className="field-column">
+            <div className="field-panel-label">对话调度</div>
+            <div className="phone-frame phone-frame-field">
+              <div className="phone-notch" />
+              <div className="phone-screen">
+                {transition ? (
+                  <div className="scene-transition">
+                    <div className="scene-transition-icon">{transition.icon}</div>
+                    <div className="scene-transition-label">{transition.label}</div>
+                  </div>
+                ) : (
+                  <>
+                    <Header
+                      isSpeaking={speech.isSpeaking}
+                      onStopSpeaking={speech.stopSpeaking}
+                      autoSpeak={autoSpeak}
+                      onToggleAutoSpeak={() => {
+                        setAutoSpeak((v) => {
+                          if (v) speech.stopSpeaking();
+                          return !v;
+                        });
+                      }}
+                    />
+                    <div
+                      ref={chatContainerRef}
+                      className="flex-1 overflow-y-auto pt-4 pb-28"
+                      style={{ WebkitOverflowScrolling: 'touch' }}
+                    >
+                      {dispatchMessages.map((msg) => (
+                        <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
+                      ))}
+                      {chat.isTyping && <TypingIndicator />}
+                      {chat.quickReplies.length > 0 && !chat.isTyping && (
+                        <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
+                      )}
+                      <div ref={messagesEndRef} />
+                    </div>
+                    <InputBar
+                      onSend={chat.handleUserMessage}
+                      onVoiceStart={speech.startListening}
+                      onVoiceStop={speech.stopListening}
+                      isListening={speech.isListening}
+                      transcript={speech.transcript}
+                      disabled={chat.isTyping}
+                    />
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* ── 代理人记忆 ── */}
+          <div className="field-column">
+            <div className="field-panel-label">代理人记忆</div>
+            <FieldMemoryPanel messages={allMessages} onSpeak={handleSpeak} />
+          </div>
+
+          {/* ── 执行面板 ── */}
+          <div className="field-column">
+            <div className="field-panel-label">执行面板</div>
+            <div className="wechat-phone-frame wechat-phone-frame-field">
+              <div className="phone-notch" />
+              <div className="phone-screen" style={{ background: '#EDEDED' }}>
+                <WeChatSimulator {...wechatProps} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Execution panel focus overlay (after Moments posting) */}
+        {executionFocused && (
+          <div className="execution-overlay" onClick={() => setExecutionFocused(false)}>
+            <div className="execution-overlay-phone" onClick={(e) => e.stopPropagation()}>
+              <div className="phone-notch" />
+              <div className="phone-screen" style={{ background: '#EDEDED' }}>
+                <WeChatSimulator {...wechatProps} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Follow-up Reminder Popup */}
+        {followUpReminder && (
+          <div className="followup-popup-overlay" onClick={() => setFollowUpReminder(null)}>
+            <div className="followup-popup" onClick={(e) => e.stopPropagation()}>
+              <div className="followup-popup-header">
+                <span className="followup-popup-icon">⏰</span>
+                <span className="followup-popup-title">{followUpReminder.title}</span>
+                <button className="followup-popup-close" onClick={() => setFollowUpReminder(null)}>✕</button>
+              </div>
+              <div className="followup-popup-body">
+                {followUpReminder.schedule.map((item, i) => (
+                  <div key={i} className="followup-popup-item">
+                    <div className="followup-popup-date">{item.date}</div>
+                    <div className="followup-popup-action">{item.action}</div>
+                  </div>
+                ))}
+              </div>
+              {followUpReminder.summary && (
+                <div className="followup-popup-summary">{followUpReminder.summary}</div>
+              )}
+              <button className="followup-popup-confirm" onClick={() => setFollowUpReminder(null)}>
+                知道了
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ── Backoffice mode layout (unchanged) ───────────────────────────────────
   return (
     <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
       {/* Left Sidebar Navigation */}
@@ -365,10 +588,10 @@ function App() {
           </div>
         </div>
 
-        <div className="sidebar-label">{mode === 'backoffice' ? '内勤场景' : '外勤场景'}</div>
+        <div className="sidebar-label">内勤场景</div>
 
         <nav className="sidebar-nav">
-          {currentModules.map((mod) => (
+          {backofficeModules.map((mod) => (
             <button
               key={mod.id}
               className={`sidebar-item ${activeModule === mod.id ? 'sidebar-item-active' : ''}`}
@@ -394,21 +617,20 @@ function App() {
         </nav>
 
         <div className="sidebar-footer">
-          <p>{mode === 'backoffice' ? '智能辅导系统' : '智能销售助手'}</p>
+          <p>智能辅导系统</p>
           <p>点击场景开始演示</p>
         </div>
 
-        {/* Hidden mode toggle tab */}
         <button
           className="mode-toggle-tab"
           onClick={handleModeToggle}
-          title={mode === 'backoffice' ? '切换到外勤场景' : '切换到内勤场景'}
+          title="切换到外勤场景"
         >
-          {mode === 'backoffice' ? '外勤' : '内勤'}
+          外勤
         </button>
       </div>
 
-      {/* Phone Mockup - Product UI */}
+      {/* Phone Mockup */}
       <div className="phone-frame">
         <div className="phone-notch" />
         <div className="phone-screen">
@@ -430,8 +652,6 @@ function App() {
                   });
                 }}
               />
-
-              {/* Chat messages area */}
               <div
                 ref={chatContainerRef}
                 className="flex-1 overflow-y-auto pt-4 pb-28"
@@ -440,18 +660,12 @@ function App() {
                 {chat.messages.map((msg) => (
                   <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
                 ))}
-
                 {chat.isTyping && <TypingIndicator />}
-
-                {/* Quick replies */}
                 {chat.quickReplies.length > 0 && !chat.isTyping && (
                   <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
                 )}
-
                 <div ref={messagesEndRef} />
               </div>
-
-              {/* Input area */}
               <InputBar
                 onSend={chat.handleUserMessage}
                 onVoiceStart={speech.startListening}
@@ -464,49 +678,6 @@ function App() {
           )}
         </div>
       </div>
-
-      {/* WeChat Simulator - only in field mode */}
-      {mode === 'field' && (
-        <div className="wechat-phone-frame">
-          <div className="phone-notch" />
-          <div className="phone-screen" style={{ background: '#EDEDED' }}>
-            <WeChatSimulator
-              currentView={wechatState.currentView}
-              chatMessages={wechatState.chatMessages}
-              moments={wechatState.moments}
-              screenshotHelper={wechatState.screenshotHelper}
-              onSwitchView={(v) => setWechatState((prev) => ({ ...prev, currentView: v }))}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Follow-up Reminder Popup */}
-      {followUpReminder && (
-        <div className="followup-popup-overlay" onClick={() => setFollowUpReminder(null)}>
-          <div className="followup-popup" onClick={(e) => e.stopPropagation()}>
-            <div className="followup-popup-header">
-              <span className="followup-popup-icon">⏰</span>
-              <span className="followup-popup-title">{followUpReminder.title}</span>
-              <button className="followup-popup-close" onClick={() => setFollowUpReminder(null)}>✕</button>
-            </div>
-            <div className="followup-popup-body">
-              {followUpReminder.schedule.map((item, i) => (
-                <div key={i} className="followup-popup-item">
-                  <div className="followup-popup-date">{item.date}</div>
-                  <div className="followup-popup-action">{item.action}</div>
-                </div>
-              ))}
-            </div>
-            {followUpReminder.summary && (
-              <div className="followup-popup-summary">{followUpReminder.summary}</div>
-            )}
-            <button className="followup-popup-confirm" onClick={() => setFollowUpReminder(null)}>
-              知道了
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
