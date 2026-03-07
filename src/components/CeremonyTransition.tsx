@@ -47,7 +47,7 @@ export function CeremonyTransition({ onComplete }: CeremonyTransitionProps) {
 
       {/* Text */}
       <div className={`ceremony-text ${phase === 'text' || phase === 'fade-out' ? 'ceremony-text-visible' : ''}`}>
-        「 你的AI营销助理 正在深度理解和对齐你的记忆 」
+        「 你的AI营销助理 正在生成 」
       </div>
     </div>
   );
