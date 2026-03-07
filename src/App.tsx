@@ -11,7 +11,7 @@ import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios as backofficeScenarioData } from './data/scenarios';
 import { fieldScenarios } from './data/fieldScenarios';
-import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder, WeChatNotification } from './types';
+import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder, WeChatNotification, MessageContentType } from './types';
 
 const backofficeModules = [
   {
