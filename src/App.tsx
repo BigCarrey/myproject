@@ -447,6 +447,11 @@ function App() {
                 />
               </>
             )}
+
+            {/* Launch Ceremony — scoped to the chat column */}
+            {showLaunchCeremony && (
+              <LaunchCeremony onComplete={() => setShowLaunchCeremony(false)} />
+            )}
           </div>
         </div>
 
@@ -473,11 +478,6 @@ function App() {
         >
           内勤
         </button>
-
-        {/* Launch Ceremony Overlay */}
-        {showLaunchCeremony && (
-          <LaunchCeremony onComplete={() => setShowLaunchCeremony(false)} />
-        )}
 
         {/* Follow-up Reminder Popup */}
         {followUpReminder && (

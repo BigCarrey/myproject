@@ -99,7 +99,7 @@ export function LaunchCeremony({ onComplete }: LaunchCeremonyProps) {
       </div>
 
       <p className="launch-ceremony-text">
-        「 <strong>你的营销分身</strong>，正式上线 」
+        「 <strong>你的AI营销助理</strong>，正式上线 」
       </p>
     </div>
   );
