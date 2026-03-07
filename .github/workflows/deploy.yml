@@ -2,7 +2,7 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ['main', 'claude/insurance-ai-chatbot-demo-sXTnW', 'claude/add-demo-navigation-M2k9P']
+    branches: ['main', 'claude/insurance-ai-chatbot-demo-sXTnW', 'claude/add-demo-navigation-M2k9P', 'claude/add-conversation-dispatch-ui-8D1n8']
 
 permissions:
   contents: read
