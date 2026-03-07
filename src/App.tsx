@@ -33,7 +33,7 @@ const backofficeModules = [
 const initialAgentMemory: AgentMemory = {
   name: '小李',
   gender: '男',
-  age: 28,
+  age: 32,
   location: '深圳',
   education: '本科',
   performance: '月均FYC 1.2万',

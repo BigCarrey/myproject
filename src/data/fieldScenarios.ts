@@ -12,8 +12,8 @@ export const memoryCollectionScenario: Scenario = {
       aiMessages: [
         {
           type: 'text',
-          content: '嗨小李！👋 我是你的AI营销助理，以后我们就是最默契的搭档了。\n\n在正式帮你拓客之前，想先聊聊你这个人——真正懂你，我才能给你最贴合的支持，而不是甩给你一堆通用模板。\n\n先来个轻松的：**你平时有啥爱好？**运动、读书、刷剧……什么都行，随便聊聊～',
-          speechText: '嗨小李！我是你的AI营销助理，以后我们就是最默契的搭档了。先来个轻松的，你平时有啥爱好？',
+          content: '嗨小李！👋 我是你的AI营销助理，以后就是搭档了。\n\n先聊两句再开始——越了解你，帮你越准。**平时有啥爱好？**随便说说～',
+          speechText: '嗨小李！我是你的AI营销助理，先聊两句再开始。平时有啥爱好？',
           wechatEvents: [
             {
               type: 'update-memory',
