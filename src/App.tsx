@@ -440,7 +440,7 @@ function App() {
           </div>
           <div className="field-col">
             <div className="field-col-header">
-              <div className="field-col-header-title">对话调度</div>
+              <div className="field-col-header-title">AI 助理对话</div>
               <div className="field-col-header-subtitle">Dialog Control</div>
             </div>
             <div className="phone-frame">
@@ -450,7 +450,7 @@ function App() {
           </div>
           <div className="field-col">
             <div className="field-col-header">
-              <div className="field-col-header-title">执行面板</div>
+              <div className="field-col-header-title">应用视窗</div>
               <div className="field-col-header-subtitle">Execution Panel</div>
             </div>
             <div className="phone-frame">
