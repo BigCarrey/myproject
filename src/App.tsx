@@ -435,16 +435,16 @@ function App() {
         <div className="field-layout">
           {collapseLeft ? (
             <div className="field-col-collapsed">
-              <button className="field-col-expand-btn" onClick={() => setCollapseLeft(false)} title="展开">▶</button>
+              <button className="field-col-toggle-btn" onClick={() => setCollapseLeft(false)} title="展开">▶</button>
             </div>
           ) : (
-            <div className="field-col">
+            <div className="field-col" style={{ position: 'relative' }}>
               <div className="field-col-header">
                 <div className="field-col-header-title">代理人记忆</div>
                 <div className="field-col-header-subtitle">Agent Memory</div>
-                <button className="field-col-collapse-btn" onClick={() => setCollapseLeft(true)} title="折叠">◀</button>
               </div>
               <AgentMemoryPanel memory={agentMemory} onModeToggle={handleModeToggle} mode={mode} />
+              <button className="field-col-toggle-btn field-col-toggle-right" onClick={() => setCollapseLeft(true)} title="折叠">◀</button>
             </div>
           )}
           <div className="field-col">
@@ -459,14 +459,13 @@ function App() {
           </div>
           {collapseRight ? (
             <div className="field-col-collapsed">
-              <button className="field-col-expand-btn" onClick={() => setCollapseRight(false)} title="展开">◀</button>
+              <button className="field-col-toggle-btn" onClick={() => setCollapseRight(false)} title="展开">◀</button>
             </div>
           ) : (
-            <div className="field-col">
+            <div className="field-col" style={{ position: 'relative' }}>
               <div className="field-col-header">
                 <div className="field-col-header-title">应用视窗</div>
                 <div className="field-col-header-subtitle">Execution Panel</div>
-                <button className="field-col-collapse-btn" onClick={() => setCollapseRight(true)} title="折叠">▶</button>
               </div>
               <div className="phone-frame">
                 <div className="phone-notch" />
@@ -478,6 +477,7 @@ function App() {
                   {renderExecutionPanel()}
                 </div>
               </div>
+              <button className="field-col-toggle-btn field-col-toggle-left" onClick={() => setCollapseRight(true)} title="折叠">▶</button>
             </div>
           )}
         </div>
