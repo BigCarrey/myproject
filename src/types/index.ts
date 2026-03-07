@@ -74,7 +74,25 @@ export interface WeChatScreenshotHelper {
 }
 
 export interface WeChatEvent {
-  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder';
+  type:
+    | 'add-chat'
+    | 'add-moment'
+    | 'show-screenshot-helper'
+    | 'hide-screenshot-helper'
+    | 'switch-view'
+    | 'set-chat-messages'
+    | 'set-moments'
+    | 'show-followup-reminder'
+    | 'update-memory'
+    | 'add-client'
+    | 'update-client'
+    | 'switch-app'
+    | 'swap-panels'
+    | 'unswap-panels'
+    | 'add-calendar-event'
+    | 'start-recording'
+    | 'stop-recording'
+    | 'set-notification';
   data: unknown;
 }
 
@@ -121,3 +139,74 @@ export interface ChatState {
   isListening: boolean;
   isSpeaking: boolean;
 }
+
+// ===== Agent Memory Types (Field Mode) =====
+
+export interface MemoryItem {
+  id: string;
+  category: 'thought' | 'preference' | 'habit' | 'recent' | 'client-update';
+  content: string;
+  timestamp: number;
+  isNew?: boolean;
+}
+
+export interface ClientMemory {
+  name: string;
+  avatar: string;
+  status: 'potential' | 'active' | 'closed';
+  addedReason: string;
+  profile: Record<string, string>;
+  memories: MemoryItem[];
+}
+
+export interface AgentMemory {
+  name: string;
+  gender: string;
+  age: number;
+  location: string;
+  education: string;
+  performance: string;
+  joinDate: string;
+  understandingLevel: number; // 0-100
+
+  // Dynamic fields
+  interests: string[];
+  socialCircle: string;
+  goals: string;
+  challenges: string;
+  memories: MemoryItem[];
+  clients: ClientMemory[];
+}
+
+// ===== Execution Panel Types =====
+
+export type PhoneApp = 'home' | 'wechat-chat' | 'wechat-moments' | 'calendar' | 'recorder' | 'memo' | 'camera' | 'photos' | 'phone' | 'sms';
+
+export interface CalendarEvent {
+  title: string;
+  date: string;
+  time: string;
+  location?: string;
+  color?: string;
+}
+
+export interface PhoneNotification {
+  app: string;
+  title: string;
+  body: string;
+  icon: string;
+  timestamp: string;
+}
+
+export interface ExecutionPanelState {
+  currentApp: PhoneApp;
+  wechatState: WeChatState;
+  calendarEvents: CalendarEvent[];
+  isRecording: boolean;
+  recordingDuration: number;
+  notification: PhoneNotification | null;
+}
+
+// ===== Field Mode Phase =====
+
+export type FieldPhase = 'memory-collection' | 'ceremony' | 'main';

@@ -1181,3 +1181,736 @@ html, body, #root {
 .followup-popup-confirm:hover {
   opacity: 0.9;
 }
+
+/* ========== Agent Memory Panel ========== */
+.memory-panel {
+  width: 280px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-radius: 24px;
+  box-shadow: 0 8px 30px rgba(37, 99, 235, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.80);
+  margin-right: 24px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.memory-panel-header {
+  padding: 20px 16px 12px;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.memory-panel-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.memory-panel-avatar-icon {
+  font-size: 22px;
+}
+
+.memory-panel-agent-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.memory-panel-agent-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1E3A8A;
+}
+
+.memory-panel-agent-meta {
+  font-size: 11px;
+  color: #94A3B8;
+  margin-top: 1px;
+}
+
+.memory-panel-understanding {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.memory-panel-understanding-label {
+  font-size: 10px;
+  color: #94A3B8;
+}
+
+.memory-panel-understanding-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #3B82F6;
+  line-height: 1.2;
+}
+
+.memory-panel-understanding-bar {
+  width: 48px;
+  height: 3px;
+  background: rgba(59, 130, 246, 0.12);
+  border-radius: 2px;
+  margin-top: 3px;
+  overflow: hidden;
+}
+
+.memory-panel-understanding-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3B82F6, #6366F1);
+  border-radius: 2px;
+  transition: width 0.8s ease;
+}
+
+.memory-panel-profile {
+  padding: 10px 16px;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.06);
+}
+
+.memory-panel-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #475569;
+  padding: 3px 0;
+}
+
+.memory-panel-profile-icon {
+  font-size: 13px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.memory-panel-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 12px 0;
+  flex-wrap: wrap;
+}
+
+.memory-panel-tab {
+  padding: 5px 10px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(59, 130, 246, 0.06);
+  font-size: 11px;
+  color: #64748B;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.memory-panel-tab.active {
+  background: #1E3A8A;
+  color: #fff;
+}
+
+.memory-panel-tab-badge {
+  background: #EF4444;
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.memory-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px 12px;
+}
+
+.memory-panel-empty {
+  text-align: center;
+  color: #94A3B8;
+  font-size: 12px;
+  margin-top: 32px;
+}
+
+/* Memory item card */
+.memory-item-card {
+  background: rgba(255, 255, 255, 0.60);
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  transition: all 0.3s;
+}
+
+.memory-item-card.memory-item-new {
+  animation: memoryItemFlash 1.5s ease;
+}
+
+@keyframes memoryItemFlash {
+  0% { background: rgba(59, 130, 246, 0.20); transform: translateX(-8px); opacity: 0; }
+  30% { background: rgba(59, 130, 246, 0.15); transform: translateX(0); opacity: 1; }
+  100% { background: rgba(255, 255, 255, 0.60); }
+}
+
+.memory-item-category {
+  font-size: 10px;
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.memory-item-content {
+  font-size: 12px;
+  color: #334155;
+  line-height: 1.5;
+}
+
+/* Client cards */
+.client-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.60);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+  font-family: inherit;
+  margin-bottom: 6px;
+}
+
+.client-card:hover {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.client-card-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #5B8DEF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.client-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.client-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1E293B;
+}
+
+.client-card-reason {
+  font-size: 10px;
+  color: #94A3B8;
+  margin-top: 1px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.client-card-status {
+  font-size: 9px;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  font-weight: 600;
+}
+
+.client-card-arrow {
+  color: #CBD5E1;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* Client detail view */
+.client-detail-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0 12px 12px;
+}
+
+.client-detail-back {
+  padding: 12px 4px;
+  font-size: 13px;
+  color: #3B82F6;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.client-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 4px 16px;
+}
+
+.client-detail-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: #5B8DEF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.client-detail-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1E3A8A;
+}
+
+.client-detail-status {
+  font-size: 12px;
+  color: #64748B;
+  margin-top: 2px;
+}
+
+.client-detail-section-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.client-detail-profile {
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.04);
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.client-detail-profile-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(59, 130, 246, 0.06);
+}
+
+.client-detail-profile-row:last-child {
+  border-bottom: none;
+}
+
+.client-detail-profile-key {
+  color: #94A3B8;
+}
+
+.client-detail-profile-val {
+  color: #334155;
+  font-weight: 500;
+}
+
+.client-detail-memories {
+  padding-top: 4px;
+}
+
+.client-detail-empty {
+  text-align: center;
+  color: #94A3B8;
+  font-size: 12px;
+  margin-top: 24px;
+}
+
+/* ========== Phone Home Screen ========== */
+.phone-home-screen {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  color: #fff;
+  padding: 0 0 16px;
+}
+
+.phone-home-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px 8px;
+}
+
+.phone-home-time {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.phone-home-status-icons {
+  display: flex;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.phone-home-recording-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: rgba(239, 68, 68, 0.85);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.phone-home-recording-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  animation: pulse-glow 1.5s infinite;
+}
+
+.phone-home-recording-time {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Notification */
+.phone-home-notification {
+  margin: 8px 16px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.20);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.phone-home-notification-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.phone-home-notification-icon {
+  font-size: 14px;
+}
+
+.phone-home-notification-app {
+  font-size: 11px;
+  font-weight: 600;
+  flex: 1;
+}
+
+.phone-home-notification-time {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+.phone-home-notification-title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.phone-home-notification-body {
+  font-size: 11px;
+  opacity: 0.8;
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+/* Calendar widget */
+.phone-home-calendar-widget {
+  margin: 6px 16px 4px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.20);
+}
+
+.phone-home-widget-title {
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  opacity: 0.9;
+}
+
+.phone-home-calendar-event {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.phone-home-calendar-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.phone-home-calendar-info {
+  flex: 1;
+}
+
+.phone-home-calendar-event-title {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.phone-home-calendar-event-time {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* App grid */
+.phone-home-app-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px 8px;
+  padding: 16px 28px;
+  align-content: center;
+}
+
+.phone-home-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.15s;
+}
+
+.phone-home-app:active {
+  transform: scale(0.9);
+}
+
+.phone-home-app-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.phone-home-app-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #EF4444;
+  color: #fff;
+  font-size: 10px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.phone-home-app-recording-dot {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #EF4444;
+  border: 2px solid #fff;
+}
+
+.phone-home-app-name {
+  font-size: 11px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Dock */
+.phone-home-dock {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 12px 28px 8px;
+  margin: 0 16px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+}
+
+.phone-home-dock-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.phone-home-dock-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.phone-home-dock-name {
+  font-size: 10px;
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* ========== Ceremony Transition ========== */
+.ceremony-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 30%, #b3c6f7 60%, #e8eaf6 100%);
+  position: relative;
+  overflow: hidden;
+  transition: opacity 0.8s ease;
+}
+
+.ceremony-fade-out {
+  opacity: 0;
+}
+
+.ceremony-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.ceremony-particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: ceremonyFloat ease-in-out infinite;
+}
+
+@keyframes ceremonyFloat {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+  50% { transform: translateY(-30px) scale(1.5); opacity: 0.8; }
+}
+
+.ceremony-orb {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 40px;
+}
+
+.ceremony-orb-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(180, 200, 255, 0.4) 60%, transparent 80%);
+  animation: ceremonyPulse 2s ease-in-out infinite;
+}
+
+@keyframes ceremonyPulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+.ceremony-orb-ring {
+  position: absolute;
+  inset: -15px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  animation: ceremonyRing 3s ease-in-out infinite;
+}
+
+.ceremony-orb-ring-2 {
+  inset: -30px;
+  animation-delay: 0.5s;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes ceremonyRing {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.2; }
+}
+
+.ceremony-text {
+  font-size: 14px;
+  color: #5C6BC0;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.8s ease;
+}
+
+.ceremony-text-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ========== Field Mode Phone Container with Swap ========== */
+.field-phones-container {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.field-phone-dialog {
+  order: 1;
+  transition: order 0s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.field-phone-execution {
+  order: 2;
+  transition: order 0s, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.field-phones-container.swapped .field-phone-dialog {
+  order: 2;
+  transform: translateX(0);
+}
+
+.field-phones-container.swapped .field-phone-execution {
+  order: 1;
+  transform: translateX(0);
+}
