@@ -30,20 +30,12 @@ export function AgentMemoryPanel({ fields, syncRate }: AgentMemoryPanelProps) {
 
   return (
     <div className="memory-panel">
-      {/* Top orb + title */}
-      <div className="memory-orb-area">
-        <div className="memory-orb">
-          <div className="memory-orb-inner" />
-          <div className="memory-orb-glow" />
-        </div>
-        <div className="memory-orb-tagline">
-          {syncRate < 15
-            ? '「 你的营销分身，正在启动 」'
-            : syncRate < 50
-            ? '「 正在了解你这个人 」'
-            : syncRate < 80
-            ? '「 我越来越懂你了 」'
-            : '「 你的分身，正在深度理解你 」'}
+      {/* Header: brain icon + title */}
+      <div className="memory-header">
+        <div className="memory-brain-icon">🧠</div>
+        <div>
+          <div className="memory-title">代理人记忆</div>
+          <div className="memory-subtitle">Agent Memory</div>
         </div>
       </div>
 

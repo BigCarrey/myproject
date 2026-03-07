@@ -381,7 +381,11 @@ function App() {
         <div className="field-column field-column-left">
           <AgentMemoryPanel
             fields={memoryFields}
-            syncRate={Math.min(100, memoryFields.filter(f => f.category !== 'static').length * 18)}
+            syncRate={
+              memoryFields.some(f => f.category === 'static')
+                ? Math.min(99, 2 + memoryFields.filter(f => f.category !== 'static').length * 4)
+                : 0
+            }
           />
         </div>
 
