@@ -11,7 +11,7 @@ import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios as backofficeScenarioData } from './data/scenarios';
 import { fieldScenarios } from './data/fieldScenarios';
-import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder, WeChatNotification, MessageContentType } from './types';
+import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder, WeChatNotification } from './types';
 
 const backofficeModules = [
   {
@@ -172,15 +172,6 @@ const DISPATCH_TYPES: MessageContentType[] = [
   'field-materials',
 ];
 
-// Message types shown in 代理人记忆 (agent memory panel)
-const MEMORY_TYPES: MessageContentType[] = [
-  'field-ai-analysis',
-  'field-customer-profile',
-  'field-needs-analysis',
-  'field-gap-diagnosis',
-  'field-product-plans',
-  'field-commission',
-];
 
 function App() {
   const [mode, setMode] = useState<'backoffice' | 'field'>('backoffice');
