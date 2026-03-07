@@ -95,6 +95,7 @@ export interface AgentMemoryField {
   label: string;
   value: string;
   category: 'static' | 'dynamic' | 'customer';
+  narrative?: string;
 }
 
 export interface WeChatEvent {

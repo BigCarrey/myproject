@@ -2,82 +2,113 @@ import type { AgentMemoryField } from '../types';
 
 interface AgentMemoryPanelProps {
   fields: AgentMemoryField[];
+  syncRate: number;
 }
 
-export function AgentMemoryPanel({ fields }: AgentMemoryPanelProps) {
+const categoryConfig: Record<string, { color: string; bg: string; label: string }> = {
+  喜好: { color: '#7C3AED', bg: 'rgba(124,58,237,0.06)', label: '喜好' },
+  社交圈: { color: '#2563EB', bg: 'rgba(37,99,235,0.06)', label: '圈子' },
+  目标: { color: '#059669', bg: 'rgba(5,150,105,0.06)', label: '目标' },
+  挑战: { color: '#DC2626', bg: 'rgba(220,38,38,0.06)', label: '挑战' },
+  客户: { color: '#9333EA', bg: 'rgba(147,51,234,0.06)', label: '客户' },
+  面谈预约: { color: '#3B82F6', bg: 'rgba(59,130,246,0.06)', label: '日程' },
+  王哥爱好: { color: '#7C3AED', bg: 'rgba(124,58,237,0.06)', label: '客户喜好' },
+  王哥家庭: { color: '#9333EA', bg: 'rgba(147,51,234,0.06)', label: '客户家庭' },
+  王哥健康: { color: '#EF4444', bg: 'rgba(239,68,68,0.06)', label: '客户健康' },
+};
+
+function getConfig(label: string, category: string) {
+  if (categoryConfig[label]) return categoryConfig[label];
+  if (category === 'customer') return { color: '#7C3AED', bg: 'rgba(124,58,237,0.06)', label: label };
+  return { color: '#3B82F6', bg: 'rgba(59,130,246,0.06)', label: label };
+}
+
+export function AgentMemoryPanel({ fields, syncRate }: AgentMemoryPanelProps) {
   const staticFields = fields.filter((f) => f.category === 'static');
-  const dynamicFields = fields.filter((f) => f.category === 'dynamic');
-  const customerFields = fields.filter((f) => f.category === 'customer');
+  const dynamicFields = fields.filter((f) => f.category === 'dynamic' || f.category === 'customer');
+  const isBuilding = syncRate < 100;
 
   return (
     <div className="memory-panel">
-      <div className="memory-header">
-        <div className="memory-avatar">🧠</div>
-        <div>
-          <div className="memory-title">代理人记忆</div>
-          <div className="memory-subtitle">Agent Memory</div>
+      {/* Top orb + title */}
+      <div className="memory-orb-area">
+        <div className="memory-orb">
+          <div className="memory-orb-inner" />
+          <div className="memory-orb-glow" />
+        </div>
+        <div className="memory-orb-tagline">
+          {syncRate < 15
+            ? '「 你的营销分身，正在启动 」'
+            : syncRate < 50
+            ? '「 正在了解你这个人 」'
+            : syncRate < 80
+            ? '「 我越来越懂你了 」'
+            : '「 你的分身，正在深度理解你 」'}
         </div>
       </div>
 
-      {/* Static Profile */}
-      <div className="memory-section">
-        <div className="memory-section-label">📋 基础画像</div>
-        <div className="memory-fields">
-          {staticFields.map((field, i) => (
-            <div key={i} className="memory-field">
-              <span className="memory-field-icon">{field.icon}</span>
-              <span className="memory-field-label">{field.label}</span>
-              <span className="memory-field-value">{field.value}</span>
-            </div>
-          ))}
+      {/* Sync rate bar */}
+      <div className="memory-sync-bar-wrap">
+        <div className="memory-sync-label">
+          <span>了解度</span>
+          <span className="memory-sync-pct">{syncRate}%</span>
+        </div>
+        <div className="memory-sync-track">
+          <div
+            className="memory-sync-fill"
+            style={{ width: `${syncRate}%` }}
+          />
         </div>
       </div>
 
-      {/* Dynamic Fields - collected through conversation */}
-      {dynamicFields.length > 0 && (
-        <div className="memory-section">
-          <div className="memory-section-label">💡 深度洞察</div>
-          <div className="memory-fields">
-            {dynamicFields.map((field, i) => (
-              <div
-                key={`dynamic-${i}`}
-                className="memory-field memory-field-dynamic animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <span className="memory-field-icon">{field.icon}</span>
-                <span className="memory-field-label">{field.label}</span>
-                <span className="memory-field-value">{field.value}</span>
-              </div>
-            ))}
+      {/* Static profile - compact chips */}
+      <div className="memory-profile-chips">
+        {staticFields.map((f, i) => (
+          <div key={i} className="memory-chip">
+            <span className="memory-chip-icon">{f.icon}</span>
+            <span className="memory-chip-text">{f.value}</span>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
 
-      {/* Customer Notes */}
-      {customerFields.length > 0 && (
-        <div className="memory-section">
-          <div className="memory-section-label">👤 客户档案</div>
-          <div className="memory-fields">
-            {customerFields.map((field, i) => (
+      {/* Dynamic memory cards - Elys-style */}
+      {dynamicFields.length > 0 ? (
+        <div className="memory-cards">
+          {dynamicFields.map((field, i) => {
+            const cfg = getConfig(field.label, field.category);
+            return (
               <div
-                key={`customer-${i}`}
-                className="memory-field memory-field-customer animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.1}s` }}
+                key={`mem-${i}`}
+                className="memory-card animate-fade-in-up"
+                style={{
+                  background: cfg.bg,
+                  borderLeft: `3px solid ${cfg.color}`,
+                  animationDelay: `${i * 0.08}s`,
+                }}
               >
-                <span className="memory-field-icon">{field.icon}</span>
-                <span className="memory-field-label">{field.label}</span>
-                <span className="memory-field-value">{field.value}</span>
+                <div className="memory-card-header">
+                  <span className="memory-card-icon">{field.icon}</span>
+                  <span className="memory-card-tag" style={{ color: cfg.color }}>
+                    {cfg.label}
+                  </span>
+                </div>
+                {field.narrative ? (
+                  <div className="memory-card-narrative">{field.narrative}</div>
+                ) : (
+                  <div className="memory-card-value">{field.value}</div>
+                )}
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      )}
-
-      {dynamicFields.length === 0 && customerFields.length === 0 && (
-        <div className="memory-empty-hint">
-          <div className="memory-empty-icon">💬</div>
-          <div className="memory-empty-text">通过AI对话收集更多信息</div>
-          <div className="memory-empty-text">记忆将实时更新...</div>
+      ) : (
+        <div className="memory-empty-state">
+          <div className="memory-empty-dots">
+            <span /><span /><span />
+          </div>
+          <div className="memory-empty-text">
+            {isBuilding ? '通过对话，我会越来越了解你……' : '开始对话，构建你的分身记忆'}
+          </div>
         </div>
       )}
     </div>

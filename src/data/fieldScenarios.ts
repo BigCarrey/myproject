@@ -8,13 +8,13 @@ export const fieldScenarios: Scenario[] = [
     description: '外勤全流程演示',
     steps: [
       // ==================== Phase 1: 初始化 - AI引导对话收集代理人信息 ====================
-      // Step 0: AI打招呼，询问兴趣爱好
+      // Step 0: AI打招呼，真实有温度，询问爱好
       {
         aiMessages: [
           {
             type: 'text',
-            content: '小李您好！我是您的AI销售助理 🤖\n\n在开始今天的工作之前，我想先更好地了解您，这样我可以为您提供更个性化的服务。\n\n**请问您平时有什么兴趣爱好？** 比如运动、读书、旅行等～',
-            speechText: '小李您好！我是您的AI销售助理。在开始工作之前，我想先更好地了解您。请问您平时有什么兴趣爱好？',
+            content: '嘿，小李~ 👋\n\n我是你的AI营销助理。不过比起「助理」，我更想做你的**营销分身**——帮你看客户、出话术、做跟进，让你把精力只花在真正值钱的地方。\n\n不过分身要好用，得先懂你这个人。\n\n**你平时有什么爱好？** 不用正式，随便说说～',
+            speechText: '嘿，小李，我是你的AI营销助理，更想做你的营销分身。分身要好用，得先懂你这个人。你平时有什么爱好？',
           },
         ],
         quickReplies: [
@@ -22,18 +22,24 @@ export const fieldScenarios: Scenario[] = [
         ],
       },
 
-      // Step 1: 收集到兴趣爱好，询问社交圈
+      // Step 1: 真实回应爱好，有洞察，问社交圈
       {
         aiMessages: [
           {
             type: 'text',
-            content: '跑步和健身，很棒的爱好！🏃‍♂️💪\n\n运动型人设在朋友圈营销中非常有优势，可以传递积极、自律的形象。\n\n**您平时的社交圈主要是哪些人呢？** 比如运动圈朋友、同事、企业客户等～',
-            speechText: '跑步和健身，很棒！运动型人设在朋友圈营销中很有优势。您平时的社交圈主要是哪些人呢？',
+            content: '跑步和健身 🏃‍♂️\n\n爱运动的人做事通常有韧性、坐得住——做保险其实最需要这个，长期主义嘛。\n\n而且「运动达人」这个人设，用在朋友圈里特别有感染力。你不是在卖保险，你是一个有生活的人，顺便帮朋友做了个靠谱的保障规划。这个差别，客户能感觉出来的。\n\n那**你平时的圈子呢**？身边大多是什么类型的人？',
+            speechText: '跑步和健身！爱运动的人通常有韧性。而且运动达人这个人设用在朋友圈里特别有感染力，客户能感觉出来。那你平时的圈子呢？',
             wechatEvents: [
               {
                 type: 'update-memory',
                 data: [
-                  { icon: '🏃', label: '兴趣爱好', value: '跑步、健身', category: 'dynamic' },
+                  {
+                    icon: '🏃',
+                    label: '喜好',
+                    value: '跑步、健身',
+                    category: 'dynamic',
+                    narrative: '爱跑步和健身，有韧性、执行力强。「运动达人」是天然的朋友圈IP——有生活感，不像在硬卖保险，客户感觉得出来。',
+                  },
                 ],
               },
             ],
@@ -44,18 +50,24 @@ export const fieldScenarios: Scenario[] = [
         ],
       },
 
-      // Step 2: 收集社交圈，询问工作目标
+      // Step 2: 回应社交圈，指出与任务的关联，问目标
       {
         aiMessages: [
           {
             type: 'text',
-            content: '明白了！运动圈+企业客户，这是很好的客户来源 📊\n\n**最后一个问题：您今年的工作目标是什么？主要面临什么挑战？**',
-            speechText: '运动圈加企业客户，很好的客户来源。最后想了解一下您今年的工作目标和面临的挑战？',
+            content: '企业客户 + 运动圈 🎯\n\n这个组合挺有意思的——企业主有保障意识、有实力，但信任门槛高；运动圈的人生活品质感强，对健康话题天然接受。\n\n王哥这个人，其实正好是这两个圈子的交叉点。\n\n**最后一个：今年最想突破的是什么？** 业绩目标？还是想拿下某类客户？',
+            speechText: '企业客户加运动圈，这个组合很有意思。王哥这个客户，正好是两个圈子的交叉点。那你今年最想突破的是什么？',
             wechatEvents: [
               {
                 type: 'update-memory',
                 data: [
-                  { icon: '👥', label: '社交圈', value: '运动圈朋友、企业客户', category: 'dynamic' },
+                  {
+                    icon: '👥',
+                    label: '社交圈',
+                    value: '运动圈 + 企业客户',
+                    category: 'dynamic',
+                    narrative: '社交圈以运动朋友和企业客户为主。企业主有实力有需求，运动圈有生活品质感——正好是高净值客户的两个来源。',
+                  },
                 ],
               },
             ],
@@ -66,26 +78,31 @@ export const fieldScenarios: Scenario[] = [
         ],
       },
 
-      // Step 3: AI总结，自动过渡到工作流
+      // Step 3: 收到目标，鼓励+连接到当天任务，自然过渡
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **记忆更新完成！**\n\n我已经全面了解了您的画像：\n• 🏃 爱好运动，阳光自律的人设\n• 👥 运动圈+企业客户的社交资源\n• 🎯 年度目标业绩翻倍，聚焦高净值客户\n\n---\n\n📌 **今日待办：**\n• 王哥 — 三高体况，健康险咨询意向\n• 朋友圈营销内容待发布\n\n让我们从**朋友圈内容定制**开始，先吸引潜在客户的注意！',
-            speechText: '记忆更新完成。今日重点关注王哥的健康险咨询，让我们先从朋友圈内容开始。',
+            content: '年度目标业绩翻倍，核心是高净值客户 ✨\n\n好，我记住了。\n\n你其实已经走在这条路上了——**王哥就是典型的高净值画像**：三高体况、企业中高层、消费力强、对价格不敏感。这单跟下来，不只是佣金，还是你打开高净值圈子的**第一张入场券**。\n\n我们出发吧。先发一条朋友圈，让王哥看见你 😊',
+            speechText: '好，记住了。王哥就是典型的高净值画像，这单做好，是你打开高净值圈子的第一张入场券。我们出发吧。',
             wechatEvents: [
               {
                 type: 'update-memory',
                 data: [
-                  { icon: '🎯', label: '年度目标', value: '业绩翻倍', category: 'dynamic' },
-                  { icon: '⚡', label: '核心挑战', value: '高净值客户开拓', category: 'dynamic' },
+                  {
+                    icon: '🎯',
+                    label: '目标',
+                    value: '年度业绩翻倍',
+                    category: 'dynamic',
+                    narrative: '今年目标是业绩翻倍，核心突破口是高净值客户。王哥就是很好的切入点——做好这单，是打开高净值圈子的第一张入场券。',
+                  },
                 ],
               },
             ],
           },
         ],
         quickReplies: [
-          { label: '好的，开始吧！', value: 'start-work' },
+          { label: '好，我们出发！', value: 'start-work' },
         ],
       },
 
@@ -335,10 +352,20 @@ export const fieldScenarios: Scenario[] = [
               {
                 type: 'update-memory',
                 data: [
-                  { icon: '👤', label: '客户-王哥', value: '42-48岁，企业中高层', category: 'customer' },
-                  { icon: '⛳', label: '王哥爱好', value: '高尔夫、养生', category: 'customer' },
-                  { icon: '👦', label: '王哥家庭', value: '孩子约10岁', category: 'customer' },
-                  { icon: '🏥', label: '王哥健康', value: '三高体况', category: 'customer' },
+                  {
+                    icon: '👤',
+                    label: '客户',
+                    value: '王哥',
+                    category: 'customer',
+                    narrative: '42-48岁，企业中高层，决策型人格，对价格不敏感。高尔夫、养生、转发健康文章——典型的「有品质、有意识」高净值画像。',
+                  },
+                  {
+                    icon: '🏥',
+                    label: '王哥健康',
+                    value: '三高体况',
+                    category: 'customer',
+                    narrative: '血压约150，空腹血糖6.8，已在用药。核保窗口随时可能收紧，现在是配置保障的关键时机。',
+                  },
                 ],
               },
             ],

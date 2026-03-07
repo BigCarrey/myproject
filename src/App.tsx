@@ -110,7 +110,7 @@ const initialMemoryFields: AgentMemoryField[] = [
 ];
 
 function App() {
-  const [mode, setMode] = useState<'backoffice' | 'field'>('backoffice');
+  const [mode, setMode] = useState<'backoffice' | 'field'>('field');
 
   const currentModules = mode === 'backoffice' ? backofficeModules : [];
   const currentScenarios = useMemo(
@@ -226,7 +226,11 @@ function App() {
   }, []);
 
   useEffect(() => {
-    chat.initChat();
+    if (mode === 'field') {
+      chat.initFieldContinuous('field-continuous');
+    } else {
+      chat.initChat();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -375,7 +379,10 @@ function App() {
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
         {/* Left: Agent Memory Panel */}
         <div className="field-column field-column-left">
-          <AgentMemoryPanel fields={memoryFields} />
+          <AgentMemoryPanel
+            fields={memoryFields}
+            syncRate={Math.min(100, memoryFields.filter(f => f.category !== 'static').length * 18)}
+          />
         </div>
 
         {/* Center: AI Chat / Dispatch */}
