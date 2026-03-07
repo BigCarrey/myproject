@@ -5,12 +5,23 @@ import { InputBar } from './components/InputBar';
 import { QuickReplies } from './components/QuickReplies';
 import { TypingIndicator } from './components/TypingIndicator';
 import { OverviewPage } from './components/OverviewPage';
-import { WeChatSimulator } from './components/WeChatSimulator';
+import { AgentMemoryPanel } from './components/AgentMemoryPanel';
+import { ExecutionPanel } from './components/ExecutionPanel';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios as backofficeScenarioData } from './data/scenarios';
 import { fieldScenarios } from './data/fieldScenarios';
-import type { WeChatState, WeChatEvent, WeChatChatMessage, WeChatMoment, FollowUpReminder } from './types';
+import type {
+  WeChatState,
+  WeChatEvent,
+  WeChatChatMessage,
+  WeChatMoment,
+  FollowUpReminder,
+  AgentMemoryField,
+  ExecutionTab,
+  CalendarEntry,
+  TranscriptItem,
+} from './types';
 
 const backofficeModules = [
   {
@@ -87,85 +98,21 @@ const backofficeModules = [
   },
 ];
 
-const fieldModules = [
-  {
-    id: 'field-content-creation',
-    name: '个性内容定制',
-    timing: '朋友圈内容',
-    icon: '✍️',
-    color: '#3B82F6',
-    narration: '小李您好，我来帮您定制一条个性化朋友圈内容，吸引潜在客户关注。',
-    category: 'field',
-  },
-  {
-    id: 'field-smart-reply',
-    name: '问题智能回复',
-    timing: '客户咨询',
-    icon: '💬',
-    color: '#DC2626',
-    narration: '王哥在微信上发来了关于健康险的咨询，我来帮您快速生成专业回复。',
-    category: 'field',
-  },
-  {
-    id: 'field-interest-insight',
-    name: '好友兴趣洞察',
-    timing: '需求解析',
-    icon: '🔍',
-    color: '#7C3AED',
-    narration: '正在分析王哥的社交动态和兴趣偏好，为您生成个性化需求分析。',
-    category: 'field',
-  },
-  {
-    id: 'field-sales-script',
-    name: '精准话术推荐',
-    timing: '话术准备',
-    icon: '🎯',
-    color: '#059669',
-    narration: '基于王哥的需求画像，为您推荐最合适的销售话术和沟通策略。',
-    category: 'field',
-  },
-  {
-    id: 'field-coverage-gap',
-    name: '保障缺口诊断',
-    timing: '缺口分析',
-    icon: '🛡️',
-    color: '#6366F1',
-    narration: '正在分析王哥现有的保障情况，诊断潜在的保障缺口。',
-    category: 'field',
-  },
-  {
-    id: 'field-product-matching',
-    name: '产品精准匹配',
-    timing: '产品推荐',
-    icon: '📦',
-    color: '#9333EA',
-    narration: '根据保障缺口，为王哥精准匹配最合适的保险产品组合。',
-    category: 'field',
-  },
-  {
-    id: 'field-commission-calc',
-    name: '收益分析测算',
-    timing: '佣金测算',
-    icon: '💰',
-    color: '#047857',
-    narration: '为您测算本次推荐方案的预期收益和佣金明细。',
-    category: 'field',
-  },
-  {
-    id: 'field-presentation-gen',
-    name: '讲解素材生成',
-    timing: '素材与跟进',
-    icon: '📑',
-    color: '#0369A1',
-    narration: '正在为您生成面见王哥时的专业讲解素材和跟进提醒计划。',
-    category: 'field',
-  },
+// Initial static profile for agent memory
+const initialMemoryFields: AgentMemoryField[] = [
+  { icon: '👤', label: '姓名', value: '小李', category: 'static' },
+  { icon: '⚧', label: '性别', value: '男', category: 'static' },
+  { icon: '🎂', label: '年龄', value: '28岁', category: 'static' },
+  { icon: '📍', label: '所在地', value: '深圳', category: 'static' },
+  { icon: '🎓', label: '学历', value: '本科', category: 'static' },
+  { icon: '📈', label: '绩效', value: 'B+', category: 'static' },
+  { icon: '🏢', label: '入司时间', value: '2023年3月', category: 'static' },
 ];
 
 function App() {
   const [mode, setMode] = useState<'backoffice' | 'field'>('backoffice');
 
-  const currentModules = mode === 'backoffice' ? backofficeModules : fieldModules;
+  const currentModules = mode === 'backoffice' ? backofficeModules : [];
   const currentScenarios = useMemo(
     () => (mode === 'backoffice' ? backofficeScenarioData : fieldScenarios),
     [mode]
@@ -178,10 +125,10 @@ function App() {
   const lastTranscriptRef = useRef<string>('');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
-  const [showOverview, setShowOverview] = useState(false);  // manual change
+  const [showOverview, setShowOverview] = useState(false);
   const [transition, setTransition] = useState<{ icon: string; label: string } | null>(null);
 
-  // WeChat simulator state (only used in field mode)
+  // WeChat simulator state (used in both modes for field)
   const [wechatState, setWechatState] = useState<WeChatState>({
     currentView: 'chat',
     chatMessages: [],
@@ -192,13 +139,69 @@ function App() {
   // Follow-up reminder popup state
   const [followUpReminder, setFollowUpReminder] = useState<FollowUpReminder | null>(null);
 
-  // WeChat event handler
+  // ===== Field mode specific state =====
+  const [memoryFields, setMemoryFields] = useState<AgentMemoryField[]>(initialMemoryFields);
+  const [executionTab, setExecutionTab] = useState<ExecutionTab>('chat');
+  const [calendarEntries, setCalendarEntries] = useState<CalendarEntry[]>([]);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [transcriptItems, setTranscriptItems] = useState<TranscriptItem[]>([]);
+  const recordingTimerRef = useRef<number | null>(null);
+
+  // Recording timer effect
+  useEffect(() => {
+    if (isRecording) {
+      recordingTimerRef.current = window.setInterval(() => {
+        setRecordingDuration((d) => d + 1);
+      }, 1000);
+    } else if (recordingTimerRef.current) {
+      clearInterval(recordingTimerRef.current);
+      recordingTimerRef.current = null;
+    }
+    return () => {
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current);
+      }
+    };
+  }, [isRecording]);
+
+  // Extended event handler for field mode
   const handleWeChatEvents = useCallback((events: WeChatEvent[]) => {
     events.forEach((evt) => {
       if (evt.type === 'show-followup-reminder') {
         setFollowUpReminder(evt.data as FollowUpReminder);
         return;
       }
+      if (evt.type === 'update-memory') {
+        const newFields = evt.data as AgentMemoryField[];
+        setMemoryFields((prev) => [...prev, ...newFields]);
+        return;
+      }
+      if (evt.type === 'add-calendar-entry') {
+        const entry = evt.data as CalendarEntry;
+        setCalendarEntries((prev) => [...prev, entry]);
+        return;
+      }
+      if (evt.type === 'switch-execution-tab') {
+        setExecutionTab(evt.data as ExecutionTab);
+        return;
+      }
+      if (evt.type === 'start-recording') {
+        setIsRecording(true);
+        setRecordingDuration(0);
+        return;
+      }
+      if (evt.type === 'stop-recording') {
+        setIsRecording(false);
+        return;
+      }
+      if (evt.type === 'add-transcript-item') {
+        const item = evt.data as TranscriptItem;
+        setTranscriptItems((prev) => [...prev, item]);
+        return;
+      }
+
+      // Standard WeChat state events
       setWechatState((prev) => {
         switch (evt.type) {
           case 'add-chat':
@@ -227,7 +230,7 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Register speak callbacks so useChat triggers speech synchronously with messages
+  // Register speak callbacks
   useEffect(() => {
     const noop = () => {};
     chat.registerSpeak(
@@ -236,7 +239,7 @@ function App() {
     );
   }, [autoSpeak, speech.speak, speech.enqueueSpeak, chat.registerSpeak]);
 
-  // Register WeChat event handler for field mode synchronization
+  // Register WeChat event handler
   useEffect(() => {
     if (mode === 'field') {
       chat.registerWeChatEvent(handleWeChatEvents);
@@ -287,8 +290,10 @@ function App() {
 
   const handleStartDemo = useCallback(() => {
     setShowOverview(false);
-    startModuleWithNarration(currentModules[0].id);
-  }, [startModuleWithNarration, currentModules]);
+    if (mode === 'backoffice') {
+      startModuleWithNarration(currentModules[0].id);
+    }
+  }, [startModuleWithNarration, currentModules, mode]);
 
   const handleModuleClick = useCallback(
     (moduleId: string) => {
@@ -299,16 +304,21 @@ function App() {
 
   const handleQuickReply = useCallback(
     (reply: { label: string; value: string }) => {
-      const mod = currentModules.find((m) => m.id === reply.value);
-      if (mod) {
-        chat.addMessage({ role: 'user', type: 'text', content: reply.label });
-        chat.startScenario(mod.id);
-        setActiveModule(mod.id);
+      if (mode === 'backoffice') {
+        const mod = currentModules.find((m) => m.id === reply.value);
+        if (mod) {
+          chat.addMessage({ role: 'user', type: 'text', content: reply.label });
+          chat.startScenario(mod.id);
+          setActiveModule(mod.id);
+        } else {
+          chat.handleQuickReply(reply);
+        }
       } else {
+        // Field mode: just advance the scenario
         chat.handleQuickReply(reply);
       }
     },
-    [chat, currentModules]
+    [chat, currentModules, mode]
   );
 
   const handleSpeak = useCallback(
@@ -331,16 +341,21 @@ function App() {
     // Reset WeChat state
     setWechatState({ currentView: 'chat', chatMessages: [], moments: [], screenshotHelper: null });
     setFollowUpReminder(null);
+    // Reset field-specific state
+    setMemoryFields(initialMemoryFields);
+    setExecutionTab('chat');
+    setCalendarEntries([]);
+    setIsRecording(false);
+    setRecordingDuration(0);
+    setTranscriptItems([]);
 
-    // Reinitialize chat with appropriate welcome after state settles
+    // Reinitialize chat
     setTimeout(() => {
       if (newMode === 'backoffice') {
         chat.initChat();
       } else {
-        chat.initChat(
-          '小李您好！我是您的AI销售助理\n\n我将全程协助您拓展客户、精准营销。让我们开始今天的工作吧！\n\n📌 待跟进客户：\n• 王哥 — 三高体况，健康险咨询意向\n• 朋友圈营销内容待发布\n\n请选择您需要的服务：',
-          '小李您好！我是您的AI销售助理，让我们开始今天的工作。'
-        );
+        // Field mode: start the continuous scenario directly
+        chat.initFieldContinuous('field-continuous');
       }
     }, 50);
   }, [mode, chat, speech]);
@@ -354,6 +369,125 @@ function App() {
     );
   }
 
+  // ===== Field Mode: 3-column layout =====
+  if (mode === 'field') {
+    return (
+      <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
+        {/* Left: Agent Memory Panel */}
+        <div className="field-column field-column-left">
+          <AgentMemoryPanel fields={memoryFields} />
+        </div>
+
+        {/* Center: AI Chat / Dispatch */}
+        <div className="field-column field-column-center">
+          <div className="field-chat-container">
+            {transition ? (
+              <div className="scene-transition">
+                <div className="scene-transition-icon">{transition.icon}</div>
+                <div className="scene-transition-label">{transition.label}</div>
+              </div>
+            ) : (
+              <>
+                <Header
+                  isSpeaking={speech.isSpeaking}
+                  onStopSpeaking={speech.stopSpeaking}
+                  autoSpeak={autoSpeak}
+                  onToggleAutoSpeak={() => {
+                    setAutoSpeak((v) => {
+                      if (v) speech.stopSpeaking();
+                      return !v;
+                    });
+                  }}
+                />
+
+                {/* Chat messages area */}
+                <div
+                  ref={chatContainerRef}
+                  className="flex-1 overflow-y-auto pt-4 pb-28"
+                  style={{ WebkitOverflowScrolling: 'touch' }}
+                >
+                  {chat.messages.map((msg) => (
+                    <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
+                  ))}
+
+                  {chat.isTyping && <TypingIndicator />}
+
+                  {chat.quickReplies.length > 0 && !chat.isTyping && (
+                    <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
+                  )}
+
+                  <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input area */}
+                <InputBar
+                  onSend={chat.handleUserMessage}
+                  onVoiceStart={speech.startListening}
+                  onVoiceStop={speech.stopListening}
+                  isListening={speech.isListening}
+                  transcript={speech.transcript}
+                  disabled={chat.isTyping}
+                />
+              </>
+            )}
+          </div>
+        </div>
+
+        {/* Right: Execution Panel */}
+        <div className="field-column field-column-right">
+          <ExecutionPanel
+            activeTab={executionTab}
+            onSwitchTab={setExecutionTab}
+            chatMessages={wechatState.chatMessages}
+            screenshotHelper={wechatState.screenshotHelper}
+            moments={wechatState.moments}
+            calendarEntries={calendarEntries}
+            isRecording={isRecording}
+            recordingDuration={recordingDuration}
+            transcriptItems={transcriptItems}
+          />
+        </div>
+
+        {/* Mode toggle */}
+        <button
+          className="field-mode-toggle"
+          onClick={handleModeToggle}
+          title="切换到内勤场景"
+        >
+          内勤
+        </button>
+
+        {/* Follow-up Reminder Popup */}
+        {followUpReminder && (
+          <div className="followup-popup-overlay" onClick={() => setFollowUpReminder(null)}>
+            <div className="followup-popup" onClick={(e) => e.stopPropagation()}>
+              <div className="followup-popup-header">
+                <span className="followup-popup-icon">⏰</span>
+                <span className="followup-popup-title">{followUpReminder.title}</span>
+                <button className="followup-popup-close" onClick={() => setFollowUpReminder(null)}>✕</button>
+              </div>
+              <div className="followup-popup-body">
+                {followUpReminder.schedule.map((item, i) => (
+                  <div key={i} className="followup-popup-item">
+                    <div className="followup-popup-date">{item.date}</div>
+                    <div className="followup-popup-action">{item.action}</div>
+                  </div>
+                ))}
+              </div>
+              {followUpReminder.summary && (
+                <div className="followup-popup-summary">{followUpReminder.summary}</div>
+              )}
+              <button className="followup-popup-confirm" onClick={() => setFollowUpReminder(null)}>
+                知道了
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // ===== Backoffice Mode: Original sidebar layout =====
   return (
     <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
       {/* Left Sidebar Navigation */}
@@ -365,7 +499,7 @@ function App() {
           </div>
         </div>
 
-        <div className="sidebar-label">{mode === 'backoffice' ? '内勤场景' : '外勤场景'}</div>
+        <div className="sidebar-label">内勤场景</div>
 
         <nav className="sidebar-nav">
           {currentModules.map((mod) => (
@@ -394,7 +528,7 @@ function App() {
         </nav>
 
         <div className="sidebar-footer">
-          <p>{mode === 'backoffice' ? '智能辅导系统' : '智能销售助手'}</p>
+          <p>智能辅导系统</p>
           <p>点击场景开始演示</p>
         </div>
 
@@ -402,9 +536,9 @@ function App() {
         <button
           className="mode-toggle-tab"
           onClick={handleModeToggle}
-          title={mode === 'backoffice' ? '切换到外勤场景' : '切换到内勤场景'}
+          title="切换到外勤场景"
         >
-          {mode === 'backoffice' ? '外勤' : '内勤'}
+          外勤
         </button>
       </div>
 
@@ -464,22 +598,6 @@ function App() {
           )}
         </div>
       </div>
-
-      {/* WeChat Simulator - only in field mode */}
-      {mode === 'field' && (
-        <div className="wechat-phone-frame">
-          <div className="phone-notch" />
-          <div className="phone-screen" style={{ background: '#EDEDED' }}>
-            <WeChatSimulator
-              currentView={wechatState.currentView}
-              chatMessages={wechatState.chatMessages}
-              moments={wechatState.moments}
-              screenshotHelper={wechatState.screenshotHelper}
-              onSwitchView={(v) => setWechatState((prev) => ({ ...prev, currentView: v }))}
-            />
-          </div>
-        </div>
-      )}
 
       {/* Follow-up Reminder Popup */}
       {followUpReminder && (

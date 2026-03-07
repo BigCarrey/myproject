@@ -73,8 +73,46 @@ export interface WeChatScreenshotHelper {
   visible: boolean;
 }
 
+export type ExecutionTab = 'chat' | 'moments' | 'calendar' | 'recording';
+
+export interface CalendarEntry {
+  id: string;
+  date: string;
+  time: string;
+  title: string;
+  description: string;
+  type: 'meeting' | 'reminder' | 'task';
+}
+
+export interface TranscriptItem {
+  speaker: string;
+  text: string;
+  time: string;
+}
+
+export interface AgentMemoryField {
+  icon: string;
+  label: string;
+  value: string;
+  category: 'static' | 'dynamic' | 'customer';
+}
+
 export interface WeChatEvent {
-  type: 'add-chat' | 'add-moment' | 'show-screenshot-helper' | 'hide-screenshot-helper' | 'switch-view' | 'set-chat-messages' | 'set-moments' | 'show-followup-reminder';
+  type:
+    | 'add-chat'
+    | 'add-moment'
+    | 'show-screenshot-helper'
+    | 'hide-screenshot-helper'
+    | 'switch-view'
+    | 'set-chat-messages'
+    | 'set-moments'
+    | 'show-followup-reminder'
+    | 'update-memory'
+    | 'add-calendar-entry'
+    | 'switch-execution-tab'
+    | 'start-recording'
+    | 'stop-recording'
+    | 'add-transcript-item';
   data: unknown;
 }
 

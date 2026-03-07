@@ -333,6 +333,30 @@ export function useChat(activeScenarios: Scenario[]) {
     }
   }, [clearTimeouts]);
 
+  // Field mode: start a continuous scenario directly (no menu)
+  const initFieldContinuous = useCallback((scenarioId: string) => {
+    clearTimeouts();
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    sessionRef.current += 1;
+
+    setState({
+      messages: [],
+      isTyping: false,
+      currentScenario: null,
+      currentStep: 0,
+      quickReplies: [],
+      isListening: false,
+      isSpeaking: false,
+    });
+
+    const t = window.setTimeout(() => {
+      playScenarioStep(scenarioId, 0);
+    }, 100);
+    timeoutRefs.current.push(t);
+  }, [clearTimeouts, playScenarioStep]);
+
   return {
     ...state,
     addMessage,
@@ -341,6 +365,7 @@ export function useChat(activeScenarios: Scenario[]) {
     startScenario,
     resetAndStartScenario,
     initChat,
+    initFieldContinuous,
     registerSpeak,
     registerWeChatEvent,
   };
