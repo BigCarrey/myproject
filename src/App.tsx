@@ -594,7 +594,7 @@ function App() {
                   window.setTimeout(() => {
                     setShowAssistantHome(true);     // AI messages start after brief pause
                     if (autoSpeak) {
-                      speech.narrate('好了，记忆采集完成！我已准备好，随时为你服务。');
+                      speech.narrate('好了，记忆采集完成！我已准备好。先帮你发一条朋友圈，让圈子里的人先看见你。');
                     }
                   }, 700);
                 }}
