@@ -515,6 +515,7 @@ function App() {
             ) : (
               <>
                 <Header
+                  title="万能营销（记忆采集）"
                   isSpeaking={speech.isSpeaking}
                   onStopSpeaking={speech.stopSpeaking}
                   autoSpeak={autoSpeak}

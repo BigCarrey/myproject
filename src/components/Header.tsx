@@ -3,9 +3,10 @@ interface HeaderProps {
   onStopSpeaking: () => void;
   autoSpeak: boolean;
   onToggleAutoSpeak: () => void;
+  title?: string;
 }
 
-export function Header({ isSpeaking, onStopSpeaking, autoSpeak, onToggleAutoSpeak }: HeaderProps) {
+export function Header({ isSpeaking, onStopSpeaking, autoSpeak, onToggleAutoSpeak, title = '万能营销' }: HeaderProps) {
   return (
     <header
       className="pt-10 pb-4 px-5 relative z-10"
@@ -26,7 +27,7 @@ export function Header({ isSpeaking, onStopSpeaking, autoSpeak, onToggleAutoSpea
             className="text-[18px] font-black text-[#1E3A8A] tracking-wider"
             style={{ fontFamily: '"Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", "PingFang SC", serif' }}
           >
-            万能营销
+            {title}
           </h1>
         </div>
 
