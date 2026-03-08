@@ -80,6 +80,7 @@ export function ExecutionPanel({
   onNotificationClick,
   onDismissNotification,
   imeState,
+  onIMEScreenshotHelp,
   onIMESendReply,
 }: ExecutionPanelProps) {
   const chatEndRef = useRef<HTMLDivElement>(null);
