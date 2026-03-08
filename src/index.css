@@ -1213,6 +1213,12 @@ html, body, #root {
   margin-right: 8px;
 }
 
+/* hide all internal content when retracted — only the drawer button remains */
+.field-column-left.panel-retracted > *:not(.field-drawer-btn),
+.field-column-right.panel-retracted > *:not(.field-drawer-btn) {
+  display: none;
+}
+
 .field-column-center {
   width: 380px;
   flex-shrink: 0;
