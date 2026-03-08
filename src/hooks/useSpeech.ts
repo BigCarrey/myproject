@@ -204,6 +204,8 @@ export function useSpeech(): UseSpeechReturn {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
 
     window.speechSynthesis.cancel();
+    // Chrome: after cancel() the engine can get stuck; resume() unblocks it.
+    window.speechSynthesis.resume();
 
     const voice = pickBestZhVoice();
     const chunks = splitIntoChunks(text);
@@ -235,6 +237,10 @@ export function useSpeech(): UseSpeechReturn {
   /** Queue speech WITHOUT cancelling ongoing utterances. */
   const enqueueSpeak = useCallback((text: string) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) return;
+
+    // Chrome: after cancel() the engine can get stuck in a paused-like state.
+    // Calling resume() before speak() ensures the queue actually drains.
+    window.speechSynthesis.resume();
 
     const voice = pickBestZhVoice();
     const chunks = splitIntoChunks(text);
