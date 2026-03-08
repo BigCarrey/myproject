@@ -454,7 +454,7 @@ function App() {
             </div>
             <div className="phone-frame">
               <div className="phone-notch" />
-              <div className="phone-screen">{centerContent}</div>
+              <div className="phone-screen" style={{ background: 'linear-gradient(180deg, #F8FAFF 0%, #EFF5FF 100%)' }}>{centerContent}</div>
             </div>
           </div>
           {collapseRight ? (
@@ -471,7 +471,7 @@ function App() {
                 <div className="phone-notch" />
                 <div className="phone-screen" style={{
                   background: executionPanel.currentApp === 'recorder' ? '#1a1a2e'
-                    : executionPanel.currentApp === 'home' ? 'linear-gradient(180deg, #667eea 0%, #764ba2 100%)'
+                    : executionPanel.currentApp === 'home' ? 'linear-gradient(180deg, #EEF2FF 0%, #E0E7FF 55%, #EDE9FE 100%)'
                     : '#EDEDED'
                 }}>
                   {renderExecutionPanel()}

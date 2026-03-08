@@ -197,35 +197,63 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
     return (
       <div className="flex justify-end mb-3 animate-fade-in-up" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
         <div
-          className="max-w-[85%] px-4 py-2.5 rounded-[18px] text-white"
+          className="max-w-[82%] px-4 py-2.5 rounded-[18px] rounded-tr-[6px] text-white"
           style={{
-            background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
+            background: 'linear-gradient(135deg, #3B82F6 0%, #4F46E5 100%)',
+            boxShadow: '0 4px 16px rgba(79,70,229,0.3)',
           }}
         >
-          <p className="text-[15px] leading-[1.5]">{message.content}</p>
+          <p className="text-[14px] leading-[1.6]">{message.content}</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="mb-4 animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+    <div className="mb-4 animate-slide-in-left" style={{ paddingLeft: '12px', paddingRight: '16px' }}>
       {message.type === 'text' ? (
-        <div
-          className="max-w-[85%] rounded-[18px] px-4 py-3"
-          style={{
-            background: 'rgba(255,255,255,0.70)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            boxShadow: '0 8px 30px 0 rgba(37,99,235,0.06)',
-            border: '1px solid rgba(255,255,255,0.80)',
-          }}
-        >
-          {renderContent()}
+        <div className="flex items-start gap-2">
+          {/* AI avatar */}
+          <div style={{
+            width: 28, height: 28, borderRadius: 9, flexShrink: 0, marginTop: 2,
+            background: 'linear-gradient(135deg, #3B82F6 0%, #6366F1 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(99,102,241,0.3)',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="9" r="3.5" fill="white" />
+              <path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+          </div>
+          <div
+            className="max-w-[82%] rounded-[16px] rounded-tl-[6px] px-4 py-3"
+            style={{
+              background: 'rgba(255,255,255,0.88)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              boxShadow: '0 2px 12px rgba(99,102,241,0.08), 0 1px 0 rgba(255,255,255,0.9) inset',
+              border: '1px solid rgba(99,102,241,0.08)',
+            }}
+          >
+            {renderContent()}
+          </div>
         </div>
       ) : (
-        <div className="max-w-[92%] flex flex-col gap-3">
-          {renderContent()}
+        <div className="flex items-start gap-2">
+          <div style={{
+            width: 28, height: 28, borderRadius: 9, flexShrink: 0, marginTop: 2,
+            background: 'linear-gradient(135deg, #3B82F6 0%, #6366F1 100%)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            boxShadow: '0 2px 8px rgba(99,102,241,0.3)',
+          }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="9" r="3.5" fill="white" />
+              <path d="M6 21c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="white" strokeWidth="2.2" strokeLinecap="round" />
+            </svg>
+          </div>
+          <div className="max-w-[90%] flex flex-col gap-3">
+            {renderContent()}
+          </div>
         </div>
       )}
     </div>
