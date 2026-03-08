@@ -53,11 +53,9 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
   useEffect(() => {
     const t1 = window.setTimeout(() => setVisible(1), 80);
     const t2 = window.setTimeout(() => setVisible(2), 1080);
-    const t3 = window.setTimeout(() => setVisible(3), 2080);
     return () => {
       window.clearTimeout(t1);
       window.clearTimeout(t2);
-      window.clearTimeout(t3);
     };
   }, []);
 
@@ -98,7 +96,7 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
       </div>
 
       {/* ── 3. 今日定制朋友圈 ─────────────────────────────────── */}
-      <div style={fadeIn(visible >= 3)}>
+      <div style={fadeIn(visible >= 2)}>
         <div className="flex items-center gap-1.5 mb-3">
           <div className="w-[3px] h-[14px] rounded-full" style={{ background: 'linear-gradient(180deg,#10B981,#059669)' }} />
           <span className="text-[11.5px] font-semibold text-[#475569] tracking-wide">今日定制朋友圈</span>
