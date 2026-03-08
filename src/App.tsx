@@ -593,6 +593,9 @@ function App() {
                   setExecutionStarted(true);        // execution panel slides in first
                   window.setTimeout(() => {
                     setShowAssistantHome(true);     // AI messages start after brief pause
+                    if (autoSpeak) {
+                      speech.narrate('好了，记忆采集完成！我已准备好，随时为你服务。');
+                    }
                   }, 700);
                 }}
               />

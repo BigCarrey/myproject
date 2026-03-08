@@ -619,8 +619,8 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **四份材料 + 话术已全部发送给王哥！**\n\n📩 **王哥回复（几分钟后）：**\n"小李你这个做得很专业！我发给老婆看看，下周给你答复。"',
-            speechText: '材料已发送，王哥表示发给老婆看看，下周给答复。',
+            content: '✅ **四份材料 + 话术已全部发送给王哥！**',
+            speechText: '四份材料和话术已全部发送给王哥。',
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'chat' },
               {
