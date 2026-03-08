@@ -616,7 +616,7 @@ function App() {
             imeState={imeState}
             onIMEScreenshotHelp={() => {
               // 截图帮回：触发 AI 生成回复（推进到 field-reply-preview 步骤）
-              chat.handleQuickReply({ label: '截图帮回', value: 'view-reply' });
+              chat.handleQuickReply({ label: '分析我的截图', value: 'view-reply' });
             }}
             onIMESendReply={(replyText) => {
               // 1. 立即把小李的消息加入聊天（给用户即时反馈）
