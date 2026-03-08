@@ -114,7 +114,6 @@ export const fieldScenarios: Scenario[] = [
             type: 'text',
             content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+\n\n已帮您切换到微信朋友圈，来看看效果 👇',
             speechText: '朋友圈已发布成功，帮你切换到微信看看效果。',
-            delay: 3200,
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'moments' },
               {
@@ -133,13 +132,7 @@ export const fieldScenarios: Scenario[] = [
                 },
               },
               { type: 'expand-panel', data: null },
-            ],
-          },
-          {
-            type: 'text',
-            content: '📱 **王哥在微信给你发来了私信**\n\n消息已出现在右侧执行面板的微信聊天里。**请在面板里点击「截图帮回」**，我来帮你分析和起草回复。',
-            speechText: '王哥在微信给你发来了私信，请在右侧面板点击截图帮回让我分析。',
-            wechatEvents: [
+              // Wang Ge's private message arrives silently — AI has no visibility into WeChat
               { type: 'collapse-panel', data: null },
               { type: 'switch-execution-tab', data: 'chat' },
               {
@@ -230,8 +223,8 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **你的回复已发送给王哥。**\n\n📩 **王哥回复了！** 消息已出现在右侧执行面板，请点击「截图帮回」让我继续帮你分析。',
-            speechText: '回复已发送，王哥回复了，请在面板截图帮回继续。',
+            content: '✅ **你的回复已发送给王哥。**',
+            speechText: '回复已发送。',
             wechatEvents: [
               { type: 'hide-screenshot-helper', data: null },
               {
