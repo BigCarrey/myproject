@@ -434,6 +434,7 @@ function App() {
 
   const handleConfirmPost = useCallback(() => {
     setShowAssistantHome(false);
+    chat.addMessage({ role: 'user', type: 'text', content: '确认发布朋友圈 ✅' });
     // Jump straight to "post success + Wang Ge reacted" (step 4 in the scenario)
     chat.jumpToStep('field-continuous', 4);
   }, [chat]);

@@ -113,7 +113,7 @@ export const fieldScenarios: Scenario[] = [
           {
             type: 'text',
             content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+',
-            speechText: '朋友圈已发布成功，800多位好友都能看到。接下来留意私信，有人主动来问就是机会。',
+            speechText: '朋友圈已发布成功',
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'moments' },
               {

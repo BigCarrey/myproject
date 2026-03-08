@@ -102,22 +102,26 @@ export function useChat(activeScenarios: Scenario[]) {
       messageCallbacks.forEach(({ delay, msg }, index) => {
         const t = window.setTimeout(() => {
           if (sessionRef.current !== currentSession) return;
-          setState((prev) => ({
-            ...prev,
-            isTyping: index < messageCallbacks.length - 1,
-            messages: [
-              ...prev.messages,
-              {
-                id: generateId(),
-                role: 'ai' as const,
-                type: msg.type,
-                content: msg.content,
-                speechText: msg.speechText,
-                data: msg.data,
-                timestamp: Date.now(),
-              },
-            ],
-          }));
+          if (msg.content !== '') {
+            setState((prev) => ({
+              ...prev,
+              isTyping: index < messageCallbacks.length - 1,
+              messages: [
+                ...prev.messages,
+                {
+                  id: generateId(),
+                  role: 'ai' as const,
+                  type: msg.type,
+                  content: msg.content,
+                  speechText: msg.speechText,
+                  data: msg.data,
+                  timestamp: Date.now(),
+                },
+              ],
+            }));
+          } else {
+            setState((prev) => ({ ...prev, isTyping: index < messageCallbacks.length - 1 }));
+          }
 
           // Enqueue speech per message (no cancel) so each component's
           // voice plays exactly when that component appears on screen.
