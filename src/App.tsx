@@ -199,7 +199,21 @@ function App() {
       }
       if (evt.type === 'update-memory') {
         const newFields = evt.data as AgentMemoryField[];
-        setMemoryFields((prev) => [...prev, ...newFields]);
+        setMemoryFields((prev) => {
+          let result = [...prev];
+          for (const field of newFields) {
+            if (field.mergeToClientId) {
+              result = result.map((f) =>
+                f.clientId === field.mergeToClientId
+                  ? { ...f, subFields: [...(f.subFields || []), ...(field.subFields || [])] }
+                  : f
+              );
+            } else {
+              result = [...result, field];
+            }
+          }
+          return result;
+        });
         return;
       }
       if (evt.type === 'add-calendar-entry') {
@@ -666,7 +680,7 @@ function App() {
               {followUpReminder.summary && (
                 <div className="followup-popup-summary">{followUpReminder.summary}</div>
               )}
-              <button className="followup-popup-confirm" onClick={() => setFollowUpReminder(null)}>
+              <button className="followup-popup-confirm" onClick={() => { setFollowUpReminder(null); setExecutionTab('calendar'); }}>
                 知道了
               </button>
             </div>

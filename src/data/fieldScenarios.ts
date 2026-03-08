@@ -161,7 +161,7 @@ export const fieldScenarios: Scenario[] = [
                 data: [
                   {
                     icon: '🆕',
-                    label: '新增潜在客户',
+                    label: '潜在客户-王哥',
                     value: '王哥',
                     category: 'customer',
                     narrative: '王哥通过朋友圈互动主动私信咨询三高能否买保险，表现出保障意识——首次保险相关沟通，标记为潜在客户。',
@@ -279,6 +279,16 @@ export const fieldScenarios: Scenario[] = [
                   { icon: '📅', label: '面谈预约', value: '周六 15:00 南山星巴克', category: 'customer', clientId: 'wangge' },
                 ],
               },
+              {
+                type: 'show-followup-reminder',
+                data: {
+                  title: 'AI已自动记录面谈安排',
+                  schedule: [
+                    { date: '📅 周六 15:00', action: '面访王哥 - 三高专属评估' },
+                    { date: '📍 地点', action: '南山星巴克' },
+                  ],
+                },
+              },
             ],
           },
         ],
@@ -358,18 +368,15 @@ export const fieldScenarios: Scenario[] = [
                 type: 'update-memory',
                 data: [
                   {
-                    icon: '👤',
-                    label: '客户',
-                    value: '王哥',
+                    icon: '',
+                    label: '',
+                    value: '',
                     category: 'customer',
-                    narrative: '42-48岁，企业中高层，决策型人格，对价格不敏感。高尔夫、养生、转发健康文章——典型的「有品质、有意识」高净值画像。',
-                  },
-                  {
-                    icon: '🏥',
-                    label: '王哥健康',
-                    value: '三高体况',
-                    category: 'customer',
-                    narrative: '血压约150，空腹血糖6.8，已在用药。核保窗口随时可能收紧，现在是配置保障的关键时机。',
+                    mergeToClientId: 'wangge',
+                    subFields: [
+                      { icon: '👤', label: '客户画像', value: '高净值', category: 'customer', narrative: '42-48岁，企业中高层，决策型人格，对价格不敏感。高尔夫、养生、转发健康文章——典型的「有品质、有意识」高净值画像。' },
+                      { icon: '🏥', label: '健康状况', value: '三高体况', category: 'customer', narrative: '血压约150，空腹血糖6.8，已在用药。核保窗口随时可能收紧，现在是配置保障的关键时机。' },
+                    ],
                   },
                 ],
               },
@@ -382,7 +389,7 @@ export const fieldScenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '好的，我准备出发了', value: 'ready-go' },
+          { label: '周六下午 3点', value: 'ready-go' },
         ],
       },
 
@@ -625,12 +632,13 @@ export const fieldScenarios: Scenario[] = [
       },
 
       // Step 16: 完成！
+      // Step 16: 一键转发材料 → 王哥回复"发给老婆看看" → 等待代理人截图
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **四份材料 + 话术已全部发送给王哥！**\n\n📩 **王哥回复（几分钟后）：**\n"小李你这个做得很专业！我发给老婆看看，下周给你答复。"\n\n---\n\n🎯 **本次服务全流程总结：**\n\n✅ 朋友圈营销 → 王哥互动\n✅ 智能回复 → 建立信任\n✅ 预约面谈 → 周六3点星巴克\n✅ 朋友圈画像分析 → 面访策略准备\n✅ 面谈录音 → 实时需求分析\n✅ 保障缺口诊断 → 方案匹配\n✅ 佣金测算 → 选定均衡版\n✅ 材料生成 → 一键转发\n\n💰 **预期佣金：首年1.12万，续期3年合计1.8万**\n\n王哥已进入决策阶段，保持适度跟进，预计下周内可推进到签约环节！',
-            speechText: '材料已发送，王哥表示发给老婆看看下周答复。本次全流程服务完成，预计下周可推进到签约。',
+            content: '✅ **四份材料 + 话术已全部发送给王哥！**\n\n📩 **王哥回复（几分钟后）：**\n"小李你这个做得很专业！我发给老婆看看，下周给你答复。"',
+            speechText: '材料已发送，王哥表示发给老婆看看，下周给答复。',
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'chat' },
               {
@@ -657,6 +665,25 @@ export const fieldScenarios: Scenario[] = [
                 type: 'add-chat',
                 data: { sender: 'wangge', content: '小李你这个做得很专业！我发给老婆看看，下周给你答复。', timestamp: '16:38' },
               },
+              {
+                type: 'show-ime',
+                data: { visible: true, mode: 'keyboard', screenshotLabel: '截图给AI' },
+              },
+            ],
+          },
+        ],
+        quickReplies: [],
+      },
+
+      // Step 17: 代理人截图王哥回复 → AI分析 → 跟进提醒弹窗
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '📊 **AI分析完成：**\n\n王哥已进入决策阶段，保持适度跟进，预计下周内可推进到签约环节！\n\n---\n\n🎯 **本次服务全流程总结：**\n\n✅ 朋友圈营销 → 王哥互动\n✅ 智能回复 → 建立信任\n✅ 预约面谈 → 周六3点星巴克\n✅ 朋友圈画像分析 → 面访策略准备\n✅ 面谈录音 → 实时需求分析\n✅ 保障缺口诊断 → 方案匹配\n✅ 佣金测算 → 选定均衡版\n✅ 材料生成 → 一键转发\n\n💰 **预期佣金：首年1.12万，续期3年合计1.8万**',
+            speechText: '王哥已进入决策阶段，预计下周可推进签约，AI已自动设置跟进提醒。',
+            wechatEvents: [
+              { type: 'hide-ime', data: null },
               {
                 type: 'add-calendar-entry',
                 data: {

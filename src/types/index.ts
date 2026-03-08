@@ -102,6 +102,8 @@ export interface AgentMemoryField {
   clientId?: string;
   /** For client detail sub-fields */
   subFields?: AgentMemoryField[];
+  /** If set, merge subFields into the existing entry with this clientId instead of adding a new top-level card */
+  mergeToClientId?: string;
 }
 
 export interface ExecutionNotification {
