@@ -268,16 +268,6 @@ export const fieldScenarios: Scenario[] = [
                   { icon: '📅', label: '面谈预约', value: '周六 15:00 南山星巴克', category: 'customer', clientId: 'wangge' },
                 ],
               },
-              {
-                type: 'show-followup-reminder',
-                data: {
-                  title: 'AI已自动记录面谈安排',
-                  schedule: [
-                    { date: '📅 周六 15:00', action: '面访王哥 - 三高专属评估' },
-                    { date: '📍 地点', action: '南山星巴克' },
-                  ],
-                },
-              },
             ],
           },
         ],
