@@ -159,8 +159,8 @@ export function useChat(activeScenarios: Scenario[]) {
 
   const handleQuickReply = useCallback(
     (reply: QuickReply) => {
-      // Add user message
-      addMessage({ role: 'user', type: 'text', content: reply.label });
+      // Add user message (skip if label is empty — silent trigger)
+      if (reply.label) addMessage({ role: 'user', type: 'text', content: reply.label });
       setQuickReplies([]);
 
       if (reply.value === 'back-to-menu') {

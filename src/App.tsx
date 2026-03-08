@@ -594,7 +594,7 @@ function App() {
                   window.setTimeout(() => {
                     setShowAssistantHome(true);     // AI messages start after brief pause
                     if (autoSpeak) {
-                      speech.narrate('好了，记忆采集完成！我已准备好。先帮你发一条朋友圈，让圈子里的人先看见你。');
+                      speech.narrate('好了，我已准备好，随时为你服务。基于你的兴趣，已为你定制个性化朋友圈内容，看看是否合适？');
                     }
                   }, 700);
                 }}
@@ -649,7 +649,7 @@ function App() {
               setImeState(null);
               // 3. 延迟 1.5s 后推进场景 → 王哥回复出现
               window.setTimeout(() => {
-                chat.handleQuickReply({ label: '点击发送', value: 'send-reply' });
+                chat.handleQuickReply({ label: '', value: 'send-reply' });
               }, 1500);
             }}
           />
