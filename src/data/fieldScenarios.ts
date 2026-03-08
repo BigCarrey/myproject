@@ -233,16 +233,6 @@ export const fieldScenarios: Scenario[] = [
                 data: { sender: 'wangge', content: '行啊，周六下午可以。3点吧，就约在南山那个星巴克。', timestamp: '10:56' },
               },
               {
-                type: 'show-notification',
-                data: {
-                  id: 'wangge-confirm',
-                  sender: '王哥',
-                  content: '行啊，周六下午可以。3点吧，就约在南山那个星巴克。',
-                  avatar: '王',
-                  targetTab: 'chat',
-                },
-              },
-              {
                 type: 'show-ime',
                 data: { visible: true, mode: 'keyboard', screenshotLabel: '截图给AI' },
               },
@@ -298,7 +288,7 @@ export const fieldScenarios: Scenario[] = [
       },
 
       // ==================== Phase 5: 周六上午 - AI自动抓取朋友圈分析 ====================
-      // Step 9: [时间跳转] 周六上午10:00
+      // Step 9: [时间跳转] 周六上午10:00 → 自动抓取朋友圈 → 自动输出画像分析
       {
         aiMessages: [
           {
@@ -336,17 +326,9 @@ export const fieldScenarios: Scenario[] = [
                   },
                 ],
               },
+              { type: 'delay', data: 1500 },
             ],
           },
-        ],
-        quickReplies: [
-          { label: '查看王哥画像分析', value: 'view-profile' },
-        ],
-      },
-
-      // Step 10: 王哥画像 + 沟通策略
-      {
-        aiMessages: [
           {
             type: 'field-customer-profile',
             content: 'AI已扫描王哥朋友圈，输出客户画像',
