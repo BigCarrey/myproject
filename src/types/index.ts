@@ -147,7 +147,8 @@ export interface WeChatEvent {
     | 'collapse-panel'
     | 'show-ime'
     | 'hide-ime'
-    | 'set-ime-reply';
+    | 'set-ime-reply'
+    | 'delay';
   data: unknown;
 }
 

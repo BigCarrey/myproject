@@ -190,7 +190,9 @@ function App() {
 
   // Extended event handler for field mode
   const handleWeChatEvents = useCallback((events: WeChatEvent[]) => {
-    events.forEach((evt) => {
+    let cumulativeMs = 0;
+
+    const processOne = (evt: WeChatEvent) => {
       if (evt.type === 'show-followup-reminder') {
         setFollowUpReminder(evt.data as FollowUpReminder);
         return;
@@ -276,6 +278,18 @@ function App() {
             return prev;
         }
       });
+    };
+
+    events.forEach((evt) => {
+      if (evt.type === 'delay') {
+        cumulativeMs += (evt.data as number);
+        return;
+      }
+      if (cumulativeMs === 0) {
+        processOne(evt);
+      } else {
+        window.setTimeout(() => processOne(evt), cumulativeMs);
+      }
     });
   }, []);
 

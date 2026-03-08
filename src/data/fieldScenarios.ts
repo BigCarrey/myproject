@@ -140,6 +140,8 @@ export const fieldScenarios: Scenario[] = [
                   { sender: 'wangge', content: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？', timestamp: '10:52' },
                 ],
               },
+              // Wait 2.5s so user can see the 朋友圈 post first, then notification pops in
+              { type: 'delay', data: 2500 },
               {
                 type: 'show-notification',
                 data: {
