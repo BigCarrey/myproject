@@ -84,7 +84,7 @@ export const fieldScenarios: Scenario[] = [
           {
             type: 'text',
             content: '年度目标业绩翻倍，核心是高净值客户 ✨\n\n好，我记住了。\n\n其实你的圈子里一直有这样的人——做生意的老板朋友、康养圈里注重品质的朋友——他们只是还不知道你能帮到他们。\n\n**你的圈子里从不缺好客户，缺的只是让他们看见你的方式——这件事，交给我。**',
-            speechText: '记住了。你圈子里一直有这样的人，关键是让他们先看见你、信任你。交给我，来发一条朋友圈吧。',
+            speechText: '记住了。你圈子里一直有这样的人，关键是让他们先看见你、信任你。交给我。',
             wechatEvents: [
               {
                 type: 'update-memory',
@@ -113,7 +113,7 @@ export const fieldScenarios: Scenario[] = [
           {
             type: 'text',
             content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+',
-            speechText: '朋友圈已发布成功。',
+            speechText: '朋友圈已发布成功，800多位好友都能看到。接下来留意私信，有人主动来问就是机会。',
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'moments' },
               {
@@ -137,7 +137,7 @@ export const fieldScenarios: Scenario[] = [
               {
                 type: 'set-chat-messages',
                 data: [
-                  { sender: 'wangge', content: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？', timestamp: '10:52' },
+                  { sender: 'wangge', content: '嗨小李，看你周末又去考察康养项目了，真专业！我最近体检查出三高，我这种情况还能买保险吗？', timestamp: '10:52' },
                 ],
               },
               // Wait 2.5s so user can see the 朋友圈 post first, then notification pops in
@@ -147,7 +147,7 @@ export const fieldScenarios: Scenario[] = [
                 data: {
                   id: 'wangge-private',
                   sender: '王哥',
-                  content: '嗨小李，看你跑步这么拼！我最近体检查出三高……',
+                  content: '嗨小李，看你周末又去考察康养项目了，真专业！我最近体检……',
                   avatar: '王',
                   targetTab: 'chat',
                 },
@@ -191,7 +191,7 @@ export const fieldScenarios: Scenario[] = [
             content: '已收到截图，AI分析完成',
             speechText: '收到王哥关于三高能否买保险的咨询，建议先安抚再引导预约面谈。',
             data: {
-              incomingMessage: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？',
+              incomingMessage: '嗨小李，看你周末又去考察康养项目了，真专业！我最近体检查出三高，我这种情况还能买保险吗？',
               sender: '王哥',
               time: '约20分钟前',
               analysis: [
