@@ -153,7 +153,7 @@ export const fieldScenarios: Scenario[] = [
               },
               {
                 type: 'show-ime',
-                data: { visible: true, mode: 'keyboard', screenshotLabel: '截图帮回' },
+                data: { visible: true, mode: 'keyboard', screenshotLabel: '截图给AI' },
               },
               {
                 type: 'update-memory',
@@ -243,7 +243,7 @@ export const fieldScenarios: Scenario[] = [
               },
               {
                 type: 'show-ime',
-                data: { visible: true, mode: 'keyboard', screenshotLabel: '截图帮回' },
+                data: { visible: true, mode: 'keyboard', screenshotLabel: '截图给AI' },
               },
             ],
           },

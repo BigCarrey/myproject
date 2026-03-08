@@ -358,7 +358,7 @@ export function ExecutionPanel({
                 <div className="ime-ai-star">✦</div>
                 <button className="ime-screenshot-btn" onClick={() => onIMEScreenshotHelp?.()}>
                   <span className="ime-screenshot-icon">📋</span>
-                  <span>{imeState.screenshotLabel || '截图帮回'}</span>
+                  <span>{imeState.screenshotLabel || '截图给AI'}</span>
                   <span className="ime-screenshot-arrow">→</span>
                 </button>
               </div>
