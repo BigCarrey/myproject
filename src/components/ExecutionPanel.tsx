@@ -90,6 +90,14 @@ export function ExecutionPanel({
     chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [chatMessages]);
 
+  // Re-scroll when IME opens/closes so file messages stay visible
+  useEffect(() => {
+    if (!imeState) return;
+    window.setTimeout(() => {
+      chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  }, [imeState]);
+
   useEffect(() => {
     transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [transcriptItems]);
