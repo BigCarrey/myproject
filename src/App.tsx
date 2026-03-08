@@ -452,8 +452,8 @@ function App() {
   if (mode === 'field') {
     return (
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
-        {/* Left: Agent Memory Panel */}
-        <div className="field-column field-column-left">
+        {/* Left: Agent Memory Panel — hidden after assistant starts */}
+        <div className={`field-column field-column-left${showAssistantHome ? ' panel-hidden' : ''}`}>
           <AgentMemoryPanel
             fields={memoryFields}
             syncRate={
@@ -556,8 +556,8 @@ function App() {
           </div>
         </div>
 
-        {/* Right: Execution Panel (can expand to center) */}
-        <div className={`field-column field-column-right ${panelExpanded ? 'panel-expanded' : ''}`}>
+        {/* Right: Execution Panel — hidden until assistant starts, can expand to center */}
+        <div className={`field-column field-column-right${!showAssistantHome ? ' panel-hidden' : ''}${panelExpanded ? ' panel-expanded' : ''}`}>
           <ExecutionPanel
             activeTab={executionTab}
             onSwitchTab={setExecutionTab}
