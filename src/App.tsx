@@ -429,11 +429,27 @@ function App() {
                 />
 
                 {showAssistantHome ? (
-                  <FieldAssistantHome
-                    agentName={memoryFields.find((f) => f.label === '姓名')?.value || '小李'}
-                    agentHobby={memoryFields.find((f) => f.label === '喜好')?.value || '跑步'}
-                    onConfirmPost={handleConfirmPost}
-                  />
+                  <>
+                    {/* Assistant home replaces message history but keeps InputBar */}
+                    <div
+                      className="flex-1 overflow-y-auto pt-2 pb-28"
+                      style={{ WebkitOverflowScrolling: 'touch' }}
+                    >
+                      <FieldAssistantHome
+                        agentName={memoryFields.find((f) => f.label === '姓名')?.value || '小李'}
+                        agentHobby={memoryFields.find((f) => f.label === '喜好')?.value || '跑步'}
+                        onConfirmPost={handleConfirmPost}
+                      />
+                    </div>
+                    <InputBar
+                      onSend={chat.handleUserMessage}
+                      onVoiceStart={speech.startListening}
+                      onVoiceStop={speech.stopListening}
+                      isListening={speech.isListening}
+                      transcript={speech.transcript}
+                      disabled={false}
+                    />
+                  </>
                 ) : (
                   <>
                     {/* Chat messages area */}
