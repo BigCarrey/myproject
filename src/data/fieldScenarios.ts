@@ -647,6 +647,7 @@ export const fieldScenarios: Scenario[] = [
                 type: 'add-chat',
                 data: { sender: 'xiaoli', content: '[文件] 同类客户脱敏案例.pdf', contentType: 'file', timestamp: '16:31' },
               },
+              { type: 'delay', data: 3000 },
               {
                 type: 'add-chat',
                 data: { sender: 'wangge', content: '小李你这个做得很专业！我发给老婆看看，下周给你答复。', timestamp: '16:38' },
