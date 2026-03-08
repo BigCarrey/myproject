@@ -469,7 +469,7 @@ function App() {
         </div>
 
         {/* Center: AI Chat / Dispatch — with side toggle buttons */}
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'stretch', flexShrink: 0 }}>
           {/* Memory toggle — always visible */}
           <button
             className="panel-side-toggle panel-side-toggle-left"
