@@ -147,6 +147,9 @@ function App() {
   // ===== Field mode specific state =====
   const [showLaunchCeremony, setShowLaunchCeremony] = useState(false);
   const [showAssistantHome, setShowAssistantHome] = useState(false);
+  const [memoryCollapsed, setMemoryCollapsed] = useState(false);   // left panel toggle
+  const [executionStarted, setExecutionStarted] = useState(false); // revealed by ceremony
+  const [executionHidden, setExecutionHidden] = useState(false);   // user manual toggle
   const [memoryFields, setMemoryFields] = useState<AgentMemoryField[]>(initialMemoryFields);
   const [executionTab, setExecutionTab] = useState<ExecutionTab>('chat');
   const [calendarEntries, setCalendarEntries] = useState<CalendarEntry[]>([]);
@@ -380,6 +383,7 @@ function App() {
         // — clear messages immediately so nothing flashes behind the ceremony
         if (reply.value === 'start-work') {
           chat.clearMessages();
+          setMemoryCollapsed(true);   // hide memory immediately when ceremony starts
           setShowLaunchCeremony(true);
           return;
         }
@@ -452,8 +456,8 @@ function App() {
   if (mode === 'field') {
     return (
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
-        {/* Left: Agent Memory Panel — hidden after assistant starts */}
-        <div className={`field-column field-column-left${showAssistantHome ? ' panel-hidden' : ''}`}>
+        {/* Left: Agent Memory Panel — collapsed when ceremony starts */}
+        <div className={`field-column field-column-left${memoryCollapsed ? ' panel-hidden' : ''}`}>
           <AgentMemoryPanel
             fields={memoryFields}
             syncRate={
@@ -464,7 +468,26 @@ function App() {
           />
         </div>
 
-        {/* Center: AI Chat / Dispatch */}
+        {/* Center: AI Chat / Dispatch — with side toggle buttons */}
+        <div style={{ position: 'relative' }}>
+          {/* Memory toggle — always visible */}
+          <button
+            className="panel-side-toggle panel-side-toggle-left"
+            onClick={() => setMemoryCollapsed(v => !v)}
+            title={memoryCollapsed ? '展开记忆面板' : '折叠记忆面板'}
+          >
+            {memoryCollapsed ? '›' : '‹'}
+          </button>
+          {/* Execution toggle — shown after ceremony */}
+          {executionStarted && (
+            <button
+              className="panel-side-toggle panel-side-toggle-right"
+              onClick={() => setExecutionHidden(v => !v)}
+              title={executionHidden ? '展开执行面板' : '折叠执行面板'}
+            >
+              {executionHidden ? '‹' : '›'}
+            </button>
+          )}
         <div className="field-column field-column-center">
           <div className="field-chat-container">
             {transition ? (
@@ -549,15 +572,19 @@ function App() {
               <LaunchCeremony
                 onComplete={() => {
                   setShowLaunchCeremony(false);
-                  setShowAssistantHome(true);
+                  setExecutionStarted(true);        // execution panel slides in first
+                  window.setTimeout(() => {
+                    setShowAssistantHome(true);     // AI messages start after brief pause
+                  }, 700);
                 }}
               />
             )}
           </div>
-        </div>
+        </div>{/* end field-column-center */}
+        </div>{/* end center wrapper */}
 
-        {/* Right: Execution Panel — hidden until assistant starts, can expand to center */}
-        <div className={`field-column field-column-right${!showAssistantHome ? ' panel-hidden' : ''}${panelExpanded ? ' panel-expanded' : ''}`}>
+        {/* Right: Execution Panel — hidden until ceremony ends, user can toggle */}
+        <div className={`field-column field-column-right${!executionStarted || executionHidden ? ' panel-hidden' : ''}${panelExpanded ? ' panel-expanded' : ''}`}>
           <ExecutionPanel
             activeTab={executionTab}
             onSwitchTab={setExecutionTab}
