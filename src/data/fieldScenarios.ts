@@ -107,13 +107,14 @@ export const fieldScenarios: Scenario[] = [
       },
 
       // ==================== Phase 2: 发布成功（朋友圈由 FieldAssistantHome 确认后直接跳入）====================
-      // Step 4: 发布成功，王哥评论互动
+      // Step 4 (JUMP TARGET): 发布成功，执行面板展开，随后王哥私信到达
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+\n\n已帮您自动切换到微信朋友圈，来看看效果吧 👇',
+            content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+\n\n已帮您切换到微信朋友圈，来看看效果 👇',
             speechText: '朋友圈已发布成功，帮你切换到微信看看效果。',
+            delay: 3200,
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'moments' },
               {
@@ -128,63 +129,18 @@ export const fieldScenarios: Scenario[] = [
                     'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&h=300&fit=crop',
                   ],
                   time: '刚刚',
-                  likes: ['王哥', '张姐', '李总'],
-                  comments: [
-                    { author: '王哥', content: '厉害啊兄弟！半马什么成绩？' },
-                  ],
+                  likes: ['张姐', '李总', '陈教练'],
                 },
               },
-              // Expand the execution panel to the center briefly
               { type: 'expand-panel', data: null },
             ],
           },
           {
             type: 'text',
-            content: '🔔 **王哥互动了！** 王哥点赞并评论了您的朋友圈——点击执行面板顶部的消息通知查看。',
-            speechText: '王哥点赞并评论了，点击通知查看。',
-            delay: 3000,
+            content: '📱 **王哥在微信给你发来了私信**\n\n消息已出现在右侧执行面板的微信聊天里。**请在面板里点击「截图帮回」**，我来帮你分析和起草回复。',
+            speechText: '王哥在微信给你发来了私信，请在右侧面板点击截图帮回让我分析。',
             wechatEvents: [
-              // Collapse panel back
               { type: 'collapse-panel', data: null },
-              // Show notification at top of execution panel
-              {
-                type: 'show-notification',
-                data: {
-                  id: 'wangge-comment',
-                  sender: '王哥',
-                  content: '厉害啊兄弟！半马什么成绩？',
-                  avatar: '王',
-                  targetTab: 'chat',
-                },
-              },
-            ],
-          },
-        ],
-        quickReplies: [
-          { label: '继续', value: 'next-smart-reply' },
-        ],
-      },
-
-      // ==================== Phase 3: 王哥私信咨询健康险 ====================
-      // Step 6: 收到王哥微信私信
-      {
-        aiMessages: [
-          {
-            type: 'field-ai-analysis',
-            content: '收到王哥微信私信，AI已完成智能分析',
-            speechText: '收到王哥关于三高能否买保险的咨询，AI分析建议先安抚再引导预约。',
-            data: {
-              incomingMessage: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？',
-              sender: '王哥',
-              time: '约20分钟前',
-              analysis: [
-                { label: '问题类型', value: '健康告知咨询' },
-                { label: '客户情绪', value: '轻微焦虑，担心被拒保', color: '#F59E0B' },
-                { label: '意向阶段', value: '初步萌发期' },
-                { label: '应对建议', value: '先安抚再引导预约面谈' },
-              ],
-            },
-            wechatEvents: [
               { type: 'switch-execution-tab', data: 'chat' },
               {
                 type: 'set-chat-messages',
@@ -192,16 +148,20 @@ export const fieldScenarios: Scenario[] = [
                   { sender: 'wangge', content: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？', timestamp: '10:52' },
                 ],
               },
-              // Show IME keyboard with screenshot help button
               {
-                type: 'show-ime',
+                type: 'show-notification',
                 data: {
-                  visible: true,
-                  mode: 'keyboard',
-                  screenshotLabel: '截图帮回',
+                  id: 'wangge-private',
+                  sender: '王哥',
+                  content: '嗨小李，看你跑步这么拼！我最近体检查出三高……',
+                  avatar: '王',
+                  targetTab: 'chat',
                 },
               },
-              // Add 王哥 as new potential client in agent memory
+              {
+                type: 'show-ime',
+                data: { visible: true, mode: 'keyboard', screenshotLabel: '截图帮回' },
+              },
               {
                 type: 'update-memory',
                 data: [
@@ -225,29 +185,29 @@ export const fieldScenarios: Scenario[] = [
             ],
           },
         ],
-        quickReplies: [
-          { label: '截图帮回', value: 'view-reply' },
-        ],
+        quickReplies: [],  // 不在中间对话给快捷回复，代理人需去面板点截图帮回
       },
 
-      // Step 7: 展示推荐回复（在输入法IME区域显示AI建议）
+      // ==================== Phase 3: 代理人在面板点截图帮回 → AI分析王哥消息 ====================
+      // Step 5: AI拿到截图后分析，同时在IME展示建议回复
       {
         aiMessages: [
           {
-            type: 'field-reply-preview',
-            content: 'AI已生成推荐回复',
-            speechText: '已生成针对王哥三高咨询的推荐回复，引导周六下午面谈。',
+            type: 'field-ai-analysis',
+            content: '已收到截图，AI分析完成',
+            speechText: '收到王哥关于三高能否买保险的咨询，建议先安抚再引导预约面谈。',
             data: {
-              recipient: '王哥',
-              replyText: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊 很多客户和你情况类似，最后都顺利配置了适合自己的方案。这个面对面聊更清楚，你看周六下午方便吗？我帮你做个专属评估，给你一个明确的答复！',
-              tips: [
-                '用轻松语气消除焦虑感',
-                '强调"很多客户类似"减少孤立感',
-                '直接引导周六面谈，把握时机',
+              incomingMessage: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？',
+              sender: '王哥',
+              time: '约20分钟前',
+              analysis: [
+                { label: '问题类型', value: '健康告知咨询' },
+                { label: '客户情绪', value: '轻微焦虑，担心被拒保', color: '#F59E0B' },
+                { label: '意向阶段', value: '初步萌发期' },
+                { label: '应对建议', value: '先安抚再引导预约面谈' },
               ],
             },
             wechatEvents: [
-              // Switch IME to AI reply mode
               {
                 type: 'set-ime-reply',
                 data: {
@@ -258,39 +218,55 @@ export const fieldScenarios: Scenario[] = [
                   replyText: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊 很多客户和你情况类似，最后都顺利配置了适合自己的方案。这个面对面聊更清楚，你看周六下午方便吗？我帮你做个专属评估，给你一个明确的答复！',
                 },
               },
-              {
-                type: 'show-screenshot-helper',
-                data: {
-                  screenshot: '王哥的微信消息截图',
-                  analysis: '识别到健康告知咨询，情绪轻微焦虑，建议先安抚再引导',
-                  generatedReply: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊',
-                  visible: true,
-                },
-              },
             ],
           },
         ],
-        quickReplies: [
-          { label: '点击发送', value: 'send-reply' },
-        ],
+        quickReplies: [],  // 代理人在面板IME点击发送，不在中间对话操作
       },
 
-      // ==================== Phase 4: 王哥答应见面 (新剧情!) ====================
-      // Step 8: 王哥答应周六下午3点见面，AI记录日历
+      // Step 6: 代理人在面板点击发送（小李消息由App.tsx立即加入聊天）
+      // 1.5s后此步骤触发：通知王哥已回复，等待代理人再次截图帮回
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ 回复已发送给王哥\n\n📩 **王哥回复：**\n"行啊，周六下午可以。3点吧，就约在南山那个星巴克。"\n\n🎉 **太好了！王哥答应了面谈！**\n\n📅 **已自动记录到日历：**\n• 时间：周六 下午 3:00\n• 地点：南山星巴克\n• 对象：王哥\n• 目的：三高客户专属评估面谈\n\nAI将在周六上午自动为您准备面访策略。',
-            speechText: '好消息！王哥答应周六下午3点在南山星巴克见面。已自动记录到日历，届时会提前为您准备面访策略。',
+            content: '✅ **你的回复已发送给王哥。**\n\n📩 **王哥回复了！** 消息已出现在右侧执行面板，请点击「截图帮回」让我继续帮你分析。',
+            speechText: '回复已发送，王哥回复了，请在面板截图帮回继续。',
             wechatEvents: [
               { type: 'hide-screenshot-helper', data: null },
-              { type: 'hide-ime', data: null },
-              // 注：小李的消息已由 IME"点击发送"直接加入聊天，这里只加王哥的回复
               {
                 type: 'add-chat',
                 data: { sender: 'wangge', content: '行啊，周六下午可以。3点吧，就约在南山那个星巴克。', timestamp: '10:56' },
               },
+              {
+                type: 'show-notification',
+                data: {
+                  id: 'wangge-confirm',
+                  sender: '王哥',
+                  content: '行啊，周六下午可以。3点吧，就约在南山那个星巴克。',
+                  avatar: '王',
+                  targetTab: 'chat',
+                },
+              },
+              {
+                type: 'show-ime',
+                data: { visible: true, mode: 'keyboard', screenshotLabel: '截图帮回' },
+              },
+            ],
+          },
+        ],
+        quickReplies: [],  // 代理人需再次去面板截图帮回
+      },
+
+      // Step 7: 代理人截图帮回王哥的确认消息 → AI确认见面 + 自动记录日历
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '🎉 **太好了！王哥答应了面谈！**\n\n📅 **已自动记录到日历：**\n• 时间：周六 下午 3:00\n• 地点：南山星巴克\n• 对象：王哥\n• 目的：三高客户专属评估面谈\n\nAI将在周六上午自动为您准备面访策略。',
+            speechText: '太好了！王哥答应周六下午3点在南山星巴克见面，已自动记录到日历。',
+            wechatEvents: [
+              { type: 'hide-ime', data: null },
               {
                 type: 'add-calendar-entry',
                 data: {
