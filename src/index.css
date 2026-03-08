@@ -1194,6 +1194,7 @@ html, body, #root {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .field-column-left {
@@ -1206,11 +1207,10 @@ html, body, #root {
   overflow: hidden;
 }
 
-.field-column-left.panel-hidden {
-  width: 0;
-  margin-right: 0;
-  opacity: 0;
-  pointer-events: none;
+/* retracted = user hid it; keeps a 24px tab so the button stays clickable */
+.field-column-left.panel-retracted {
+  width: 24px;
+  margin-right: 8px;
 }
 
 .field-column-center {
@@ -1228,10 +1228,16 @@ html, body, #root {
   overflow: hidden;
 }
 
-.field-column-right.panel-hidden {
+/* invisible = not yet revealed by ceremony */
+.field-column-right.panel-invisible {
   width: 0;
   opacity: 0;
   pointer-events: none;
+}
+
+/* retracted = user hid it; keeps a 24px tab */
+.field-column-right.panel-retracted {
+  width: 24px;
 }
 
 .field-chat-container {
@@ -1246,46 +1252,45 @@ html, body, #root {
   position: relative;
 }
 
-/* ========== Panel Side Toggle Buttons ========== */
-.panel-side-toggle {
+/* ========== Panel Drawer Buttons (collapse/expand side panels) ========== */
+.field-drawer-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: 16px;
-  height: 44px;
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(37, 99, 235, 0.15);
+  width: 18px;
+  height: 40px;
+  background: rgba(235, 245, 255, 0.9);
+  border: 1px solid rgba(37, 99, 235, 0.12);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 20;
-  color: rgba(37, 99, 235, 0.5);
+  z-index: 10;
+  color: rgba(37, 99, 235, 0.45);
   font-size: 11px;
   line-height: 1;
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
-  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
   padding: 0;
   outline: none;
 }
 
-.panel-side-toggle:hover {
-  background: rgba(255, 255, 255, 1);
-  color: rgba(37, 99, 235, 0.9);
-  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.15);
+.field-drawer-btn:hover {
+  background: rgba(219, 234, 254, 1);
+  color: rgba(37, 99, 235, 0.85);
 }
 
-.panel-side-toggle-left {
-  left: -9px;
-  border-radius: 0 6px 6px 0;
-  border-left: none;
-}
-
-.panel-side-toggle-right {
-  right: -9px;
-  border-radius: 6px 0 0 6px;
+/* Memory panel button — right inner edge */
+.field-drawer-btn-right {
+  right: 0;
+  border-radius: 8px 0 0 8px;
   border-right: none;
+}
+
+/* Execution panel button — left inner edge */
+.field-drawer-btn-left {
+  left: 0;
+  border-radius: 0 8px 8px 0;
+  border-left: none;
 }
 
 .field-mode-toggle {

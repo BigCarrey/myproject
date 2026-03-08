@@ -456,8 +456,16 @@ function App() {
   if (mode === 'field') {
     return (
       <div className="h-full flex items-center justify-center py-5 noise-overlay" style={{ background: 'linear-gradient(180deg, #EBF5FF 0%, #E0F2FE 50%, #DBEAFE 100%)' }}>
-        {/* Left: Agent Memory Panel — collapsed when ceremony starts */}
-        <div className={`field-column field-column-left${memoryCollapsed ? ' panel-hidden' : ''}`}>
+        {/* Left: Agent Memory Panel — retracted when ceremony starts */}
+        <div className={`field-column field-column-left${memoryCollapsed ? ' panel-retracted' : ''}`}>
+          {/* Memory collapse/expand button — at right inner edge */}
+          <button
+            className="field-drawer-btn field-drawer-btn-right"
+            onClick={() => setMemoryCollapsed(v => !v)}
+            title={memoryCollapsed ? '展开记忆面板' : '收起记忆面板'}
+          >
+            {memoryCollapsed ? '‹' : '›'}
+          </button>
           <AgentMemoryPanel
             fields={memoryFields}
             syncRate={
@@ -468,26 +476,7 @@ function App() {
           />
         </div>
 
-        {/* Center: AI Chat / Dispatch — with side toggle buttons */}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'stretch', flexShrink: 0 }}>
-          {/* Memory toggle — always visible */}
-          <button
-            className="panel-side-toggle panel-side-toggle-left"
-            onClick={() => setMemoryCollapsed(v => !v)}
-            title={memoryCollapsed ? '展开记忆面板' : '折叠记忆面板'}
-          >
-            {memoryCollapsed ? '›' : '‹'}
-          </button>
-          {/* Execution toggle — shown after ceremony */}
-          {executionStarted && (
-            <button
-              className="panel-side-toggle panel-side-toggle-right"
-              onClick={() => setExecutionHidden(v => !v)}
-              title={executionHidden ? '展开执行面板' : '折叠执行面板'}
-            >
-              {executionHidden ? '‹' : '›'}
-            </button>
-          )}
+        {/* Center: AI Chat / Dispatch */}
         <div className="field-column field-column-center">
           <div className="field-chat-container">
             {transition ? (
@@ -581,10 +570,19 @@ function App() {
             )}
           </div>
         </div>{/* end field-column-center */}
-        </div>{/* end center wrapper */}
 
-        {/* Right: Execution Panel — hidden until ceremony ends, user can toggle */}
-        <div className={`field-column field-column-right${!executionStarted || executionHidden ? ' panel-hidden' : ''}${panelExpanded ? ' panel-expanded' : ''}`}>
+        {/* Right: Execution Panel — invisible before ceremony, retractable after */}
+        <div className={`field-column field-column-right${!executionStarted ? ' panel-invisible' : executionHidden ? ' panel-retracted' : ''}${panelExpanded ? ' panel-expanded' : ''}`}>
+          {/* Execution collapse/expand button — at left inner edge */}
+          {executionStarted && (
+            <button
+              className="field-drawer-btn field-drawer-btn-left"
+              onClick={() => setExecutionHidden(v => !v)}
+              title={executionHidden ? '展开执行面板' : '收起执行面板'}
+            >
+              {executionHidden ? '›' : '‹'}
+            </button>
+          )}
           <ExecutionPanel
             activeTab={executionTab}
             onSwitchTab={setExecutionTab}
