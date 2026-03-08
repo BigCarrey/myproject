@@ -98,6 +98,32 @@ export interface AgentMemoryField {
   value: string;
   category: 'static' | 'dynamic' | 'customer';
   narrative?: string;
+  /** If set, this memory card is clickable and opens client detail */
+  clientId?: string;
+  /** For client detail sub-fields */
+  subFields?: AgentMemoryField[];
+}
+
+export interface ExecutionNotification {
+  id: string;
+  sender: string;
+  content: string;
+  avatar?: string;
+  /** Which tab to switch to when clicked */
+  targetTab: ExecutionTab;
+}
+
+export interface IMEState {
+  /** Whether the IME keyboard is visible */
+  visible: boolean;
+  /** Mode: default keyboard or AI reply */
+  mode: 'keyboard' | 'ai-reply';
+  /** AI reply data when mode is ai-reply */
+  customerName?: string;
+  customerAvatar?: string;
+  replyText?: string;
+  /** Callback label for the screenshot help button */
+  screenshotLabel?: string;
 }
 
 export interface WeChatEvent {
@@ -115,7 +141,13 @@ export interface WeChatEvent {
     | 'switch-execution-tab'
     | 'start-recording'
     | 'stop-recording'
-    | 'add-transcript-item';
+    | 'add-transcript-item'
+    | 'show-notification'
+    | 'expand-panel'
+    | 'collapse-panel'
+    | 'show-ime'
+    | 'hide-ime'
+    | 'set-ime-reply';
   data: unknown;
 }
 

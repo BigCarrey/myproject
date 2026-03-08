@@ -112,8 +112,8 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+\n\n🔔 **王哥互动了！** 王哥点赞并评论了您的朋友圈。',
-            speechText: '朋友圈已发布成功，王哥点赞并评论了。',
+            content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+\n\n已帮您自动切换到微信朋友圈，来看看效果吧 👇',
+            speechText: '朋友圈已发布成功，帮你切换到微信看看效果。',
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'moments' },
               {
@@ -132,6 +132,29 @@ export const fieldScenarios: Scenario[] = [
                   comments: [
                     { author: '王哥', content: '厉害啊兄弟！半马什么成绩？' },
                   ],
+                },
+              },
+              // Expand the execution panel to the center briefly
+              { type: 'expand-panel', data: null },
+            ],
+          },
+          {
+            type: 'text',
+            content: '🔔 **王哥互动了！** 王哥点赞并评论了您的朋友圈——点击执行面板顶部的消息通知查看。',
+            speechText: '王哥点赞并评论了，点击通知查看。',
+            delay: 3000,
+            wechatEvents: [
+              // Collapse panel back
+              { type: 'collapse-panel', data: null },
+              // Show notification at top of execution panel
+              {
+                type: 'show-notification',
+                data: {
+                  id: 'wangge-comment',
+                  sender: '王哥',
+                  content: '厉害啊兄弟！半马什么成绩？',
+                  avatar: '王',
+                  targetTab: 'chat',
                 },
               },
             ],
@@ -169,24 +192,45 @@ export const fieldScenarios: Scenario[] = [
                   { sender: 'wangge', content: '嗨小李，看你跑步这么拼！我最近体检查出三高，我这种情况还能买保险吗？', timestamp: '10:52' },
                 ],
               },
+              // Show IME keyboard with screenshot help button
               {
-                type: 'show-screenshot-helper',
+                type: 'show-ime',
                 data: {
-                  screenshot: '王哥的微信消息截图',
-                  analysis: '识别到健康告知咨询，情绪轻微焦虑，建议先安抚再引导',
-                  generatedReply: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊',
                   visible: true,
+                  mode: 'keyboard',
+                  screenshotLabel: '截图帮回',
                 },
+              },
+              // Add 王哥 as new potential client in agent memory
+              {
+                type: 'update-memory',
+                data: [
+                  {
+                    icon: '🆕',
+                    label: '新增潜在客户',
+                    value: '王哥',
+                    category: 'customer',
+                    narrative: '王哥通过朋友圈互动主动私信咨询三高能否买保险，表现出保障意识——首次保险相关沟通，标记为潜在客户。',
+                    clientId: 'wangge',
+                    subFields: [
+                      { icon: '👤', label: '姓名', value: '王哥', category: 'customer' },
+                      { icon: '📱', label: '来源', value: '朋友圈互动 → 私信咨询', category: 'customer' },
+                      { icon: '💬', label: '首次话题', value: '三高能否买保险', category: 'customer' },
+                      { icon: '🔥', label: '意向等级', value: '初步萌发期', category: 'customer' },
+                      { icon: '📅', label: '建档时间', value: '今天 10:52', category: 'customer' },
+                    ],
+                  },
+                ],
               },
             ],
           },
         ],
         quickReplies: [
-          { label: '查看推荐回复', value: 'view-reply' },
+          { label: '截图帮回', value: 'view-reply' },
         ],
       },
 
-      // Step 7: 展示推荐回复
+      // Step 7: 展示推荐回复（在输入法IME区域显示AI建议）
       {
         aiMessages: [
           {
@@ -202,10 +246,32 @@ export const fieldScenarios: Scenario[] = [
                 '直接引导周六面谈，把握时机',
               ],
             },
+            wechatEvents: [
+              // Switch IME to AI reply mode
+              {
+                type: 'set-ime-reply',
+                data: {
+                  visible: true,
+                  mode: 'ai-reply',
+                  customerName: '王哥',
+                  customerAvatar: '王',
+                  replyText: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊 很多客户和你情况类似，最后都顺利配置了适合自己的方案。这个面对面聊更清楚，你看周六下午方便吗？我帮你做个专属评估，给你一个明确的答复！',
+                },
+              },
+              {
+                type: 'show-screenshot-helper',
+                data: {
+                  screenshot: '王哥的微信消息截图',
+                  analysis: '识别到健康告知咨询，情绪轻微焦虑，建议先安抚再引导',
+                  generatedReply: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊',
+                  visible: true,
+                },
+              },
+            ],
           },
         ],
         quickReplies: [
-          { label: '一键发送', value: 'send-reply' },
+          { label: '点击发送', value: 'send-reply' },
         ],
       },
 
@@ -219,6 +285,7 @@ export const fieldScenarios: Scenario[] = [
             speechText: '好消息！王哥答应周六下午3点在南山星巴克见面。已自动记录到日历，届时会提前为您准备面访策略。',
             wechatEvents: [
               { type: 'hide-screenshot-helper', data: null },
+              { type: 'hide-ime', data: null },
               {
                 type: 'add-chat',
                 data: { sender: 'xiaoli', content: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊 很多客户和你情况类似，最后都顺利配置了适合自己的方案。这个面对面聊更清楚，你看周六下午方便吗？我帮你做个专属评估，给你一个明确的答复！', timestamp: '10:53' },
@@ -242,7 +309,7 @@ export const fieldScenarios: Scenario[] = [
               {
                 type: 'update-memory',
                 data: [
-                  { icon: '📅', label: '面谈预约', value: '周六 15:00 南山星巴克', category: 'customer' },
+                  { icon: '📅', label: '面谈预约', value: '周六 15:00 南山星巴克', category: 'customer', clientId: 'wangge' },
                 ],
               },
             ],

@@ -23,6 +23,8 @@ import type {
   ExecutionTab,
   CalendarEntry,
   TranscriptItem,
+  ExecutionNotification,
+  IMEState,
 } from './types';
 
 const backofficeModules = [
@@ -152,6 +154,10 @@ function App() {
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [transcriptItems, setTranscriptItems] = useState<TranscriptItem[]>([]);
   const recordingTimerRef = useRef<number | null>(null);
+  const [panelExpanded, setPanelExpanded] = useState(false);
+  const [notification, setNotification] = useState<ExecutionNotification | null>(null);
+  const [imeState, setImeState] = useState<IMEState | null>(null);
+  const panelCollapseTimerRef = useRef<number | null>(null);
 
   // Recording timer effect
   useEffect(() => {
@@ -169,6 +175,15 @@ function App() {
       }
     };
   }, [isRecording]);
+
+  // Cleanup panel collapse timer
+  useEffect(() => {
+    return () => {
+      if (panelCollapseTimerRef.current) {
+        clearTimeout(panelCollapseTimerRef.current);
+      }
+    };
+  }, []);
 
   // Extended event handler for field mode
   const handleWeChatEvents = useCallback((events: WeChatEvent[]) => {
@@ -203,6 +218,37 @@ function App() {
       if (evt.type === 'add-transcript-item') {
         const item = evt.data as TranscriptItem;
         setTranscriptItems((prev) => [...prev, item]);
+        return;
+      }
+      if (evt.type === 'expand-panel') {
+        setPanelExpanded(true);
+        // Auto-collapse after 2.8s (scenario sends collapse-panel, but this is a safety fallback)
+        if (panelCollapseTimerRef.current) clearTimeout(panelCollapseTimerRef.current);
+        panelCollapseTimerRef.current = window.setTimeout(() => setPanelExpanded(false), 2800);
+        return;
+      }
+      if (evt.type === 'collapse-panel') {
+        if (panelCollapseTimerRef.current) {
+          clearTimeout(panelCollapseTimerRef.current);
+          panelCollapseTimerRef.current = null;
+        }
+        setPanelExpanded(false);
+        return;
+      }
+      if (evt.type === 'show-notification') {
+        setNotification(evt.data as ExecutionNotification);
+        return;
+      }
+      if (evt.type === 'show-ime') {
+        setImeState(evt.data as IMEState);
+        return;
+      }
+      if (evt.type === 'hide-ime') {
+        setImeState(null);
+        return;
+      }
+      if (evt.type === 'set-ime-reply') {
+        setImeState(evt.data as IMEState);
         return;
       }
 
@@ -378,6 +424,9 @@ function App() {
     setIsRecording(false);
     setRecordingDuration(0);
     setTranscriptItems([]);
+    setPanelExpanded(false);
+    setNotification(null);
+    setImeState(null);
 
     // Reinitialize chat
     setTimeout(() => {
@@ -409,7 +458,7 @@ function App() {
             fields={memoryFields}
             syncRate={
               memoryFields.some(f => f.category === 'static')
-                ? Math.min(99, 2 + memoryFields.filter(f => f.category !== 'static').length * 4)
+                ? Math.min(20, 2 + memoryFields.filter(f => f.category !== 'static').length * 3)
                 : 0
             }
           />
@@ -507,8 +556,8 @@ function App() {
           </div>
         </div>
 
-        {/* Right: Execution Panel */}
-        <div className="field-column field-column-right">
+        {/* Right: Execution Panel (can expand to center) */}
+        <div className={`field-column field-column-right ${panelExpanded ? 'panel-expanded' : ''}`}>
           <ExecutionPanel
             activeTab={executionTab}
             onSwitchTab={setExecutionTab}
@@ -519,6 +568,19 @@ function App() {
             isRecording={isRecording}
             recordingDuration={recordingDuration}
             transcriptItems={transcriptItems}
+            notification={notification}
+            onNotificationClick={(notif) => {
+              setNotification(null);
+              setExecutionTab(notif.targetTab);
+            }}
+            onDismissNotification={() => setNotification(null)}
+            imeState={imeState}
+            onIMESendReply={(text) => {
+              // Switch IME back to keyboard mode to show "sent"
+              setImeState(null);
+              // Advance the scenario
+              chat.handleQuickReply({ label: '点击发送', value: 'send-reply' });
+            }}
           />
         </div>
 
