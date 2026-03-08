@@ -382,6 +382,15 @@ export function useChat(activeScenarios: Scenario[]) {
     timeoutRefs.current.push(t);
   }, [clearTimeouts, playScenarioStep]);
 
+  const clearMessages = useCallback(() => {
+    clearTimeouts();
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
+    sessionRef.current += 1;
+    setState((prev) => ({ ...prev, messages: [], isTyping: false, quickReplies: [] }));
+  }, [clearTimeouts]);
+
   return {
     ...state,
     addMessage,
@@ -390,6 +399,7 @@ export function useChat(activeScenarios: Scenario[]) {
     startScenario,
     resetAndStartScenario,
     jumpToStep,
+    clearMessages,
     initChat,
     initFieldContinuous,
     registerSpeak,

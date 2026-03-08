@@ -124,6 +124,7 @@ function App() {
   const speech = useSpeech();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const homeContainerRef = useRef<HTMLDivElement>(null);
   const lastTranscriptRef = useRef<string>('');
   const [activeModule, setActiveModule] = useState<string | null>(null);
   const [autoSpeak, setAutoSpeak] = useState(true);
@@ -256,12 +257,19 @@ function App() {
     }
   }, [mode, chat.registerWeChatEvent, handleWeChatEvents]);
 
-  // Auto scroll to bottom
+  // Auto scroll to bottom (normal chat)
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [chat.messages, chat.isTyping, chat.quickReplies]);
+
+  // Scroll home container to top when it appears
+  useEffect(() => {
+    if (showAssistantHome && homeContainerRef.current) {
+      homeContainerRef.current.scrollTop = 0;
+    }
+  }, [showAssistantHome]);
 
   // Handle voice transcript submission
   useEffect(() => {
@@ -323,8 +331,9 @@ function App() {
         }
       } else {
         // Field mode: "start-work" opens the ceremony then the assistant home
-        // — no user message sent, no chat history advanced
+        // — clear messages immediately so nothing flashes behind the ceremony
         if (reply.value === 'start-work') {
+          chat.clearMessages();
           setShowLaunchCeremony(true);
           return;
         }
@@ -432,6 +441,7 @@ function App() {
                   <>
                     {/* Assistant home replaces message history but keeps InputBar */}
                     <div
+                      ref={homeContainerRef}
                       className="flex-1 overflow-y-auto pt-2 pb-28"
                       style={{ WebkitOverflowScrolling: 'touch' }}
                     >

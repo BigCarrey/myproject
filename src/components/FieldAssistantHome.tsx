@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 
 interface FieldAssistantHomeProps {
   agentName: string;
@@ -38,12 +38,34 @@ const glassBubble: CSSProperties = {
   border: '1px solid rgba(255,255,255,0.80)',
 };
 
+function fadeIn(visible: boolean): CSSProperties {
+  return {
+    opacity: visible ? 1 : 0,
+    transform: visible ? 'translateY(0)' : 'translateY(18px)',
+    transition: 'opacity 0.55s ease, transform 0.55s ease',
+  };
+}
+
 export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: FieldAssistantHomeProps) {
+  // 0 = nothing, 1 = greeting, 2 = features, 3 = moments
+  const [visible, setVisible] = useState(0);
+
+  useEffect(() => {
+    const t1 = window.setTimeout(() => setVisible(1), 80);
+    const t2 = window.setTimeout(() => setVisible(2), 1080);
+    const t3 = window.setTimeout(() => setVisible(3), 2080);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, []);
+
   return (
     <div className="flex flex-col py-4" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
 
-      {/* ── 1. 打招呼 + AI定位（普通对话气泡）────────────────── */}
-      <div className="mb-4 animate-slide-in-left">
+      {/* ── 1. 打招呼 + AI定位 ───────────────────────────────── */}
+      <div className="mb-4" style={fadeIn(visible >= 1)}>
         <div className="max-w-[85%] rounded-[18px] px-4 py-3" style={glassBubble}>
           <p className="text-[15px] leading-[1.65] text-[#0F172A] whitespace-pre-wrap">
             {`嗨 ${agentName} 👋\n\n我是你的AI营销助理，更想当你的营销分身。\n\n朋友圈、客户消息、见客备课——这些事儿从今天起都有我，你只管把精力花在真正值钱的地方。`}
@@ -52,7 +74,7 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
       </div>
 
       {/* ── 2. 常用功能 ──────────────────────────────────────── */}
-      <div className="mb-4 animate-slide-in-left" style={{ animationDelay: '80ms' }}>
+      <div className="mb-4" style={fadeIn(visible >= 2)}>
         <div className="flex items-center gap-1.5 mb-2.5">
           <div className="w-[3px] h-[14px] rounded-full" style={{ background: 'linear-gradient(180deg,#3B82F6,#6366F1)' }} />
           <span className="text-[11.5px] font-semibold text-[#475569] tracking-wide">常用功能</span>
@@ -76,7 +98,7 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
       </div>
 
       {/* ── 3. 今日定制朋友圈 ─────────────────────────────────── */}
-      <div className="mb-1 animate-slide-in-left" style={{ animationDelay: '160ms' }}>
+      <div style={fadeIn(visible >= 3)}>
         <div className="flex items-center gap-1.5 mb-3">
           <div className="w-[3px] h-[14px] rounded-full" style={{ background: 'linear-gradient(180deg,#10B981,#059669)' }} />
           <span className="text-[11.5px] font-semibold text-[#475569] tracking-wide">今日定制朋友圈</span>
@@ -88,12 +110,10 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
           </span>
         </div>
 
-        {/* 个性化文案气泡（section 下方，朋友圈卡片上方）*/}
+        {/* 个性化文案气泡 */}
         <div className="max-w-[85%] rounded-[18px] px-4 py-3 mb-3" style={glassBubble}>
           <p className="text-[15px] leading-[1.65] text-[#0F172A]">
-            根据你
-            <strong>「{agentHobby}达人」</strong>
-            的人设 + 今天的运动热点，这条朋友圈是专门为你写的。你看看合不合适，确认就发 👇
+            根据你<strong>「{agentHobby}达人」</strong>的人设 + 今天的运动热点，这条朋友圈是专门为你写的。你看看合不合适，确认就发 👇
           </p>
         </div>
 
@@ -106,7 +126,6 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
             boxShadow: '0 4px 20px rgba(37,99,235,0.07)',
           }}
         >
-          {/* Author bar */}
           <div className="flex items-center gap-2.5 px-3 pt-3 pb-2 border-b border-gray-50">
             <div
               className="w-9 h-9 rounded-[10px] flex items-center justify-center text-[15px] flex-shrink-0"
@@ -126,12 +145,10 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
             </span>
           </div>
 
-          {/* Post text */}
           <p className="px-3 pt-2.5 pb-2 text-[11px] text-[#2D2D2D] leading-[1.85] whitespace-pre-wrap">
             {POST_CONTENT}
           </p>
 
-          {/* Images */}
           <div className="px-3 pb-2.5 flex gap-2">
             {POST_IMAGE_URLS.map((url, i) => (
               <div key={i} className="flex-1 relative rounded-[10px] overflow-hidden" style={{ height: 80 }}>
@@ -140,7 +157,6 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
             ))}
           </div>
 
-          {/* Highlights */}
           <div
             className="mx-3 mb-3 rounded-[12px] p-2.5"
             style={{ background: 'linear-gradient(135deg,#EFF6FF,#DBEAFE)' }}
@@ -160,8 +176,8 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
           </div>
         </div>
 
-        {/* 确认发布 — quick-reply style button */}
-        <div className="flex justify-center">
+        {/* 确认发布 */}
+        <div className="flex justify-center pb-4">
           <button
             onClick={onConfirmPost}
             className="px-6 py-2.5 rounded-[20px] text-white font-medium text-[14px]"
