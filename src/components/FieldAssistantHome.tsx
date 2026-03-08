@@ -178,10 +178,21 @@ export function FieldAssistantHome({ agentName, agentHobby, onConfirmPost }: Fie
         <div className="flex justify-center pb-4">
           <button
             onClick={onConfirmPost}
-            className="px-6 py-2.5 rounded-[20px] text-white font-medium text-[14px]"
+            className="px-4 py-2 rounded-[20px] text-[13px] font-medium text-[#1D4ED8] transition-all duration-300 border border-white/80 hover:border-[#3B82F6]/30 active:text-white active:border-transparent"
             style={{
-              background: 'linear-gradient(135deg,#3B82F6 0%,#1D4ED8 100%)',
-              boxShadow: '0 4px 14px rgba(37,99,235,0.28)',
+              background: 'rgba(255,255,255,0.70)',
+              backdropFilter: 'blur(24px)',
+              WebkitBackdropFilter: 'blur(24px)',
+              boxShadow: '0 8px 30px 0 rgba(37,99,235,0.06)',
+            }}
+            onMouseDown={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'linear-gradient(135deg, #3B82F6, #1D4ED8)';
+            }}
+            onMouseUp={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.70)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.70)';
             }}
           >
             确认发布朋友圈 ✅

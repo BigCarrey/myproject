@@ -563,8 +563,6 @@ function App() {
                         <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
                       ))}
 
-                      {chat.isTyping && <TypingIndicator />}
-
                       {chat.quickReplies.length > 0 && !chat.isTyping && (
                         <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
                       )}
@@ -665,32 +663,6 @@ function App() {
           内勤
         </button>
 
-        {/* Follow-up Reminder Popup */}
-        {followUpReminder && (
-          <div className="followup-popup-overlay" onClick={() => setFollowUpReminder(null)}>
-            <div className="followup-popup" onClick={(e) => e.stopPropagation()}>
-              <div className="followup-popup-header">
-                <span className="followup-popup-icon">⏰</span>
-                <span className="followup-popup-title">{followUpReminder.title}</span>
-                <button className="followup-popup-close" onClick={() => setFollowUpReminder(null)}>✕</button>
-              </div>
-              <div className="followup-popup-body">
-                {followUpReminder.schedule.map((item, i) => (
-                  <div key={i} className="followup-popup-item">
-                    <div className="followup-popup-date">{item.date}</div>
-                    <div className="followup-popup-action">{item.action}</div>
-                  </div>
-                ))}
-              </div>
-              {followUpReminder.summary && (
-                <div className="followup-popup-summary">{followUpReminder.summary}</div>
-              )}
-              <button className="followup-popup-confirm" onClick={() => { setFollowUpReminder(null); setExecutionTab('calendar'); }}>
-                知道了
-              </button>
-            </div>
-          </div>
-        )}
       </div>
     );
   }
