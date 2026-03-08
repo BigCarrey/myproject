@@ -575,7 +575,7 @@ function App() {
             }}
             onDismissNotification={() => setNotification(null)}
             imeState={imeState}
-            onIMESendReply={(text) => {
+            onIMESendReply={(_text) => {
               // Switch IME back to keyboard mode to show "sent"
               setImeState(null);
               // Advance the scenario
