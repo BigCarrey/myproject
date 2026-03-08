@@ -112,8 +112,8 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+\n\n已帮您切换到微信朋友圈，来看看效果 👇',
-            speechText: '朋友圈已发布成功，帮你切换到微信看看效果。',
+            content: '✅ **朋友圈发布成功，10:32**\n\n📊 预计覆盖好友 800+',
+            speechText: '朋友圈已发布成功。',
             wechatEvents: [
               { type: 'switch-execution-tab', data: 'moments' },
               {
@@ -134,7 +134,6 @@ export const fieldScenarios: Scenario[] = [
               { type: 'expand-panel', data: null },
               // Wang Ge's private message arrives silently — AI has no visibility into WeChat
               { type: 'collapse-panel', data: null },
-              { type: 'switch-execution-tab', data: 'chat' },
               {
                 type: 'set-chat-messages',
                 data: [
