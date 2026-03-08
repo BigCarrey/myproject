@@ -389,22 +389,27 @@ export const fieldScenarios: Scenario[] = [
                 type: 'add-transcript-item',
                 data: { speaker: '小李', text: '王哥！好久不见，最近气色不错啊！', time: '15:00' },
               },
+              { type: 'delay', data: 1000 },
               {
                 type: 'add-transcript-item',
                 data: { speaker: '王哥', text: '哈哈还行，最近开始注意养生了。上次你说的保险的事，我认真想了想...', time: '15:01' },
               },
+              { type: 'delay', data: 1000 },
               {
                 type: 'add-transcript-item',
                 data: { speaker: '小李', text: '是的，三高其实很多客户都有，关键是趁现在指标还可控的时候做好保障。您目前的保障情况是怎样的？', time: '15:02' },
               },
+              { type: 'delay', data: 1000 },
               {
                 type: 'add-transcript-item',
                 data: { speaker: '王哥', text: '公司团险有意外险和医疗险，重疾险之前买过一份，好像是20万保额。其他的就没有了。', time: '15:04' },
               },
+              { type: 'delay', data: 1000 },
               {
                 type: 'add-transcript-item',
                 data: { speaker: '小李', text: '明白了。那您的三高具体是什么情况？有在用药吗？', time: '15:05' },
               },
+              { type: 'delay', data: 1000 },
               {
                 type: 'add-transcript-item',
                 data: { speaker: '王哥', text: '血压偏高，150左右，血糖空腹6.8，血脂也高。在吃降压药和他汀。医生说要注意，不然容易有心脑血管问题。', time: '15:07' },
