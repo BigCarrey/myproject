@@ -270,6 +270,31 @@ export function useChat(activeScenarios: Scenario[]) {
     [state, addMessage, setQuickReplies, setTyping, startScenario, playScenarioStep]
   );
 
+  // Jump to a specific step in a scenario, clearing message history first
+  const jumpToStep = useCallback(
+    (scenarioId: string, stepIndex: number) => {
+      clearTimeouts();
+      if (typeof window !== 'undefined' && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+      sessionRef.current += 1;
+      setState({
+        messages: [],
+        isTyping: false,
+        currentScenario: scenarioId,
+        currentStep: stepIndex - 1,
+        quickReplies: [],
+        isListening: false,
+        isSpeaking: false,
+      });
+      const t = window.setTimeout(() => {
+        playScenarioStep(scenarioId, stepIndex);
+      }, 100);
+      timeoutRefs.current.push(t);
+    },
+    [clearTimeouts, playScenarioStep]
+  );
+
   const resetAndStartScenario = useCallback(
     (scenarioId: string) => {
       clearTimeouts();
@@ -364,6 +389,7 @@ export function useChat(activeScenarios: Scenario[]) {
     handleUserMessage,
     startScenario,
     resetAndStartScenario,
+    jumpToStep,
     initChat,
     initFieldContinuous,
     registerSpeak,

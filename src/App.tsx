@@ -8,6 +8,7 @@ import { OverviewPage } from './components/OverviewPage';
 import { AgentMemoryPanel } from './components/AgentMemoryPanel';
 import { ExecutionPanel } from './components/ExecutionPanel';
 import { LaunchCeremony } from './components/LaunchCeremony';
+import { FieldAssistantHome } from './components/FieldAssistantHome';
 import { useChat } from './hooks/useChat';
 import { useSpeech } from './hooks/useSpeech';
 import { scenarios as backofficeScenarioData } from './data/scenarios';
@@ -142,6 +143,7 @@ function App() {
 
   // ===== Field mode specific state =====
   const [showLaunchCeremony, setShowLaunchCeremony] = useState(false);
+  const [showAssistantHome, setShowAssistantHome] = useState(false);
   const [memoryFields, setMemoryFields] = useState<AgentMemoryField[]>(initialMemoryFields);
   const [executionTab, setExecutionTab] = useState<ExecutionTab>('chat');
   const [calendarEntries, setCalendarEntries] = useState<CalendarEntry[]>([]);
@@ -320,9 +322,11 @@ function App() {
           chat.handleQuickReply(reply);
         }
       } else {
-        // Field mode: show launch ceremony on the start-work button
+        // Field mode: "start-work" opens the ceremony then the assistant home
+        // — no user message sent, no chat history advanced
         if (reply.value === 'start-work') {
           setShowLaunchCeremony(true);
+          return;
         }
         chat.handleQuickReply(reply);
       }
@@ -341,6 +345,12 @@ function App() {
     [speech]
   );
 
+  const handleConfirmPost = useCallback(() => {
+    setShowAssistantHome(false);
+    // Jump straight to "post success + Wang Ge reacted" (step 4 in the scenario)
+    chat.jumpToStep('field-continuous', 4);
+  }, [chat]);
+
   const handleModeToggle = useCallback(() => {
     const newMode = mode === 'backoffice' ? 'field' : 'backoffice';
     setMode(newMode);
@@ -352,6 +362,7 @@ function App() {
     setFollowUpReminder(null);
     // Reset field-specific state
     setShowLaunchCeremony(false);
+    setShowAssistantHome(false);
     setMemoryFields(initialMemoryFields);
     setExecutionTab('chat');
     setCalendarEntries([]);
@@ -417,40 +428,55 @@ function App() {
                   }}
                 />
 
-                {/* Chat messages area */}
-                <div
-                  ref={chatContainerRef}
-                  className="flex-1 overflow-y-auto pt-4 pb-28"
-                  style={{ WebkitOverflowScrolling: 'touch' }}
-                >
-                  {chat.messages.map((msg) => (
-                    <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
-                  ))}
+                {showAssistantHome ? (
+                  <FieldAssistantHome
+                    agentName={memoryFields.find((f) => f.label === '姓名')?.value || '小李'}
+                    agentHobby={memoryFields.find((f) => f.label === '喜好')?.value || '跑步'}
+                    onConfirmPost={handleConfirmPost}
+                  />
+                ) : (
+                  <>
+                    {/* Chat messages area */}
+                    <div
+                      ref={chatContainerRef}
+                      className="flex-1 overflow-y-auto pt-4 pb-28"
+                      style={{ WebkitOverflowScrolling: 'touch' }}
+                    >
+                      {chat.messages.map((msg) => (
+                        <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
+                      ))}
 
-                  {chat.isTyping && <TypingIndicator />}
+                      {chat.isTyping && <TypingIndicator />}
 
-                  {chat.quickReplies.length > 0 && !chat.isTyping && (
-                    <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
-                  )}
+                      {chat.quickReplies.length > 0 && !chat.isTyping && (
+                        <QuickReplies replies={chat.quickReplies} onSelect={handleQuickReply} />
+                      )}
 
-                  <div ref={messagesEndRef} />
-                </div>
+                      <div ref={messagesEndRef} />
+                    </div>
 
-                {/* Input area */}
-                <InputBar
-                  onSend={chat.handleUserMessage}
-                  onVoiceStart={speech.startListening}
-                  onVoiceStop={speech.stopListening}
-                  isListening={speech.isListening}
-                  transcript={speech.transcript}
-                  disabled={chat.isTyping}
-                />
+                    {/* Input area */}
+                    <InputBar
+                      onSend={chat.handleUserMessage}
+                      onVoiceStart={speech.startListening}
+                      onVoiceStop={speech.stopListening}
+                      isListening={speech.isListening}
+                      transcript={speech.transcript}
+                      disabled={chat.isTyping}
+                    />
+                  </>
+                )}
               </>
             )}
 
             {/* Launch Ceremony — scoped to the chat column */}
             {showLaunchCeremony && (
-              <LaunchCeremony onComplete={() => setShowLaunchCeremony(false)} />
+              <LaunchCeremony
+                onComplete={() => {
+                  setShowLaunchCeremony(false);
+                  setShowAssistantHome(true);
+                }}
+              />
             )}
           </div>
         </div>

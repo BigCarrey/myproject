@@ -106,58 +106,8 @@ export const fieldScenarios: Scenario[] = [
         ],
       },
 
-      // ==================== Phase 2: 启动仪式 + 功能介绍 ====================
-      // Step 4: 结构化欢迎卡：固定功能区 + 个性化引导
-      {
-        aiMessages: [
-          {
-            type: 'field-ai-welcome',
-            content: 'AI营销助理已就位',
-            speechText: '好，你的AI营销助理已就位。我能帮你每天发朋友圈、帮你回客户消息、见客前备课、谈完帮收尾。先来发一条朋友圈，让圈子里的人看见你。',
-            delay: 800,
-            data: {
-              agentName: '小李',
-              agentHobby: '跑步',
-              todayRecommendation: '先让圈子里的人看见你——发一条朋友圈吧。',
-            },
-          },
-        ],
-        quickReplies: [
-          { label: '好，先发条朋友圈', value: 'begin-moments' },
-        ],
-      },
-
-      // ==================== Phase 3: 朋友圈内容定制 ====================
-      // Step 5: AI生成个性化朋友圈内容
-      {
-        aiMessages: [
-          {
-            type: 'field-moments-post',
-            content: '已为您定制个性化朋友圈内容',
-            speechText: '我已结合您爱运动的人设和近期体育新闻，为您定制了一条个性化朋友圈内容。',
-            data: {
-              author: '小李',
-              avatar: '🏃',
-              postContent: '周末半马冲线瞬间，汗流浃背却格外踏实～ 就像做保险这两年，每一次为客户规划保障方案，都和跑步一样：前期充分准备，过程稳步推进，最终才能让客户收获安心。最近看到 #国内马拉松赛事安全保障升级# 的新闻，更觉得"保障"不分场景 —— 运动需要护具和医疗支持，生活需要保险和规划兜底。如果你也热爱运动，或想给家人配置全面保障，随时找我聊聊呀～',
-              images: ['半马成绩图', '赛事安全保障新闻截图'],
-              imageUrls: [
-                'https://images.unsplash.com/photo-1513593771513-7b58b6c4af38?w=400&h=300&fit=crop',
-                'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=400&h=300&fit=crop',
-              ],
-              highlights: [
-                '融合个人运动IP，塑造真实可信的人设',
-                '结合热点新闻自然切入保险话题',
-                '软性引导而非硬广，容易引起互动',
-              ],
-            },
-          },
-        ],
-        quickReplies: [
-          { label: '确认并授权发布', value: 'confirm-post' },
-        ],
-      },
-
-      // Step 5: 发布成功，王哥评论互动
+      // ==================== Phase 2: 发布成功（朋友圈由 FieldAssistantHome 确认后直接跳入）====================
+      // Step 4: 发布成功，王哥评论互动
       {
         aiMessages: [
           {
