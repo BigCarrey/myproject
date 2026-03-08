@@ -211,6 +211,9 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
     );
   }
 
+  // Don't render a visible bubble if there's no content (events-only step)
+  if (isAi && message.type === 'text' && !message.content) return null;
+
   return (
     <div className="mb-4 animate-slide-in-left" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
       {message.type === 'text' ? (

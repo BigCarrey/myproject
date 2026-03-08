@@ -224,8 +224,7 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **你的回复已发送给王哥。**',
-            speechText: '回复已发送。',
+            content: '',
             wechatEvents: [
               { type: 'hide-screenshot-helper', data: null },
               {
