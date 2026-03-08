@@ -692,6 +692,7 @@ export const fieldScenarios: Scenario[] = [
                   type: 'task',
                 },
               },
+              { type: 'delay', data: 3000 },
               {
                 type: 'show-followup-reminder',
                 data: {
