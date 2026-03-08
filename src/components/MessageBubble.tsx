@@ -30,6 +30,7 @@ import { FieldGapDiagnosisCard } from './cards/FieldGapDiagnosisCard';
 import { FieldProductPlansCard } from './cards/FieldProductPlansCard';
 import { FieldCommissionCard } from './cards/FieldCommissionCard';
 import { FieldMaterialsCard } from './cards/FieldMaterialsCard';
+import { FieldAIWelcomeCard } from './cards/FieldAIWelcomeCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -188,6 +189,8 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <FieldCommissionCard data={message.data as Record<string, unknown>} />;
       case 'field-materials':
         return <FieldMaterialsCard data={message.data as Record<string, unknown>} />;
+      case 'field-ai-welcome':
+        return <FieldAIWelcomeCard data={message.data as Record<string, unknown>} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

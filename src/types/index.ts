@@ -30,7 +30,8 @@ export type MessageContentType =
   | 'field-gap-diagnosis'
   | 'field-product-plans'
   | 'field-commission'
-  | 'field-materials';
+  | 'field-materials'
+  | 'field-ai-welcome';
 
 export interface Message {
   id: string;
