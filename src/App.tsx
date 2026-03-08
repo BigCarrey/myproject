@@ -575,11 +575,25 @@ function App() {
             }}
             onDismissNotification={() => setNotification(null)}
             imeState={imeState}
-            onIMESendReply={(_text) => {
-              // Switch IME back to keyboard mode to show "sent"
+            onIMEScreenshotHelp={() => {
+              // 截图帮回：触发 AI 生成回复（推进到 field-reply-preview 步骤）
+              chat.handleQuickReply({ label: '截图帮回', value: 'view-reply' });
+            }}
+            onIMESendReply={(replyText) => {
+              // 1. 立即把小李的消息加入聊天（给用户即时反馈）
+              setWechatState((prev) => ({
+                ...prev,
+                chatMessages: [
+                  ...prev.chatMessages,
+                  { sender: 'xiaoli' as const, content: replyText, timestamp: '10:53' },
+                ],
+              }));
+              // 2. 关闭 IME
               setImeState(null);
-              // Advance the scenario
-              chat.handleQuickReply({ label: '点击发送', value: 'send-reply' });
+              // 3. 延迟 1.5s 后推进场景 → 王哥回复出现
+              window.setTimeout(() => {
+                chat.handleQuickReply({ label: '点击发送', value: 'send-reply' });
+              }, 1500);
             }}
           />
         </div>

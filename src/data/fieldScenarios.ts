@@ -286,10 +286,7 @@ export const fieldScenarios: Scenario[] = [
             wechatEvents: [
               { type: 'hide-screenshot-helper', data: null },
               { type: 'hide-ime', data: null },
-              {
-                type: 'add-chat',
-                data: { sender: 'xiaoli', content: '王哥！三高不是拒之门外的门槛，关键看指标控制情况😊 很多客户和你情况类似，最后都顺利配置了适合自己的方案。这个面对面聊更清楚，你看周六下午方便吗？我帮你做个专属评估，给你一个明确的答复！', timestamp: '10:53' },
-              },
+              // 注：小李的消息已由 IME"点击发送"直接加入聊天，这里只加王哥的回复
               {
                 type: 'add-chat',
                 data: { sender: 'wangge', content: '行啊，周六下午可以。3点吧，就约在南山那个星巴克。', timestamp: '10:56' },
