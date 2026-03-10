@@ -30,6 +30,12 @@ export function QuickReplies({ replies, onSelect }: QuickRepliesProps) {
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.70)';
             }}
+            onTouchStart={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'linear-gradient(135deg, #3B82F6, #1D4ED8)';
+            }}
+            onTouchEnd={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.70)';
+            }}
           >
             {reply.label}
           </button>

@@ -81,6 +81,7 @@ export function InputBar({
               style={{
                 background: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)',
                 animation: 'voice-pulse 2s ease-out infinite',
+                pointerEvents: 'none',
               }}
             />
             {/* Mic icon */}

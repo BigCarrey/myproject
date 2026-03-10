@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 
 interface UseSpeechReturn {
   isListening: boolean;
@@ -18,6 +18,11 @@ interface UseSpeechReturn {
 function stripPunct(text: string): string {
   return text.replace(/[。！？，、；：…]/g, '');
 }
+
+const isIOS = (): boolean =>
+  typeof navigator !== 'undefined' &&
+  /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+  !(window as any).MSStream;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getSpeechRecognition = (): (new () => any) | null => {
@@ -84,8 +89,8 @@ function pickBestZhVoice(): SpeechSynthesisVoice | null {
   const zhVoices = zhCN.length > 0 ? zhCN : allZh;
   if (zhVoices.length === 0) return null;
 
-  // Female voice keywords — English + Chinese localized names
-  const femaleNames = ['Xiaoxiao', '晓晓', 'Xiaoyi', '晓伊', 'Xiaoxuan', '晓萱'];
+  // Female voice keywords — English + Chinese localized names (includes iOS voices)
+  const femaleNames = ['Xiaoxiao', '晓晓', 'Xiaoyi', '晓伊', 'Xiaoxuan', '晓萱', 'Tingting', '婷婷', 'Sinji', '沁姿', 'Meijia', '美佳'];
   const qualityTags = ['Natural', 'Premium', 'Enhanced', 'Neural', '自然', '在线'];
 
   // 1st: high-quality female by name
@@ -157,6 +162,20 @@ export function useSpeech(): UseSpeechReturn {
     !!getSpeechRecognition() &&
     typeof window !== 'undefined' &&
     typeof window.speechSynthesis !== 'undefined';
+
+  // iOS Safari requires a user-gesture "unlock" before speechSynthesis will play.
+  // Speak a silent empty utterance on first touch to satisfy the browser policy.
+  useEffect(() => {
+    if (!isIOS()) return;
+    const unlock = () => {
+      if (typeof window === 'undefined' || !window.speechSynthesis) return;
+      const u = new SpeechSynthesisUtterance('');
+      u.volume = 0;
+      window.speechSynthesis.speak(u);
+    };
+    document.addEventListener('touchstart', unlock, { once: true });
+    return () => document.removeEventListener('touchstart', unlock);
+  }, []);
 
   const clearSilenceTimer = useCallback(() => {
     if (silenceTimerRef.current !== null) {
@@ -421,12 +440,15 @@ export function useSpeech(): UseSpeechReturn {
 
     // Chrome bug: long utterances (>~15s) silently stop.
     // Periodic pause+resume keeps the engine alive.
-    keepAliveRef.current = window.setInterval(() => {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.pause();
-        window.speechSynthesis.resume();
-      }
-    }, 10000);
+    // NOTE: skip on iOS — pause/resume permanently halts speech on iOS Safari.
+    if (!isIOS()) {
+      keepAliveRef.current = window.setInterval(() => {
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.pause();
+          window.speechSynthesis.resume();
+        }
+      }, 10000);
+    }
   }, [clearKeepAlive]);
 
   const stopSpeaking = useCallback(() => {

@@ -188,26 +188,38 @@ export function ScenarioTracking({ onBack }: Props) {
     }
   };
 
-  // Start real speech recognition — capture recognized text into voiceText
+  // Start real speech recognition — capture recognized text into voiceText.
+  // Auto-restarts on iOS where continuous:true is not supported.
   const startRecognition = (durationMs: number) => {
-    try {
-      const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (!SR) return;
-      const recognition = new SR();
-      recognition.lang = 'zh-CN';
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognitionRef.current = recognition;
-      recognition.onresult = (e: any) => {
-        let transcript = '';
-        for (let i = 0; i < e.results.length; i++) {
-          transcript += e.results[i][0].transcript;
-        }
-        setVoiceText(transcript);
-      };
-      recognition.start();
-      setTimeout(() => { try { recognition.stop(); } catch { /* */ } }, durationMs);
-    } catch { /* browser may not support */ }
+    const doStart = () => {
+      try {
+        const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (!SR) return;
+        const recognition = new SR();
+        recognition.lang = 'zh-CN';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognitionRef.current = recognition;
+        recognition.onresult = (e: any) => {
+          let transcript = '';
+          for (let i = 0; i < e.results.length; i++) {
+            transcript += e.results[i][0].transcript;
+          }
+          setVoiceText(transcript);
+        };
+        // iOS ignores continuous:true and stops after each phrase — restart if still active
+        recognition.onend = () => {
+          if (recognitionRef.current === recognition) setTimeout(doStart, 150);
+        };
+        recognition.start();
+      } catch { /* browser may not support */ }
+    };
+    doStart();
+    setTimeout(() => {
+      const r = recognitionRef.current;
+      recognitionRef.current = null;
+      try { if (r) r.stop(); } catch { /* */ }
+    }, durationMs);
   };
 
   const handleMicClick = () => {
@@ -229,7 +241,9 @@ export function ScenarioTracking({ onBack }: Props) {
   // User clicks "完成" on the voice overlay — close overlay and proceed with preset text
   const handleVoiceDone = () => {
     setVoiceOverlay(false);
-    try { if (recognitionRef.current) recognitionRef.current.stop(); } catch { /* */ }
+    const r = recognitionRef.current;
+    recognitionRef.current = null; // clear before stop to prevent iOS auto-restart
+    try { if (r) r.stop(); } catch { /* */ }
     if (voiceCmd === 1) {
       setStep(1); setTyped1(CMD1.length);
       scroll();
