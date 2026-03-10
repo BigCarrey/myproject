@@ -85,7 +85,6 @@ export function ScenarioTracking({ onBack }: Props) {
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const _typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const recognitionRef = useRef<any>(null);
   const dialogTimerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const dialogCancelledRef = useRef(false);

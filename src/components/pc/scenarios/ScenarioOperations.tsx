@@ -63,7 +63,6 @@ export function ScenarioOperations({ onBack }: Props) {
   const wxBodyRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const _typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const recognitionRef = useRef<any>(null);
   const { narratorText, speak } = useNarrator();
 
