@@ -71,8 +71,8 @@ export function ScenarioTracking({ onBack }: Props) {
   const [pptStep, setPptStep] = useState(0);
   const [pptConfirmed, setPptConfirmed] = useState(false);
   const [micReady, setMicReady] = useState(1);
-  const [typed1, setTyped1] = useState(0);
-  const [typed2, setTyped2] = useState(0);
+  const [_typed1, setTyped1] = useState(0);
+  const [_typed2, setTyped2] = useState(0);
   // Voice recognition overlay
   const [voiceOverlay, setVoiceOverlay] = useState(false);
   const [voiceCmd, setVoiceCmd] = useState(0); // which command is being recorded (1 or 2)
@@ -85,7 +85,7 @@ export function ScenarioTracking({ onBack }: Props) {
 
   const bodyRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const _typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const recognitionRef = useRef<any>(null);
   const dialogTimerRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const dialogCancelledRef = useRef(false);

@@ -48,7 +48,7 @@ export function ScenarioInterview({ onBack }: Props) {
   const [sumStep, setSumStep] = useState(0);
   const [minutesStep, setMinutesStep] = useState(0);
   const [recordSeconds, setRecordSeconds] = useState(0);
-  const [dispatchStep, setDispatchStep] = useState(0);
+  const [_dispatchStep, _setDispatchStep] = useState(0);
   const [chatIdx, setChatIdx] = useState(0);    // 0=张仟, 1=李平安
   const [msgIdx, setMsgIdx] = useState(0);       // how many msgs visible in current chat
   const recordTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);

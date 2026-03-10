@@ -230,7 +230,7 @@ function WeChatInputBar({ onShowHelper }: { onShowHelper?: () => void }) {
 function SmartKeyboard({
   data,
   onSend,
-  onDismiss,
+  onDismiss: _onDismiss,
 }: {
   data: SmartKeyboardData;
   onSend: (text: string) => void;

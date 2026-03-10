@@ -45,8 +45,8 @@ export function ScenarioOperations({ onBack }: Props) {
   const [honorOpen, setHonorOpen] = useState(false);
   const [honorForwarded, setHonorForwarded] = useState(false);
   const [micReady, setMicReady] = useState(1); // 1=ready for cmd1, 2=ready for cmd2, 0=not ready
-  const [typed1, setTyped1] = useState(0);
-  const [typed2, setTyped2] = useState(0);
+  const [_typed1, setTyped1] = useState(0);
+  const [_typed2, setTyped2] = useState(0);
   // Voice recognition overlay
   const [voiceOverlay, setVoiceOverlay] = useState(false);
   const [voiceCmd, setVoiceCmd] = useState(0); // which command is being recorded (1 or 2)
@@ -58,12 +58,12 @@ export function ScenarioOperations({ onBack }: Props) {
   const [wxOpen, setWxOpen] = useState(false);
   const [wxMsgs, setWxMsgs] = useState<WxMsg[]>([]);
   const [wxVisibleCount, setWxVisibleCount] = useState(0);
-  const [wxMode, setWxMode] = useState<'honor' | 'case'>('honor');
+  const [_wxMode, setWxMode] = useState<'honor' | 'case'>('honor');
   const wxTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
   const wxBodyRef = useRef<HTMLDivElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const _typingRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const recognitionRef = useRef<any>(null);
   const { narratorText, speak } = useNarrator();
 
