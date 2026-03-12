@@ -31,6 +31,7 @@ import { FieldProductPlansCard } from './cards/FieldProductPlansCard';
 import { FieldCommissionCard } from './cards/FieldCommissionCard';
 import { FieldMaterialsCard } from './cards/FieldMaterialsCard';
 import { FieldCustomerPlanCard } from './cards/FieldCustomerPlanCard';
+import { FieldCustomerTemperatureCard } from './cards/FieldCustomerTemperatureCard';
 import { FieldInvitationCard } from './cards/FieldInvitationCard';
 import { FieldCustomerArchiveCard } from './cards/FieldCustomerArchiveCard';
 import { FieldInsuranceSolutionCard } from './cards/FieldInsuranceSolutionCard';
@@ -197,6 +198,8 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <FieldMaterialsCard data={message.data as Record<string, unknown>} />;
       case 'field-customer-plan':
         return <FieldCustomerPlanCard data={message.data as Record<string, unknown>} />;
+      case 'field-customer-temperature':
+        return <FieldCustomerTemperatureCard data={message.data as Record<string, unknown>} />;
       case 'field-invitation':
         return <FieldInvitationCard data={message.data as Record<string, unknown>} />;
       case 'field-customer-archive':
