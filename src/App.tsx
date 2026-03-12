@@ -220,8 +220,6 @@ function App() {
           { type: 'switch-view', data: 'chat' },
           { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？', timestamp: '10:15' } },
           { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '好的，正好最近也在想这些，你什么时候方便详细聊聊？', timestamp: '10:18' } },
-          { type: 'show-smart-keyboard', data: { analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的回复话术', recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？' } },
-          { type: 'show-float-btn', data: null },
         ]);
         setPhoneView('wechat');
 
@@ -342,7 +340,12 @@ function App() {
               style={{ WebkitOverflowScrolling: 'touch' }}
             >
               {chat.messages.map((msg) => (
-                <MessageBubble key={msg.id} message={msg} onSpeak={handleSpeak} />
+                <MessageBubble
+                  key={msg.id}
+                  message={msg}
+                  onSpeak={handleSpeak}
+                  onAction={() => chat.handleQuickReply({ label: '一键发送', value: 'send-content' })}
+                />
               ))}
               {chat.isTyping && <TypingIndicator />}
               {chat.quickReplies.length > 0 && !chat.isTyping && (

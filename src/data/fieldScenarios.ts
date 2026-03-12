@@ -685,74 +685,46 @@ export const fieldScenarios: Scenario[] = [
     icon: '📲',
     description: '触客互动',
     steps: [
-      // Step 1: 切换到微信，智能键盘展示推荐话术，代理人一键发送
-      // 注：add-chat 消息已在旁白阶段由 advanceToNextStep 预填充，此处仅刷新键盘
+      // Step 1: 助手页展示触客内容卡片，代理人点击「一键发送」
       {
         aiMessages: [
           {
-            type: 'text',
-            content: '📩 **微信智能键盘已就绪！**\n\nAI已根据对话内容生成回复话术，点击「发送话术」发给陈先生。',
-            speechText: '智能键盘已为您生成回复话术，请切换到微信，点击一键发送。',
-            wechatEvents: [
-              { type: 'switch-view', data: 'chat' },
-              {
-                type: 'show-smart-keyboard',
-                data: {
-                  analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的回复话术',
-                  recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？',
-                },
-              },
-              { type: 'show-float-btn', data: null },
-            ],
+            type: 'field-outreach-content',
+            content: '',
+            speechText: 'AI已根据近期热点话题为您定制好触客内容，点击一键发送给陈先生。',
+            wechatEvents: [],
+            data: {
+              contentItems: [
+                { icon: '📊', title: '市场动态周报', tag: '文章', desc: '近期A股波动分析与资产配置建议' },
+                { icon: '💰', title: '资产配置指南', tag: 'PDF', desc: '震荡市下高净值客户保全策略' },
+                { icon: '📈', title: '同类客户案例', tag: '案例', desc: '企业主多元化配置，年化稳健收益' },
+                { icon: '🏆', title: '理财收益对比', tag: '报告', desc: '保险年金vs其他资产5年收益对比' },
+              ],
+              forwardingScript: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！',
+            },
           },
         ],
         quickReplies: [],
       },
-      // Step 2: 代理人发送话术后，陈先生回复"可以"，键盘切换为触客素材
+      // Step 2: 发送后，切换到微信，陈先生回复，智能键盘出引导话术
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **陈先生回复了：「可以，感兴趣，您介绍一下！」**\n\nAI已为您匹配对应触客素材，可一键发送。',
-            speechText: '陈先生表示感兴趣！AI已为您匹配对应触客素材，可一键转发给陈先生。',
+            content: '✅ **触客内容已发送！**\n\n陈先生刚刚回复了，请切换到微信查看，AI已生成回复话术。',
+            speechText: '触客内容已成功发送！陈先生已回复，请切换到微信，智能键盘已为您生成回复话术。',
             wechatEvents: [
-              {
-                type: 'add-chat',
-                data: { sender: 'chensheng', senderName: '陈先生', content: '可以，感兴趣，您介绍一下！', timestamp: '10:22' },
-              },
+              { type: 'switch-view', data: 'chat' },
+              { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！', timestamp: '10:20' } },
+              { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '好的！正好最近在看这方面，谢谢～', timestamp: '10:22' } },
               {
                 type: 'show-smart-keyboard',
                 data: {
-                  analysis: '根据近期热点话题，AI为您定制以下触客内容，可一键转发',
-                  recommendedScript: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！',
-                  contentItems: [
-                    {
-                      icon: '📊',
-                      title: '市场动态周报',
-                      tag: '文章',
-                      desc: '近期A股波动分析与资产配置建议',
-                    },
-                    {
-                      icon: '💰',
-                      title: '资产配置指南',
-                      tag: 'PDF',
-                      desc: '震荡市下高净值客户保全策略',
-                    },
-                    {
-                      icon: '📈',
-                      title: '同类客户案例',
-                      tag: '案例',
-                      desc: '企业主多元化配置，年化稳健收益',
-                    },
-                    {
-                      icon: '🏆',
-                      title: '理财收益对比',
-                      tag: '报告',
-                      desc: '保险年金vs其他资产5年收益对比',
-                    },
-                  ],
+                  analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的开口话术',
+                  recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？',
                 },
               },
+              { type: 'show-float-btn', data: null },
             ],
           },
         ],

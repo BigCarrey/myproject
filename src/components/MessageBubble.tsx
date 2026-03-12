@@ -38,10 +38,12 @@ import { FieldInsuranceSolutionCard } from './cards/FieldInsuranceSolutionCard';
 import { FieldSalesLogicCard } from './cards/FieldSalesLogicCard';
 import FieldMonthlyPlanCard from './cards/FieldMonthlyPlanCard';
 import FieldOutreachScriptsCard from './cards/FieldOutreachScriptsCard';
+import { FieldOutreachContentCard } from './cards/FieldOutreachContentCard';
 
 interface MessageBubbleProps {
   message: Message;
   onSpeak?: (text: string) => void;
+  onAction?: () => void;
 }
 
 function renderMarkdown(text: string): string {
@@ -129,7 +131,7 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
   );
 }
 
-export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
+export function MessageBubble({ message, onSpeak, onAction }: MessageBubbleProps) {
   const isAi = message.role === 'ai';
 
   const renderContent = () => {
@@ -212,6 +214,8 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <FieldMonthlyPlanCard data={message.data as any} />;
       case 'field-outreach-scripts':
         return <FieldOutreachScriptsCard data={message.data as any} />;
+      case 'field-outreach-content':
+        return <FieldOutreachContentCard data={message.data as any} onSend={onAction} />;
       default:
         return <TextContent content={message.content} onSpeak={isAi ? onSpeak : undefined} />;
     }

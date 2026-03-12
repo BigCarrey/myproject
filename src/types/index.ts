@@ -38,7 +38,8 @@ export type MessageContentType =
   | 'field-sales-logic'
   | 'field-monthly-plan'
   | 'field-outreach-scripts'
-  | 'field-customer-temperature';
+  | 'field-customer-temperature'
+  | 'field-outreach-content';
 
 export interface Message {
   id: string;
