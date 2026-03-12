@@ -477,8 +477,8 @@ export const fieldScenarios: Scenario[] = [
         aiMessages: [
           {
             type: 'text',
-            content: '👋 王芳老师，**司庆季**开始了！AI助手结合当下司庆季营销节点，已为您智能盘点重点客户，共推荐 **20位** 重点客户。\n\n根据经验数据，同类型客户转化率接近 **10%**，提醒您尽快预约拜访！是否要为您添加至**4月经营计划**中？',
-            speechText: '王芳老师，司庆季开始了！结合当下司庆季营销节点，为您推荐20位重点客户，转化率接近10%。是否要为您添加至4月经营计划？',
+            content: '👋 王芳老师，**司庆季**开始了！AI助手结合当下司庆季营销节点，已为您智能盘点重点客户，共推荐 **20位** 重点客户，其中银行存款到期客户5位、旺财余额大于5万的客户3位、资产规模大于600W的客户10位。\n\n根据近半年互动情况分析，中高温客户有 **8位**，同类型客户转化率接近 **10%**，提醒您尽快邀约拜访直接进行产品推荐！❄️ **冷却客户有5位**，长期未联系易导致关系疏远，提醒您加强线上互动频次，提升客户关系。\n\n是否要为您添加至**4月经营计划**中？',
+            speechText: '王芳老师，司庆季开始了！为您推荐20位重点客户，其中中高温客户8位，转化率接近10%，建议尽快邀约拜访。另有冷却客户5位，长期未联系易导致关系疏远，提醒加强线上互动频次。是否添加至4月经营计划？',
           },
           {
             type: 'field-customer-plan',
@@ -522,8 +522,18 @@ export const fieldScenarios: Scenario[] = [
                     { name: '李明', detail: '资产约640万' },
                   ],
                 },
+                {
+                  type: '冷却客户', count: 5, icon: '❄️', color: '#94A3B8', bg: '#F8FAFC',
+                  customers: [
+                    { name: '高先生', detail: '资产约680万 · 8个月未联系' },
+                    { name: '柳女士', detail: '旺财15万 · 6个月未联系' },
+                    { name: '余先生', detail: '资产约520万 · 5个月未联系' },
+                    { name: '白女士', detail: '存款100万 · 7个月未联系' },
+                    { name: '许先生', detail: '资产约450万 · 4个月未联系' },
+                  ],
+                },
               ],
-              aiNote: '以上客户均在近30天内有明确的资产管理需求信号，司庆季是切入的最佳时机。',
+              aiNote: '以上客户均在近30天内有明确的资产管理需求信号，司庆季是切入的最佳时机。冷却客户建议优先通过朋友圈、问候消息加强互动频次。',
             },
           },
         ],
@@ -666,6 +676,7 @@ export const fieldScenarios: Scenario[] = [
     description: '触客互动',
     steps: [
       // Step 1: 切换到微信，展示已发话术 + 陈先生回复，智能键盘出现
+      // 注：add-chat 消息已在旁白阶段由 advanceToNextStep 预填充，此处仅刷新键盘
       {
         aiMessages: [
           {
@@ -674,23 +685,6 @@ export const fieldScenarios: Scenario[] = [
             speechText: '话术已成功发送！陈先生已回复，请切换到微信，点击智能键盘的一键截屏按钮获取AI话术建议。',
             wechatEvents: [
               { type: 'switch-view', data: 'chat' },
-              {
-                type: 'add-chat',
-                data: {
-                  sender: 'xiaoli',
-                  content: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？',
-                  timestamp: '10:15',
-                },
-              },
-              {
-                type: 'add-chat',
-                data: {
-                  sender: 'chensheng',
-                  senderName: '陈先生',
-                  content: '好的，正好最近也在想这些，你什么时候方便详细聊聊？',
-                  timestamp: '10:18',
-                },
-              },
               {
                 type: 'show-smart-keyboard',
                 data: {

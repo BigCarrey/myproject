@@ -26,7 +26,7 @@ const DEMO_STEPS = [
     sublabel: '微信互动',
     icon: '📲',
     color: '#059669',
-    narration: '陈先生主动发来资产配置咨询，AI助手实时分析客户意图，并帮您生成专属活动邀请函。',
+    narration: '在我与客户微信沟通时，助手实时提供开口话术，提示我如何回复陈先生的问题，很快我与客户轻松地互动起来。',
   },
   {
     id: 'field-chen-solution',
@@ -213,8 +213,38 @@ function App() {
       if (nextIndex >= DEMO_STEPS.length) return;
       const step = DEMO_STEPS[nextIndex];
       setActiveStepIndex(nextIndex);
-      setPhoneView('assistant');
 
+      if (nextIndex === 1) {
+        // 触客场景：旁白期间展示微信实时开口话术画面
+        handleWeChatEvents([
+          { type: 'switch-view', data: 'chat' },
+          { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？', timestamp: '10:15' } },
+          { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '好的，正好最近也在想这些，你什么时候方便详细聊聊？', timestamp: '10:18' } },
+          { type: 'show-smart-keyboard', data: { analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈', recommendedScript: '陈先生，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！' } },
+          { type: 'show-float-btn', data: null },
+        ]);
+        setPhoneView('wechat');
+
+        const launchScenario = () => {
+          // 0.5s额外延迟，避免旁白与下一段衔接太紧凑
+          setTimeout(() => {
+            setPhoneView('assistant');
+            chat.resetAndStartScenario(step.id);
+          }, 500);
+        };
+
+        if (autoSpeak && step.narration) {
+          let done = false;
+          const startScenario = () => { if (!done) { done = true; launchScenario(); } };
+          speech.narrate(step.narration, startScenario);
+          setTimeout(startScenario, 3000); // fallback
+        } else {
+          launchScenario();
+        }
+        return;
+      }
+
+      setPhoneView('assistant');
       if (autoSpeak && step.narration) {
         let scenarioStarted = false;
         const startScenario = () => {
@@ -229,7 +259,7 @@ function App() {
         chat.resetAndStartScenario(step.id);
       }
     },
-    [autoSpeak, speech, chat]
+    [autoSpeak, speech, chat, handleWeChatEvents]
   );
 
   const handleQuickReply = useCallback(

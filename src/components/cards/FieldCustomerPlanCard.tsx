@@ -181,6 +181,20 @@ export function FieldCustomerPlanCard({ data }: FieldCustomerPlanCardProps) {
         { name: '唐总', detail: '资产约2000万' },
       ],
     },
+    {
+      type: '冷却客户',
+      count: 5,
+      icon: '❄️',
+      color: '#94A3B8',
+      bg: '#F8FAFC',
+      customers: [
+        { name: '高先生', detail: '资产约680万 · 8个月未联系' },
+        { name: '柳女士', detail: '旺财15万 · 6个月未联系' },
+        { name: '余先生', detail: '资产约520万 · 5个月未联系' },
+        { name: '白女士', detail: '存款100万 · 7个月未联系' },
+        { name: '许先生', detail: '资产约450万 · 4个月未联系' },
+      ],
+    },
   ];
 
   const displaySegments = segments;
