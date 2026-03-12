@@ -37,7 +37,8 @@ export type MessageContentType =
   | 'field-insurance-solution'
   | 'field-sales-logic'
   | 'field-monthly-plan'
-  | 'field-outreach-scripts';
+  | 'field-outreach-scripts'
+  | 'field-customer-temperature';
 
 export interface Message {
   id: string;
