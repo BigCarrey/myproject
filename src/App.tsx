@@ -219,10 +219,9 @@ function App() {
         handleWeChatEvents([
           { type: 'switch-view', data: 'chat' },
           { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？', timestamp: '10:15' } },
-          { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '好的，正好最近也在想这些，你什么时候方便详细聊聊？', timestamp: '10:18' } },
-          { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！', timestamp: '10:20' } },
-          { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '这些资料看起来很有参考价值！您说的几个资产配置方向我都挺感兴趣的，能约个时间详细聊聊吗？', timestamp: '10:22' } },
-          { type: 'show-smart-keyboard', data: { analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的开口话术', recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？' } },
+          { type: 'add-chat', data: { sender: 'xiaoli', content: '[资产配置参考资料 · 共4份] 市场动态周报、资产配置指南、同类客户案例、理财收益对比', contentType: 'file', timestamp: '10:15' } },
+          { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '最近市场波动比较大，亏了好多', timestamp: '10:20' } },
+          { type: 'show-smart-keyboard', data: { analysis: 'AI识别到客户有市场亏损焦虑情绪，建议先共情、再引导资产配置方向', recommendedScript: '陈先生，您说得很对！最近市场波动确实比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个抗波动、稳收益的方向，您看方便的话我来详细给您介绍一下？' } },
           { type: 'show-float-btn', data: null },
         ]);
         setPhoneView('wechat');
