@@ -698,8 +698,8 @@ export const fieldScenarios: Scenario[] = [
               {
                 type: 'show-smart-keyboard',
                 data: {
-                  analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈',
-                  recommendedScript: '陈先生，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！',
+                  analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的回复话术',
+                  recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？',
                 },
               },
               { type: 'show-float-btn', data: null },
