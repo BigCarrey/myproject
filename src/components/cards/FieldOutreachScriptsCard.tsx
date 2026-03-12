@@ -27,8 +27,6 @@ export default function FieldOutreachScriptsCard({ data }: FieldOutreachScriptsC
     { icon: '📈', title: '同类客户案例', tag: '案例', desc: '企业主多元化配置，年化稳健收益' },
     { icon: '🏆', title: '理财收益对比', tag: '报告', desc: '保险年金vs其他资产5年收益对比' },
   ];
-  const forwardingScript = data.forwardingScript || '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！';
-
   return (
     <div
       className="rounded-2xl overflow-hidden shadow-sm border border-gray-100"
@@ -89,20 +87,9 @@ export default function FieldOutreachScriptsCard({ data }: FieldOutreachScriptsC
       {/* Divider */}
       <div style={{ height: '1px', background: '#F3F4F6', margin: '0 14px' }} />
 
-      {/* AI Content Section (replaces general template) */}
+      {/* AI Content items */}
       <div className="px-[14px] pt-[10px] pb-[12px]">
-        {/* Sub-header */}
-        <div
-          className="flex items-center gap-1.5 px-3 py-2 rounded-[10px] mb-2"
-          style={{ background: 'linear-gradient(135deg, #EFF6FF, #EDE9FE)' }}
-        >
-          <span className="text-[12px]">📤</span>
-          <span className="text-[12px] font-semibold text-[#1E40AF]">AI生成触客内容</span>
-          <span className="text-[10px] text-[#64748B] ml-1">根据近期热点话题定制，可一键转发</span>
-        </div>
-
-        {/* Content items */}
-        <div className="flex flex-col gap-1.5 mb-2.5">
+        <div className="flex flex-col gap-1.5">
           {contentItems.map((item, i) => (
             <div
               key={i}
@@ -135,21 +122,6 @@ export default function FieldOutreachScriptsCard({ data }: FieldOutreachScriptsC
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Forwarding script */}
-        <div className="text-[10px] text-[#64748B] font-medium mb-1.5">📝 AI生成转发话术：</div>
-        <div
-          className="rounded-[10px] px-[10px] py-[8px] text-[11px] leading-[1.6] text-[#374151]"
-          style={{
-            background: '#F1F5F9',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
-          }}
-        >
-          "{forwardingScript}"
         </div>
       </div>
     </div>
