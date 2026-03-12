@@ -703,26 +703,14 @@ export const fieldScenarios: Scenario[] = [
     icon: '📲',
     description: '触客互动',
     steps: [
-      // Step 1: 已跳转微信，发送话术后陈先生回复，智能键盘出引导话术
+      // Step 1: 微信互动已展示，等待代理人通过智能键盘回复
       {
         aiMessages: [
           {
             type: 'text',
-            content: '✅ **触客内容已发送！**\n\n陈先生刚刚回复了，请切换到微信查看，AI已生成回复话术。',
-            speechText: '触客内容已成功发送！陈先生已回复，请切换到微信，智能键盘已为您生成回复话术。',
-            wechatEvents: [
-              { type: 'switch-view', data: 'chat' },
-              { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！', timestamp: '10:20' } },
-              { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '好的！正好最近在看这方面，谢谢～', timestamp: '10:22' } },
-              {
-                type: 'show-smart-keyboard',
-                data: {
-                  analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的开口话术',
-                  recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？',
-                },
-              },
-              { type: 'show-float-btn', data: null },
-            ],
+            content: '✅ **触客内容已发送！**\n\nAI已为您生成回复话术，请在微信智能键盘一键发送。',
+            speechText: '触客内容已成功发送！陈先生表示感兴趣，AI已为您生成引导话术，请通过智能键盘一键发送。',
+            wechatEvents: [],
           },
         ],
         quickReplies: [],

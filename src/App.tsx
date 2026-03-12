@@ -215,11 +215,15 @@ function App() {
       setActiveStepIndex(nextIndex);
 
       if (nextIndex === 1) {
-        // 触客场景：旁白期间展示微信实时开口话术画面
+        // 触客场景：一键发送至微信后，完整展示触客互动流程
         handleWeChatEvents([
           { type: 'switch-view', data: 'chat' },
           { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？', timestamp: '10:15' } },
           { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '好的，正好最近也在想这些，你什么时候方便详细聊聊？', timestamp: '10:18' } },
+          { type: 'add-chat', data: { sender: 'xiaoli', content: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！', timestamp: '10:20' } },
+          { type: 'add-chat', data: { sender: 'chensheng', senderName: '陈先生', content: '这些资料看起来很有参考价值！您说的几个资产配置方向我都挺感兴趣的，能约个时间详细聊聊吗？', timestamp: '10:22' } },
+          { type: 'show-smart-keyboard', data: { analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的开口话术', recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？' } },
+          { type: 'show-float-btn', data: null },
         ]);
         setPhoneView('wechat');
 
