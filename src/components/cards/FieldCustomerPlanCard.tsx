@@ -182,6 +182,23 @@ export function FieldCustomerPlanCard({ data }: FieldCustomerPlanCardProps) {
       ],
     },
     {
+      type: '中高温客户',
+      count: 8,
+      icon: '🔥',
+      color: '#F97316',
+      bg: '#FFF7ED',
+      customers: [
+        { name: '陈先生', detail: '近30天互动3次 · 意向强' },
+        { name: '王总', detail: '近30天互动2次 · 主动询问' },
+        { name: '马总', detail: '近20天互动2次 · 关注产品' },
+        { name: '吴女士', detail: '近25天互动4次 · 积极回复' },
+        { name: '郑总', detail: '近15天互动3次 · 意向明确' },
+        { name: '唐总', detail: '近10天互动2次 · 主动联系' },
+        { name: '李先生', detail: '近30天互动2次 · 询问收益' },
+        { name: '孙女士', detail: '近20天互动3次 · 有购买意向' },
+      ],
+    },
+    {
       type: '冷却客户',
       count: 5,
       icon: '❄️',
@@ -199,7 +216,7 @@ export function FieldCustomerPlanCard({ data }: FieldCustomerPlanCardProps) {
 
   const displaySegments = segments;
 
-  const totalCount = d.totalCount || 20;
+  const totalCount = d.totalCount || 31;
   const isUpdated = d.isUpdated || false;
   const updatedTotal = d.updatedTotal || totalCount;
 

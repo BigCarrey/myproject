@@ -495,9 +495,9 @@ export const fieldScenarios: Scenario[] = [
             content: '',
             data: {
               title: '司庆季 · 4月重点经营客户',
-              totalCount: 20,
+              totalCount: 31,
               conversionRate: '~10%',
-              estimatedConversion: '2人',
+              estimatedConversion: '3人',
               segments: [
                 {
                   type: '银行存款到期客户', count: 5, icon: '🏦', color: '#F59E0B', bg: '#FFFBEB',
@@ -530,6 +530,19 @@ export const fieldScenarios: Scenario[] = [
                     { name: '韩先生', detail: '资产约620万' },
                     { name: '唐总', detail: '资产约2000万' },
                     { name: '李明', detail: '资产约640万' },
+                  ],
+                },
+                {
+                  type: '中高温客户', count: 8, icon: '🔥', color: '#F97316', bg: '#FFF7ED',
+                  customers: [
+                    { name: '陈先生', detail: '近30天互动3次 · 意向强' },
+                    { name: '王总', detail: '近30天互动2次 · 主动询问' },
+                    { name: '马总', detail: '近20天互动2次 · 关注产品' },
+                    { name: '吴女士', detail: '近25天互动4次 · 积极回复' },
+                    { name: '郑总', detail: '近15天互动3次 · 意向明确' },
+                    { name: '唐总', detail: '近10天互动2次 · 主动联系' },
+                    { name: '李先生', detail: '近30天互动2次 · 询问收益' },
+                    { name: '孙女士', detail: '近20天互动3次 · 有购买意向' },
                   ],
                 },
                 {
