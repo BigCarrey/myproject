@@ -679,8 +679,13 @@ export const fieldScenarios: Scenario[] = [
                 script: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？',
                 reason: '存款300万本月到期 · 主动咨询意向强',
               },
-              generalTemplate: '王老师，平安司庆季特别推出了几款专属产品，结合您目前的资产情况，我觉得很适合您，方便的话给您详细介绍一下？',
-              templateCount: 26,
+              contentItems: [
+                { icon: '📊', title: '市场动态周报', tag: '文章', desc: '近期A股波动分析与资产配置建议' },
+                { icon: '💰', title: '资产配置指南', tag: 'PDF', desc: '震荡市下高净值客户保全策略' },
+                { icon: '📈', title: '同类客户案例', tag: '案例', desc: '企业主多元化配置，年化稳健收益' },
+                { icon: '🏆', title: '理财收益对比', tag: '报告', desc: '保险年金vs其他资产5年收益对比' },
+              ],
+              forwardingScript: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！',
             },
           },
         ],
@@ -698,28 +703,7 @@ export const fieldScenarios: Scenario[] = [
     icon: '📲',
     description: '触客互动',
     steps: [
-      // Step 1: 助手页展示触客内容卡片，代理人点击「一键发送」
-      {
-        aiMessages: [
-          {
-            type: 'field-outreach-content',
-            content: '',
-            speechText: 'AI已根据近期热点话题为您定制好触客内容，点击一键发送给陈先生。',
-            wechatEvents: [],
-            data: {
-              contentItems: [
-                { icon: '📊', title: '市场动态周报', tag: '文章', desc: '近期A股波动分析与资产配置建议' },
-                { icon: '💰', title: '资产配置指南', tag: 'PDF', desc: '震荡市下高净值客户保全策略' },
-                { icon: '📈', title: '同类客户案例', tag: '案例', desc: '企业主多元化配置，年化稳健收益' },
-                { icon: '🏆', title: '理财收益对比', tag: '报告', desc: '保险年金vs其他资产5年收益对比' },
-              ],
-              forwardingScript: '陈先生，我给您整理了几份资产配置的参考资料，包括市场分析、方案指南、客户案例等，抽空看看，有问题随时聊！',
-            },
-          },
-        ],
-        quickReplies: [],
-      },
-      // Step 2: 发送后，切换到微信，陈先生回复，智能键盘出引导话术
+      // Step 1: 已跳转微信，发送话术后陈先生回复，智能键盘出引导话术
       {
         aiMessages: [
           {

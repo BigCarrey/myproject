@@ -226,7 +226,7 @@ function App() {
         const launchScenario = () => {
           // 0.5s额外延迟，避免旁白与下一段衔接太紧凑
           setTimeout(() => {
-            setPhoneView('assistant');
+            // 触客场景：发送后直接停留在微信页面
             chat.resetAndStartScenario(step.id);
           }, 500);
         };
