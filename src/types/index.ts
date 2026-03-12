@@ -82,9 +82,17 @@ export interface WeChatScreenshotHelper {
   visible: boolean;
 }
 
+export interface SmartKeyboardContentItem {
+  icon: string;
+  title: string;
+  tag: string;
+  desc: string;
+}
+
 export interface SmartKeyboardData {
   analysis: string;
   recommendedScript: string;
+  contentItems?: SmartKeyboardContentItem[];
 }
 
 export interface WeChatEvent {

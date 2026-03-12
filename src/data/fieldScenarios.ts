@@ -698,8 +698,34 @@ export const fieldScenarios: Scenario[] = [
               {
                 type: 'show-smart-keyboard',
                 data: {
-                  analysis: 'AI根据对话内容实时分析，为您生成符合自身风格的回复话术',
+                  analysis: '根据近期热点话题，AI为您定制以下触客内容，可一键转发',
                   recommendedScript: '陈先生，您说得很对！最近市场波动比较大，很多客户都在重新审视资产配置。我根据您的情况梳理了几个方向，您看方便的话我来详细给您介绍一下？',
+                  contentItems: [
+                    {
+                      icon: '📊',
+                      title: '市场动态周报',
+                      tag: '文章',
+                      desc: '近期A股波动分析与资产配置建议',
+                    },
+                    {
+                      icon: '💰',
+                      title: '资产配置指南',
+                      tag: 'PDF',
+                      desc: '震荡市下高净值客户保全策略',
+                    },
+                    {
+                      icon: '📈',
+                      title: '同类客户案例',
+                      tag: '案例',
+                      desc: '企业主多元化配置，年化稳健收益',
+                    },
+                    {
+                      icon: '🏆',
+                      title: '理财收益对比',
+                      tag: '报告',
+                      desc: '保险年金vs其他资产5年收益对比',
+                    },
+                  ],
                 },
               },
               { type: 'show-float-btn', data: null },

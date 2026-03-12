@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
-import type { WeChatChatMessage, WeChatMoment, WeChatScreenshotHelper, SmartKeyboardData } from '../types/index';
+import type { WeChatChatMessage, WeChatMoment, WeChatScreenshotHelper, SmartKeyboardData, SmartKeyboardContentItem } from '../types/index';
 
 interface WeChatSimulatorProps {
   currentView: 'chat' | 'moments';
@@ -226,6 +226,142 @@ function WeChatInputBar({ onShowHelper }: { onShowHelper?: () => void }) {
   );
 }
 
+/* ─── Content Keyboard (触客内容 card style) ─── */
+function ContentKeyboard({ data, onSend }: { data: SmartKeyboardData; onSend: (text: string) => void }) {
+  const items: SmartKeyboardContentItem[] = data.contentItems!;
+  return (
+    <div style={{ background: '#fff', borderRadius: '16px 16px 0 0', overflow: 'hidden' }}>
+      {/* Header */}
+      <div
+        style={{
+          padding: '10px 14px 8px',
+          background: 'linear-gradient(135deg, #0EA5E9 0%, #6366F1 100%)',
+        }}
+      >
+        <div style={{ color: '#fff', fontSize: 13, fontWeight: 700 }}>📤 AI生成触客内容</div>
+        <div style={{ color: 'rgba(255,255,255,0.75)', fontSize: 10, marginTop: 2 }}>
+          {data.analysis}
+        </div>
+      </div>
+
+      {/* Content items */}
+      <div style={{ padding: '8px 10px 0', display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {items.map((item, i) => (
+          <div
+            key={i}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '8px 10px',
+              borderRadius: 10,
+              background: '#F8FAFC',
+              border: '1px solid #E2E8F0',
+            }}
+          >
+            {/* Icon */}
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 8,
+                background: 'linear-gradient(135deg, #E0F2FE, #EDE9FE)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 18,
+                flexShrink: 0,
+              }}
+            >
+              {item.icon}
+            </div>
+            {/* Text */}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 2 }}>
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#1E293B' }}>{item.title}</span>
+                <span
+                  style={{
+                    fontSize: 9,
+                    fontWeight: 700,
+                    color: '#0EA5E9',
+                    background: '#E0F2FE',
+                    borderRadius: 4,
+                    padding: '1px 5px',
+                  }}
+                >
+                  {item.tag}
+                </span>
+              </div>
+              <div style={{ fontSize: 10, color: '#64748B', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {item.desc}
+              </div>
+            </div>
+            {/* Number badge */}
+            <div
+              style={{
+                width: 22,
+                height: 22,
+                borderRadius: '50%',
+                background: 'linear-gradient(135deg, #0EA5E9, #6366F1)',
+                color: '#fff',
+                fontSize: 11,
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
+              {i + 1}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* AI forwarding script */}
+      <div style={{ padding: '8px 10px 10px' }}>
+        <div style={{ fontSize: 10, color: '#64748B', marginBottom: 4, fontWeight: 500 }}>
+          📝 AI生成转发话术：
+        </div>
+        <div
+          style={{
+            fontSize: 11,
+            color: '#334155',
+            lineHeight: 1.55,
+            background: '#F1F5F9',
+            borderRadius: 8,
+            padding: '7px 10px',
+            marginBottom: 8,
+            display: '-webkit-box',
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+          }}
+        >
+          "{data.recommendedScript}"
+        </div>
+        <button
+          onClick={() => onSend(data.recommendedScript)}
+          style={{
+            width: '100%',
+            background: 'linear-gradient(135deg, #0EA5E9, #6366F1)',
+            color: '#fff',
+            fontSize: 13,
+            fontWeight: 700,
+            border: 'none',
+            borderRadius: 10,
+            padding: '9px 0',
+            cursor: 'pointer',
+            letterSpacing: '0.04em',
+          }}
+        >
+          一键发送
+        </button>
+      </div>
+    </div>
+  );
+}
+
 /* ─── Smart Keyboard ─── */
 function SmartKeyboard({
   data,
@@ -332,7 +468,10 @@ function SmartKeyboard({
             </div>
           )}
 
-          {status === 'ready' && (
+          {status === 'ready' && data.contentItems && data.contentItems.length > 0 && (
+            <ContentKeyboard data={data} onSend={onSend} />
+          )}
+          {status === 'ready' && (!data.contentItems || data.contentItems.length === 0) && (
             <div>
               {/* Header */}
               <div
