@@ -962,7 +962,7 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [
           {
-            label: '🎤 我的客户陈诚是企业中层，45岁有2个孩子，3月银行定存到期30万，请更新客户档案',
+            label: '🎤 客户陈诚家里有2个孩子，开着宝马5系参加活动，家里住在福田中心区，客户在活动现场对资产配置比较关心',
             value: 'voice-input-archive',
           },
         ],
