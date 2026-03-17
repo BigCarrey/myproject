@@ -484,11 +484,27 @@ export const fieldScenarios: Scenario[] = [
             type: 'field-customer-panorama',
             content: '',
             data: {
-              total: 7847,
-              lifeInsurance: 1231,
-              comprehensive: 855,
-              existing: 12,
-              prospect: 6027,
+              touchCustomer: { done: 2, total: 20 },
+              faceVisit: { done: 0, total: 30 },
+              invite: { done: 0, total: 10 },
+              monthlyWarmUp: 1,
+              grid: {
+                a: {
+                  cold: { count: 1, pendingCount: 0 },
+                  low: { count: 5, pendingCount: 5 },
+                  medHigh: { count: 2, pendingCount: 2 },
+                },
+                bc: {
+                  cold: { count: 18, pendingCount: 18 },
+                  low: { count: 22, pendingCount: 22 },
+                  medHigh: { count: 6, pendingCount: 6 },
+                },
+                def: {
+                  cold: { count: 1, pendingCount: 0 },
+                  low: { count: 3, pendingCount: 3 },
+                  medHigh: { count: 2, pendingCount: 2 },
+                },
+              },
             },
           },
           {
