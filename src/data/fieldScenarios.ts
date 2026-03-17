@@ -993,6 +993,13 @@ export const fieldScenarios: Scenario[] = [
               archiveTime: '活动后语音更新',
             },
           },
+          {
+            type: 'text',
+            content: '好的，已为您更新到客户档案，您对客户陈诚有什么下一步的跟进计划吗？',
+            speechText: '好的，已为您更新到客户档案，您对客户陈诚有什么下一步的跟进计划吗？',
+            delay: 600,
+            wechatEvents: [],
+          },
         ],
         quickReplies: [
           { label: '确认更新，继续', value: 'back-to-menu' },
