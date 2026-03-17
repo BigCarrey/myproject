@@ -249,14 +249,13 @@ function App() {
         }));
       }, 1500);
 
-      // 3. After 2.8 s: show AI smart keyboard panel
+      // 3. After 2.8 s: show AI smart keyboard panel (keyboard state first)
       const t2 = window.setTimeout(() => {
         setWeChatState(prev => ({
           ...prev,
           smartKeyboard: {
             analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈',
             recommendedScript: `${contactName}，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！`,
-            skipAnalyzing: true,
           },
         }));
       }, 2800);
