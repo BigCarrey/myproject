@@ -43,6 +43,7 @@ import FieldCustomerPanoramaCard from './cards/FieldCustomerPanoramaCard';
 import FieldRoleplayCustomerCard from './cards/FieldRoleplayCustomerCard';
 import FieldHealthConsultCard from './cards/FieldHealthConsultCard';
 import FieldVisitPrepCard from './cards/FieldVisitPrepCard';
+import FieldVisitPlanCard from './cards/FieldVisitPlanCard';
 
 interface MessageBubbleProps {
   message: Message;
@@ -259,6 +260,8 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
         return <FieldHealthConsultCard data={message.data as any} />;
       case 'field-visit-prep':
         return <FieldVisitPrepCard data={message.data as any} />;
+      case 'field-visit-plan':
+        return <FieldVisitPlanCard data={message.data as Record<string, unknown>} />;
       case 'field-outreach-scripts':
         return <FieldOutreachScriptsCard data={message.data as any} />;
       case 'field-interaction-heat':

@@ -298,7 +298,33 @@ function App() {
       if (reply.value === 'back-to-menu') {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
         const nextIndex = activeStepIndex + 1;
-        setTimeout(() => advanceToNextStep(nextIndex), 500);
+        // Step 1: AI confirms visit plan added
+        setTimeout(() => {
+          chat.addMessage({ role: 'ai', type: 'text', content: '已为您加入下周拜访计划 ✅' });
+        }, 600);
+        // Step 2: AI outputs visit plan card
+        setTimeout(() => {
+          chat.addMessage({
+            role: 'ai',
+            type: 'field-visit-plan',
+            content: '',
+            data: {
+              clientName: '陈诚',
+              clientTitle: '企业中层 · 45岁',
+              visitDate: '3月24日（周一）',
+              visitTime: '上午 10:00',
+              objective: '保险需求深度面谈，呈现平安盛盈专属方案',
+              preps: [
+                '准备平安盛盈·居家养老定制方案材料',
+                '打印陈诚专属财富规划报告',
+                '准备同类企业中层客户成功案例',
+              ],
+              aiTip: '上午10点拜访最佳，客户此时精力充沛，决策效率高；定存30万到期是切入主推产品的黄金时机。',
+            },
+          });
+        }, 1400);
+        // Step 3: transition to next demo step
+        setTimeout(() => advanceToNextStep(nextIndex), 3200);
         return;
       }
       chat.handleQuickReply(reply);

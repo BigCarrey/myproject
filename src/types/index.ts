@@ -44,6 +44,7 @@ export type MessageContentType =
   | 'field-roleplay-customer'
   | 'field-health-consult'
   | 'field-visit-prep'
+  | 'field-visit-plan'
   | 'wechat-screenshot';
 
 export interface Message {
