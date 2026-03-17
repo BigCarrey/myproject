@@ -1002,7 +1002,7 @@ export const fieldScenarios: Scenario[] = [
           },
         ],
         quickReplies: [
-          { label: '确认更新，继续', value: 'back-to-menu' },
+          { label: '我打算下周再去客户家拜访一下', value: 'back-to-menu' },
         ],
       },
     ],
