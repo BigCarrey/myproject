@@ -236,41 +236,14 @@ function SmartKeyboard({
   onSend: (text: string) => void;
   onDismiss: () => void;
 }) {
-  const [status, setStatus] = useState<'idle' | 'analyzing' | 'ready'>(
-    data.skipAnalyzing ? 'ready' : 'idle'
+  const [status, setStatus] = useState<'keyboard' | 'analyzing' | 'ready'>(
+    data.skipAnalyzing ? 'ready' : 'keyboard'
   );
 
-  // Auto-start analyzing when component mounts if data is provided
-  useEffect(() => {
-    if (data.skipAnalyzing) {
-      setStatus('ready');
-      return;
-    }
+  const handleAISuggest = () => {
+    if (status !== 'keyboard') return;
     setStatus('analyzing');
-    const t = setTimeout(() => setStatus('ready'), 2000);
-    return () => clearTimeout(t);
-  }, [data.skipAnalyzing]);
-
-  const screenshotBtnStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 3,
-    padding: '0 8px',
-    height: 32,
-    borderRadius: 6,
-    border: 'none',
-    fontSize: 12,
-    fontWeight: 500,
-    cursor: 'pointer',
-    whiteSpace: 'nowrap',
-    background: status === 'idle'
-      ? '#e0e0e0'
-      : 'linear-gradient(135deg, #3B82F6, #6366F1)',
-    color: status === 'idle' ? '#555' : '#fff',
-    boxShadow: status !== 'idle'
-      ? '0 0 8px rgba(59,130,246,0.6)'
-      : 'none',
-    animation: status === 'analyzing' ? 'pulse 1.2s ease-in-out infinite' : 'none',
+    setTimeout(() => setStatus('ready'), 2000);
   };
 
   const inputRowStyle: React.CSSProperties = {
@@ -284,14 +257,195 @@ function SmartKeyboard({
     flexShrink: 0,
   };
 
+  const screenshotBtnStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 3,
+    padding: '0 8px',
+    height: 32,
+    borderRadius: 6,
+    border: 'none',
+    fontSize: 12,
+    fontWeight: 500,
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+    background: '#e0e0e0',
+    color: '#555',
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
-      {/* AI panel — stacked above input row */}
-      {status !== 'idle' && (
+      <style>{`
+        @keyframes shimmer {
+          0% { transform: translateX(-150%); }
+          100% { transform: translateX(350%); }
+        }
+        @keyframes pulse {
+          0%, 100% { box-shadow: 0 0 6px rgba(59,130,246,0.5); }
+          50% { box-shadow: 0 0 14px rgba(99,102,241,0.9); }
+        }
+      `}</style>
+
+      {/* Input row */}
+      <div style={inputRowStyle}>
+        <button className="wc-input-icon">🎤</button>
+        <div className="wc-input-field" style={{ flex: 1 }}>输入消息...</div>
+        <button style={screenshotBtnStyle}>
+          📸 截屏
+        </button>
+        <button className="wc-input-icon">😊</button>
+        <button className="wc-input-icon">＋</button>
+      </div>
+
+      {/* Keyboard panel (idle state) */}
+      {status === 'keyboard' && (
+        <div style={{ background: '#d1d5db', flexShrink: 0 }}>
+          {/* AI input helper bar */}
+          <div
+            style={{
+              background: 'rgba(15, 23, 42, 0.95)',
+              padding: '10px 14px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <div>
+              <div style={{ color: '#fff', fontSize: 13, fontWeight: 600 }}>✨ AI 输入助手</div>
+              <div style={{ color: 'rgba(255,255,255,0.5)', fontSize: 10, marginTop: 2 }}>点击获取智能回复建议</div>
+            </div>
+            <button
+              onClick={handleAISuggest}
+              style={{
+                background: 'linear-gradient(135deg, #3B82F6, #6366F1)',
+                color: '#fff',
+                fontSize: 13,
+                fontWeight: 700,
+                border: 'none',
+                borderRadius: 20,
+                padding: '7px 18px',
+                cursor: 'pointer',
+                letterSpacing: '0.03em',
+                boxShadow: '0 2px 8px rgba(59,130,246,0.5)',
+              }}
+            >
+              AI 建议
+            </button>
+          </div>
+
+          {/* Toolbar row */}
+          <div
+            style={{
+              background: '#aaafb8',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: 6,
+              padding: '4px 8px',
+            }}
+          >
+            {['A', '✦', '▣', '🎤', '˅'].map((icon, i) => (
+              <button
+                key={i}
+                style={{
+                  width: 30,
+                  height: 30,
+                  borderRadius: 6,
+                  border: 'none',
+                  background: 'rgba(255,255,255,0.5)',
+                  fontSize: 12,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {icon}
+              </button>
+            ))}
+          </div>
+
+          {/* QWERTY rows */}
+          {[
+            ['Q','W','E','R','T','Y','U','I','O','P'],
+            ['A','S','D','F','G','H','J','K','L'],
+            ['⇧','Z','X','C','V','B','N','M','⌫'],
+          ].map((row, ri) => (
+            <div
+              key={ri}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                gap: 5,
+                padding: ri === 0 ? '8px 4px 4px' : '4px',
+              }}
+            >
+              {row.map((key) => (
+                <button
+                  key={key}
+                  style={{
+                    flex: (key === '⇧' || key === '⌫') ? '1.5 1 0' : '1 1 0',
+                    minWidth: 0,
+                    height: 40,
+                    borderRadius: 5,
+                    border: 'none',
+                    background: (key === '⇧' || key === '⌫') ? '#aaafb8' : '#fff',
+                    fontSize: key.length > 1 ? 14 : 15,
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    boxShadow: '0 1px 0 rgba(0,0,0,0.3)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {key}
+                </button>
+              ))}
+            </div>
+          ))}
+
+          {/* Bottom row */}
+          <div style={{ display: 'flex', gap: 5, padding: '4px 4px 10px' }}>
+            {[
+              { label: '123', flex: 1.4 },
+              { label: '😊', flex: 1 },
+              { label: ',', flex: 1 },
+              { label: '', flex: 4, isSpace: true },
+              { label: '中/英', flex: 1.4 },
+              { label: '发送', flex: 1.4, isPrimary: true },
+            ].map((k, i) => (
+              <button
+                key={i}
+                style={{
+                  flex: k.flex,
+                  height: 40,
+                  borderRadius: 5,
+                  border: 'none',
+                  background: k.isPrimary
+                    ? '#3B82F6'
+                    : k.isSpace
+                    ? '#fff'
+                    : '#aaafb8',
+                  color: k.isPrimary ? '#fff' : '#000',
+                  fontSize: 13,
+                  fontWeight: k.isPrimary ? 700 : 400,
+                  cursor: 'pointer',
+                  boxShadow: '0 1px 0 rgba(0,0,0,0.3)',
+                }}
+              >
+                {k.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Analyzing / Ready: AI panel */}
+      {(status === 'analyzing' || status === 'ready') && (
         <div
           style={{
             background: 'rgba(15, 23, 42, 0.95)',
-            borderRadius: '16px 16px 0 0',
             overflow: 'hidden',
             flexShrink: 0,
           }}
@@ -299,9 +453,8 @@ function SmartKeyboard({
           {status === 'analyzing' && (
             <div style={{ padding: '12px 14px 14px' }}>
               <div style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: 500, marginBottom: 10 }}>
-                🔍 {data.analyzingText || 'AI正在分析截图中...'}
+                🔍 {data.analyzingText || 'AI正在分析中...'}
               </div>
-              {/* Shimmer progress bar */}
               <div
                 style={{
                   width: '100%',
@@ -325,22 +478,11 @@ function SmartKeyboard({
                   }}
                 />
               </div>
-              <style>{`
-                @keyframes shimmer {
-                  0% { transform: translateX(-150%); }
-                  100% { transform: translateX(350%); }
-                }
-                @keyframes pulse {
-                  0%, 100% { box-shadow: 0 0 6px rgba(59,130,246,0.5); }
-                  50% { box-shadow: 0 0 14px rgba(99,102,241,0.9); }
-                }
-              `}</style>
             </div>
           )}
 
           {status === 'ready' && (
             <div>
-              {/* Header */}
               <div
                 style={{
                   padding: '10px 14px 8px',
@@ -352,7 +494,6 @@ function SmartKeyboard({
                   {data.headerTitle ? data.analysis : `识别到: ${data.analysis}`}
                 </div>
               </div>
-              {/* Script section */}
               <div style={{ padding: '10px 14px 14px' }}>
                 <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 11, marginBottom: 6 }}>💬 推荐话术</div>
                 <div
@@ -387,27 +528,10 @@ function SmartKeyboard({
                   发 送 话 术
                 </button>
               </div>
-              <style>{`
-                @keyframes pulse {
-                  0%, 100% { box-shadow: 0 0 6px rgba(59,130,246,0.5); }
-                  50% { box-shadow: 0 0 14px rgba(99,102,241,0.9); }
-                }
-              `}</style>
             </div>
           )}
         </div>
       )}
-
-      {/* Input row */}
-      <div style={inputRowStyle}>
-        <button className="wc-input-icon">🎤</button>
-        <div className="wc-input-field" style={{ flex: 1 }}>输入消息...</div>
-        <button style={screenshotBtnStyle} onClick={() => {}}>
-          📸 截屏{status !== 'idle' ? '✨' : ''}
-        </button>
-        <button className="wc-input-icon">😊</button>
-        <button className="wc-input-icon">＋</button>
-      </div>
     </div>
   );
 }
