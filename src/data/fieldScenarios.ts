@@ -676,6 +676,13 @@ export const fieldScenarios: Scenario[] = [
             content: '好的。已按您的要求查找到3名财富产品到期客户，并匹配了沟通话术及针对性触客内容，是否按此名单为您生成4月经营计划？',
             speechText: '好的。已按您的要求查找到3名财富产品到期客户，并匹配了沟通话术及针对性触客内容，是否按此名单为您生成4月经营计划？',
           },
+        ],
+        quickReplies: [
+          { label: '好的，谢谢', value: 'confirm-monthly-plan' },
+        ],
+      },
+      {
+        aiMessages: [
           {
             type: 'field-monthly-plan',
             content: '',
