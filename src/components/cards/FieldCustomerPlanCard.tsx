@@ -143,7 +143,7 @@ export function FieldCustomerPlanCard({ data }: FieldCustomerPlanCardProps) {
       color: '#F59E0B',
       bg: '#FFFBEB',
       customers: [
-        { name: '陈先生', detail: '存款300万 · 本月到期' },
+        { name: '陈先生', detail: '存款30万 · 本月到期' },
         { name: '刘女士', detail: '存款150万 · 本月到期' },
         { name: '张先生', detail: '存款200万 · 下月到期' },
         { name: '王总', detail: '存款500万 · 本月到期' },

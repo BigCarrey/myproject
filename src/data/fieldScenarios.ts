@@ -534,7 +534,7 @@ export const fieldScenarios: Scenario[] = [
                 {
                   icon: '🏦', label: '银行存款到期客户', count: 5, color: '#F59E0B',
                   customers: [
-                    { name: '陈先生', detail: '存款300万 · 本月到期' },
+                    { name: '陈先生', detail: '存款30万 · 本月到期' },
                     { name: '刘女士', detail: '存款150万 · 本月到期' },
                     { name: '张先生', detail: '存款200万 · 下月到期' },
                     { name: '王总', detail: '存款500万 · 本月到期' },
@@ -610,7 +610,7 @@ export const fieldScenarios: Scenario[] = [
                   color: '#F59E0B',
                   bg: '#FFFBEB',
                   customers: [
-                    { name: '陈先生', detail: '存款300万 · 本月到期' },
+                    { name: '陈先生', detail: '存款30万 · 本月到期' },
                     { name: '刘女士', detail: '存款150万 · 本月到期' },
                     { name: '张先生', detail: '存款200万 · 下月到期' },
                     { name: '王总', detail: '存款500万 · 本月到期' },
@@ -692,7 +692,7 @@ export const fieldScenarios: Scenario[] = [
               estimatedConversion: '2-3人',
               estimatedIncome: '约5万元',
               topContacts: [
-                { rank: 1, name: '陈先生', detail: '存款300万 · 本月到期 · 主动咨询意向强', script: '陈先生，司庆季来了！之前聊到您的300万存款这个月就到期了，我特意为您准备了一套保本增值方案，比银行利率高不少，方便这两天见面聊聊吗？' },
+                { rank: 1, name: '陈先生', detail: '存款30万 · 本月到期 · 主动咨询意向强', script: '陈先生，司庆季来了！之前聊到您的30万存款这个月就到期了，我特意为您准备了一套保本增值方案，比银行利率高不少，方便这两天见面聊聊吗？' },
                 { rank: 2, name: '王总', detail: '存款500万 · 本月到期', script: '王总您好！您那笔500万存款本月到期，正好赶上平安司庆季，我为您匹配了一套高收益专属方案，有空给您详细汇报一下？' },
                 { rank: 3, name: '唐总', detail: '资产2000万 · 高净值重点', script: '唐总，司庆季特别为高净值客户推出了一套综合资产保障方案，兼顾收益与传承，非常适合您目前的资产规模，方便安排一次专属沙龙吗？' },
               ],
@@ -740,7 +740,7 @@ export const fieldScenarios: Scenario[] = [
               priorityContact: {
                 name: '陈先生',
                 script: '陈先生，司庆季开始了！想起您之前提过在考虑资产配置的问题，正好我们近期有几款特别适合您情况的产品，有时间聊聊吗？',
-                reason: '存款300万本月到期 · 主动咨询意向强',
+                reason: '存款30万本月到期 · 主动咨询意向强',
               },
               generalTemplate: '王老师，平安司庆季特别推出了几款专属产品，结合您目前的资产情况，我觉得很适合您，方便的话给您详细介绍一下？',
               templateCount: 26,
@@ -842,7 +842,7 @@ export const fieldScenarios: Scenario[] = [
                 { icon: '💼', label: '企业中层管理' },
                 { icon: '👨‍👩‍👧‍�', label: '家有老小' },
                 { icon: '📈', label: '偏好理财' },
-                { icon: '💰', label: '存款300万到期' },
+                { icon: '💰', label: '存款30万到期' },
                 { icon: '🏠', label: '关注资产传承' },
               ],
               analysis: [
