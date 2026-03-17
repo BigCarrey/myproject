@@ -240,6 +240,11 @@ function SmartKeyboard({
     data.skipAnalyzing ? 'ready' : 'keyboard'
   );
 
+  // Reset to keyboard state whenever new data arrives (safety net for reuse without remount)
+  useEffect(() => {
+    setStatus(data.skipAnalyzing ? 'ready' : 'keyboard');
+  }, [data]);
+
   const handleAISuggest = () => {
     if (status !== 'keyboard') return;
     setStatus('analyzing');
