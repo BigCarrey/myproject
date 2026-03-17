@@ -43,7 +43,8 @@ export type MessageContentType =
   | 'field-customer-panorama'
   | 'field-roleplay-customer'
   | 'field-health-consult'
-  | 'field-visit-prep';
+  | 'field-visit-prep'
+  | 'wechat-screenshot';
 
 export interface Message {
   id: string;

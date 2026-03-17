@@ -134,6 +134,45 @@ function TextContent({ content, onSpeak }: { content: string; onSpeak?: (text: s
   );
 }
 
+function WeChatScreenshotPreview({ data }: { data?: Record<string, unknown> }) {
+  const contactName = (data?.contactName as string) || '客户';
+  const msgs = (data?.messages as Array<{ type: 'self' | 'contact'; text: string }>) || [];
+  return (
+    <div style={{ width: 195, borderRadius: 10, overflow: 'hidden', boxShadow: '0 3px 14px rgba(0,0,0,0.35)', border: '0.5px solid rgba(0,0,0,0.12)' }}>
+      {/* 状态栏 */}
+      <div style={{ background: '#e9e9e9', padding: '3px 8px', display: 'flex', justifyContent: 'space-between', fontSize: 8, color: '#555' }}>
+        <span>21:15</span>
+        <span>●●● WiFi 🔋</span>
+      </div>
+      {/* 聊天标题栏 */}
+      <div style={{ background: '#ededed', padding: '5px 10px', display: 'flex', alignItems: 'center', borderBottom: '0.5px solid #ccc' }}>
+        <span style={{ fontSize: 14, color: '#555', marginRight: 4 }}>‹</span>
+        <span style={{ flex: 1, textAlign: 'center', fontSize: 12, fontWeight: 500, color: '#1a1a1a' }}>{contactName}</span>
+        <span style={{ fontSize: 14, color: '#555' }}>⋯</span>
+      </div>
+      {/* 聊天消息区 */}
+      <div style={{ background: '#f0f0f0', padding: '8px 7px', display: 'flex', flexDirection: 'column', gap: 6, minHeight: 60 }}>
+        {msgs.map((m, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: m.type === 'self' ? 'flex-end' : 'flex-start', alignItems: 'flex-start', gap: 4 }}>
+            {m.type === 'contact' && (
+              <div style={{ width: 22, height: 22, borderRadius: 4, background: '#4B7BE5', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, color: '#fff', fontWeight: 700, flexShrink: 0 }}>
+                {contactName.charAt(0)}
+              </div>
+            )}
+            <div style={{ background: m.type === 'self' ? '#95EC69' : '#fff', borderRadius: 5, padding: '4px 7px', fontSize: 9.5, maxWidth: 135, color: '#000', lineHeight: 1.4, wordBreak: 'break-all' }}>
+              {m.text}
+            </div>
+          </div>
+        ))}
+      </div>
+      {/* 底部标签 */}
+      <div style={{ background: '#ededed', padding: '3px 8px', fontSize: 9, color: '#888', textAlign: 'center' }}>
+        截图 · 微信对话
+      </div>
+    </div>
+  );
+}
+
 export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   const isAi = message.role === 'ai';
 
@@ -233,6 +272,13 @@ export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   };
 
   if (!isAi) {
+    if (message.type === 'wechat-screenshot') {
+      return (
+        <div className="flex justify-end mb-3 animate-fade-in-up" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+          <WeChatScreenshotPreview data={message.data} />
+        </div>
+      );
+    }
     return (
       <div className="flex justify-end mb-3 animate-fade-in-up" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
         <div

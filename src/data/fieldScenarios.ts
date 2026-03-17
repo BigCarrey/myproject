@@ -811,13 +811,27 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [],
       },
-      // Step 2: 话术已发送，回到万能营销，建议邀约活动
+      // Step 2: 用户发截图 → AI分析
       {
         aiMessages: [
           {
+            role: 'user',
+            type: 'wechat-screenshot',
+            content: '[微信截图]',
+            delay: 1000,
+            data: {
+              contactName: '陈先生',
+              messages: [
+                { type: 'self', text: '方便这两天见面聊聊吗？' },
+                { type: 'contact', text: '好的，正好最近也在想这些，你什么时候方便详细聊聊？' },
+              ],
+            },
+          },
+          {
             type: 'field-ai-analysis',
             content: '陈先生互动分析完成，AI建议邀请参加财富管理讲座',
-            speechText: '话术已成功发送！基于陈先生的兴趣偏好，AI助手建议邀请他参加本月的财富管理讲座，这是促成转化的最佳时机。',
+            speechText: '截图分析完成！基于陈先生的兴趣偏好，AI助手建议邀请他参加本月的财富管理讲座，这是促成转化的最佳时机。',
+            delay: 400,
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
               { type: 'hide-float-btn', data: null },
