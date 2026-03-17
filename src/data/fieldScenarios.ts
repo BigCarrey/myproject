@@ -727,9 +727,7 @@ export const fieldScenarios: Scenario[] = [
             },
           },
         ],
-        quickReplies: [
-          { label: '查看匹配沟通话术与触客内容', value: 'view-outreach-scripts' },
-        ],
+        quickReplies: [],
       },
       {
         aiMessages: [
