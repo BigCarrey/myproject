@@ -43,7 +43,9 @@ export type MessageContentType =
   | 'field-customer-panorama'
   | 'field-roleplay-customer'
   | 'field-health-consult'
-  | 'field-visit-prep';
+  | 'field-visit-prep'
+  | 'field-visit-plan'
+  | 'wechat-screenshot';
 
 export interface Message {
   id: string;
@@ -87,12 +89,23 @@ export interface WeChatScreenshotHelper {
   visible: boolean;
 }
 
+export interface SmartKeyboardContentItem {
+  icon: string;
+  title: string;
+  tag: string;
+  tagColor?: string;
+  tagTextColor?: string;
+  description: string;
+}
+
 export interface SmartKeyboardData {
   analysis: string;
   recommendedScript: string;
   skipAnalyzing?: boolean;
   headerTitle?: string;
+  headerSubtitle?: string;
   analyzingText?: string;
+  contentItems?: SmartKeyboardContentItem[];
 }
 
 export interface WeChatEvent {

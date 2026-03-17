@@ -249,14 +249,22 @@ function App() {
         }));
       }, 1500);
 
-      // 3. After 2.8 s: show AI smart keyboard panel
+      // 3. After 2.8 s: show AI smart keyboard panel (keyboard state first)
       const t2 = window.setTimeout(() => {
         setWeChatState(prev => ({
           ...prev,
           smartKeyboard: {
+            headerTitle: '🧑‍💼 AI生成触客内容',
+            headerSubtitle: '根据客户情况，AI为您定制以下触客内容，可一键转发',
             analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈',
+            analyzingText: 'AI正在分析客户意图...',
+            contentItems: [
+              { icon: '📊', title: '市场动态周报', tag: '文章', tagColor: '#FFF3E0', tagTextColor: '#E65100', description: '近期A股波动分析与资产配置建议' },
+              { icon: '💰', title: '资产配置指南', tag: 'PDF', tagColor: '#FFEBEE', tagTextColor: '#C62828', description: '震荡市下高净值客户保全策略' },
+              { icon: '📈', title: '同类客户案例', tag: '案例', tagColor: '#E0F2F1', tagTextColor: '#00695C', description: '企业主多元化配置，年化稳健收益' },
+              { icon: '🏆', title: '理财收益对比', tag: '报告', tagColor: '#E3F2FD', tagTextColor: '#0277BD', description: '保险年金vs其他资产5年收益对比' },
+            ],
             recommendedScript: `${contactName}，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！`,
-            skipAnalyzing: true,
           },
         }));
       }, 2800);
@@ -289,8 +297,35 @@ function App() {
     (reply: { label: string; value: string }) => {
       if (reply.value === 'back-to-menu') {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
+        chat.setQuickReplies([]);
         const nextIndex = activeStepIndex + 1;
-        setTimeout(() => advanceToNextStep(nextIndex), 500);
+        // Step 1: AI confirms visit plan added
+        setTimeout(() => {
+          chat.addMessage({ role: 'ai', type: 'text', content: '已为您加入下周拜访计划 ✅' });
+        }, 600);
+        // Step 2: AI outputs visit plan card
+        setTimeout(() => {
+          chat.addMessage({
+            role: 'ai',
+            type: 'field-visit-plan',
+            content: '',
+            data: {
+              clientName: '陈诚',
+              clientTitle: '企业中层 · 45岁',
+              visitDate: '3月24日（周一）',
+              visitTime: '上午 10:00',
+              objective: '保险需求深度面谈，呈现平安盛盈专属方案',
+              preps: [
+                '准备平安盛盈·居家养老定制方案材料',
+                '打印陈诚专属财富规划报告',
+                '准备同类企业中层客户成功案例',
+              ],
+              aiTip: '上午10点拜访最佳，客户此时精力充沛，决策效率高；定存30万到期是切入主推产品的黄金时机。',
+            },
+          });
+        }, 1400);
+        // Step 3: transition to next demo step
+        setTimeout(() => advanceToNextStep(nextIndex), 3200);
         return;
       }
       chat.handleQuickReply(reply);

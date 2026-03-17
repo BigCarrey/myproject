@@ -673,9 +673,16 @@ export const fieldScenarios: Scenario[] = [
           },
           {
             type: 'text',
-            content: '好的。已按您的要求查找到3名财富产品到期客户、为您生成4月经营计划，并匹配了沟通话术及针对性触客内容。',
-            speechText: '好的。已按您的要求查找到3名财富产品到期客户、为您生成4月经营计划，并匹配了沟通话术及针对性触客内容。',
+            content: '好的。已按您的要求查找到3名财富产品到期客户，并匹配了沟通话术及针对性触客内容，是否按此名单为您生成4月经营计划？',
+            speechText: '好的。已按您的要求查找到3名财富产品到期客户，并匹配了沟通话术及针对性触客内容，是否按此名单为您生成4月经营计划？',
           },
+        ],
+        quickReplies: [
+          { label: '好的，谢谢', value: 'confirm-monthly-plan' },
+        ],
+      },
+      {
+        aiMessages: [
           {
             type: 'field-monthly-plan',
             content: '',
@@ -785,7 +792,16 @@ export const fieldScenarios: Scenario[] = [
               {
                 type: 'show-smart-keyboard',
                 data: {
+                  headerTitle: '🧑‍💼 AI生成触客内容',
+                  headerSubtitle: '根据客户情况，AI为您定制以下触客内容，可一键转发',
                   analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈',
+                  analyzingText: 'AI正在分析客户意图...',
+                  contentItems: [
+                    { icon: '📊', title: '市场动态周报', tag: '文章', tagColor: '#FFF3E0', tagTextColor: '#E65100', description: '近期A股波动分析与资产配置建议' },
+                    { icon: '💰', title: '资产配置指南', tag: 'PDF', tagColor: '#FFEBEE', tagTextColor: '#C62828', description: '震荡市下高净值客户保全策略' },
+                    { icon: '📈', title: '同类客户案例', tag: '案例', tagColor: '#E0F2F1', tagTextColor: '#00695C', description: '企业主多元化配置，年化稳健收益' },
+                    { icon: '🏆', title: '理财收益对比', tag: '报告', tagColor: '#E3F2FD', tagTextColor: '#0277BD', description: '保险年金vs其他资产5年收益对比' },
+                  ],
                   recommendedScript: '陈先生，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！',
                 },
               },
@@ -795,13 +811,27 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [],
       },
-      // Step 2: 话术已发送，回到万能营销，建议邀约活动
+      // Step 2: 用户发截图 → AI分析
       {
         aiMessages: [
           {
+            role: 'user',
+            type: 'wechat-screenshot',
+            content: '[微信截图]',
+            delay: 1000,
+            data: {
+              contactName: '陈先生',
+              messages: [
+                { type: 'self', text: '方便这两天见面聊聊吗？' },
+                { type: 'contact', text: '好的，正好最近也在想这些，你什么时候方便详细聊聊？' },
+              ],
+            },
+          },
+          {
             type: 'field-ai-analysis',
             content: '陈先生互动分析完成，AI建议邀请参加财富管理讲座',
-            speechText: '话术已成功发送！基于陈先生的兴趣偏好，AI助手建议邀请他参加本月的财富管理讲座，这是促成转化的最佳时机。',
+            speechText: '截图分析完成！基于陈先生的兴趣偏好，AI助手建议邀请他参加本月的财富管理讲座，这是促成转化的最佳时机。',
+            delay: 400,
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
               { type: 'hide-float-btn', data: null },
@@ -901,13 +931,12 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [],
       },
-      // Step 5: 活动后，回到万能营销，语音更新档案
+      // Step 5: 活动后，回到万能营销，提示代理人开口（仅切换视图，不显示AI消息）
       {
         aiMessages: [
           {
             type: 'text',
-            content: '🎉 **活动反馈来了！**\n\n陈先生参加完活动心情不错，结束后主动找我聊，说讲座内容很实用，正好和他最近在考虑的问题对上了，开始向我咨询资产配置的事。\n\n🎤 **请用语音输入**告诉我陈先生在活动中聊到的关键信息，我来帮您快速更新客户档案。',
-            speechText: '活动效果很好！陈先生参加后主动来问资产配置的事，请用语音告诉我活动中收集到的信息，我来帮您更新客户档案。',
+            content: '',
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
               { type: 'hide-float-btn', data: null },
@@ -916,7 +945,24 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [
           {
-            label: '🎤 我的客户陈诚是企业中层，45岁有2个孩子，3月银行定存到期30万，请更新客户档案',
+            label: '我刚与客户陈诚参与财富管理讲座活动，想记录活动参与情况',
+            value: 'record-activity',
+          },
+        ],
+      },
+      // Step 6: 代理人开口后，AI 追问细节
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '好的，您这次和客户的拜访，收集到了哪些新的信息？客户活动现场反馈了什么？请用语音告诉我，我来帮你整理更新客户档案。',
+            speechText: '好的，请用语音告诉我客户活动现场的反馈，我来帮您整理更新客户档案。',
+            wechatEvents: [],
+          },
+        ],
+        quickReplies: [
+          {
+            label: '🎤 客户陈诚家里有2个孩子，开着宝马5系参加活动，家里住在福田中心区，客户在活动现场对资产配置比较关心',
             value: 'voice-input-archive',
           },
         ],
@@ -947,9 +993,16 @@ export const fieldScenarios: Scenario[] = [
               archiveTime: '活动后语音更新',
             },
           },
+          {
+            type: 'text',
+            content: '好的，已为您更新到客户档案，您对客户陈诚有什么下一步的跟进计划吗？',
+            speechText: '好的，已为您更新到客户档案，您对客户陈诚有什么下一步的跟进计划吗？',
+            delay: 600,
+            wechatEvents: [],
+          },
         ],
         quickReplies: [
-          { label: '确认更新，继续', value: 'back-to-menu' },
+          { label: '我打算下周再去客户家拜访一下', value: 'back-to-menu' },
         ],
       },
     ],
@@ -975,7 +1028,7 @@ export const fieldScenarios: Scenario[] = [
           },
           {
             type: 'text',
-            content: '好的，经分析客户陈诚的客户画像，已为您生成拜访前准备方案，包括核心需求挖掘、拜访策略、沟通要点等内容，请查看 👇',
+            content: '好的，经分析客户陈诚的客户画像，为您生成拜访前准备方案，包括核心需求挖掘、拜访策略、沟通要点、时政经济话题视频等内容，请查看 👇',
             speechText: '收到，已分析陈诚的客户画像，为您生成拜访前准备方案，包括核心需求和拜访策略。',
           },
           {
