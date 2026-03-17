@@ -297,6 +297,7 @@ function App() {
     (reply: { label: string; value: string }) => {
       if (reply.value === 'back-to-menu') {
         chat.addMessage({ role: 'user', type: 'text', content: reply.label });
+        chat.setQuickReplies([]);
         const nextIndex = activeStepIndex + 1;
         // Step 1: AI confirms visit plan added
         setTimeout(() => {

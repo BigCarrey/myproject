@@ -336,6 +336,7 @@ export function useChat(activeScenarios: Scenario[]) {
   return {
     ...state,
     addMessage,
+    setQuickReplies,
     handleQuickReply,
     handleUserMessage,
     startScenario,
