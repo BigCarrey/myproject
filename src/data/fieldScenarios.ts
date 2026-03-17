@@ -931,17 +931,34 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [],
       },
-      // Step 5: 活动后，回到万能营销，语音更新档案
+      // Step 5: 活动后，回到万能营销，提示代理人开口
       {
         aiMessages: [
           {
             type: 'text',
-            content: '🎉 **活动反馈来了！**\n\n陈先生参加完活动心情不错，结束后主动找我聊，说讲座内容很实用，正好和他最近在考虑的问题对上了，开始向我咨询资产配置的事。\n\n🎤 **请用语音输入**告诉我陈先生在活动中聊到的关键信息，我来帮您快速更新客户档案。',
-            speechText: '活动效果很好！陈先生参加后主动来问资产配置的事，请用语音告诉我活动中收集到的信息，我来帮您更新客户档案。',
+            content: '🎉 **活动反馈来了！**\n\n陈先生参加完活动心情不错，结束后主动找我聊，说讲座内容很实用，正好和他最近在考虑的问题对上了，开始向我咨询资产配置的事。',
+            speechText: '活动效果很好！陈先生参加后主动来问资产配置的事。',
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
               { type: 'hide-float-btn', data: null },
             ],
+          },
+        ],
+        quickReplies: [
+          {
+            label: '我刚与客户陈诚参与财富管理讲座活动，想记录活动参与情况',
+            value: 'record-activity',
+          },
+        ],
+      },
+      // Step 6: 代理人开口后，AI 追问细节
+      {
+        aiMessages: [
+          {
+            type: 'text',
+            content: '好的，您这次和客户的拜访，收集到了哪些新的信息？客户活动现场反馈了什么？请用语音告诉我，我来帮你整理更新客户档案。',
+            speechText: '好的，请用语音告诉我客户活动现场的反馈，我来帮您整理更新客户档案。',
+            wechatEvents: [],
           },
         ],
         quickReplies: [
