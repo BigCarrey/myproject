@@ -210,17 +210,22 @@ function AIHelperPanel({
 }
 
 /* ─── Input bar ─── */
-function WeChatInputBar({ onShowHelper }: { onShowHelper?: () => void }) {
+function WeChatInputBar({ onShowHelper, onAIAnalysis }: { onShowHelper?: () => void; onAIAnalysis?: () => void }) {
   return (
     <div className="wc-input-bar">
       <button className="wc-input-icon">🎤</button>
       <div className="wc-input-field">输入消息...</div>
-      <button className="wc-input-icon">😊</button>
-      {onShowHelper && (
+      {onAIAnalysis && (
+        <button className="wc-ai-screenshot-btn" onClick={onAIAnalysis}>
+          ✨ AI截图分析
+        </button>
+      )}
+      {onShowHelper && !onAIAnalysis && (
         <button className="wc-ai-screenshot-btn" onClick={onShowHelper}>
           ✨ 截图
         </button>
       )}
+      <button className="wc-input-icon">😊</button>
       <button className="wc-input-icon">＋</button>
     </div>
   );
@@ -648,7 +653,7 @@ export function WeChatSimulator({
             onDismiss={() => {}}
           />
         ) : (
-          <WeChatInputBar />
+          <WeChatInputBar onAIAnalysis={onReturnToAssistant} />
         )
       )}
 
