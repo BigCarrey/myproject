@@ -254,7 +254,16 @@ function App() {
         setWeChatState(prev => ({
           ...prev,
           smartKeyboard: {
+            headerTitle: '🧑‍💼 AI生成触客内容',
+            headerSubtitle: '根据客户情况，AI为您定制以下触客内容，可一键转发',
             analysis: '客户主动咨询，意向明确，适合趁热打铁推进面谈',
+            analyzingText: 'AI正在分析客户意图...',
+            contentItems: [
+              { icon: '📊', title: '市场动态周报', tag: '文章', tagColor: '#FFF3E0', tagTextColor: '#E65100', description: '近期A股波动分析与资产配置建议' },
+              { icon: '💰', title: '资产配置指南', tag: 'PDF', tagColor: '#FFEBEE', tagTextColor: '#C62828', description: '震荡市下高净值客户保全策略' },
+              { icon: '📈', title: '同类客户案例', tag: '案例', tagColor: '#E0F2F1', tagTextColor: '#00695C', description: '企业主多元化配置，年化稳健收益' },
+              { icon: '🏆', title: '理财收益对比', tag: '报告', tagColor: '#E3F2FD', tagTextColor: '#0277BD', description: '保险年金vs其他资产5年收益对比' },
+            ],
             recommendedScript: `${contactName}，我这周四下午或周六上午都有时间，您看哪个方便？另外我们本月有个财富管理讲座，专家阵容很强，也可以一起参加！`,
           },
         }));
