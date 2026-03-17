@@ -931,13 +931,12 @@ export const fieldScenarios: Scenario[] = [
         ],
         quickReplies: [],
       },
-      // Step 5: 活动后，回到万能营销，提示代理人开口
+      // Step 5: 活动后，回到万能营销，提示代理人开口（仅切换视图，不显示AI消息）
       {
         aiMessages: [
           {
             type: 'text',
-            content: '🎉 **活动反馈来了！**\n\n陈先生参加完活动心情不错，结束后主动找我聊，说讲座内容很实用，正好和他最近在考虑的问题对上了，开始向我咨询资产配置的事。',
-            speechText: '活动效果很好！陈先生参加后主动来问资产配置的事。',
+            content: '',
             wechatEvents: [
               { type: 'switch-to-assistant', data: null },
               { type: 'hide-float-btn', data: null },

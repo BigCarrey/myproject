@@ -176,6 +176,9 @@ function WeChatScreenshotPreview({ data }: { data?: Record<string, unknown> }) {
 export function MessageBubble({ message, onSpeak }: MessageBubbleProps) {
   const isAi = message.role === 'ai';
 
+  // 空内容的 text 消息只用于触发 wechatEvents，不渲染气泡
+  if (isAi && message.type === 'text' && !message.content) return null;
+
   const renderContent = () => {
     switch (message.type) {
       case 'progress-list':
