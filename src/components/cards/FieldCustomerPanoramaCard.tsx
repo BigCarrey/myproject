@@ -1,26 +1,49 @@
+interface GridCell {
+  count: number;
+  pendingCount: number;
+}
+
+interface GridRow {
+  cold: GridCell;
+  low: GridCell;
+  medHigh: GridCell;
+}
+
 interface FieldCustomerPanoramaCardProps {
   data: {
-    total: number;
-    lifeInsurance: number;
-    comprehensive: number;
-    existing: number;
-    prospect: number;
+    touchCustomer: { done: number; total: number };
+    faceVisit: { done: number; total: number };
+    invite: { done: number; total: number };
+    monthlyWarmUp: number;
+    grid: {
+      a: GridRow;
+      bc: GridRow;
+      def: GridRow;
+    };
   };
 }
 
-const SEGMENTS = [
-  { key: 'prospect',      label: '准客户',    icon: '🎯', color: '#3B82F6',  bgFrom: '#EFF6FF', bgTo: '#DBEAFE', border: '#BFDBFE', text: '#1D4ED8' },
-  { key: 'lifeInsurance', label: '寿险客户',  icon: '🛡️', color: '#7C3AED',  bgFrom: '#F5F3FF', bgTo: '#EDE9FE', border: '#DDD6FE', text: '#5B21B6' },
-  { key: 'comprehensive', label: '综拓客户',  icon: '🌐', color: '#059669',  bgFrom: '#ECFDF5', bgTo: '#D1FAE5', border: '#A7F3D0', text: '#065F46' },
-  { key: 'existing',      label: '存续单客户', icon: '📋', color: '#F59E0B', bgFrom: '#FFFBEB', bgTo: '#FEF3C7', border: '#FDE68A', text: '#92400E' },
+const TEMP_COLS = [
+  { key: 'cold' as const, label: '冷却', pendingLabel: '待触客' },
+  { key: 'low' as const, label: '低温', pendingLabel: '待面访', color: '#E8900C', bgColor: '#FFF8ED', borderColor: '#FFE4B5' },
+  { key: 'medHigh' as const, label: '中高温', pendingLabel: '待邀约', color: '#3B6DE5', bgColor: '#EDF3FF', borderColor: '#C4D8FF' },
+];
+
+const ROW_LABELS = [
+  { key: 'a' as const, label: 'A' },
+  { key: 'bc' as const, label: 'BC' },
+  { key: 'def' as const, label: 'DEF' },
 ];
 
 export default function FieldCustomerPanoramaCard({ data }: FieldCustomerPanoramaCardProps) {
-  const { total, lifeInsurance, comprehensive, existing, prospect } = data;
-  const values: Record<string, number> = { prospect, lifeInsurance, comprehensive, existing };
+  const { touchCustomer, faceVisit, invite, monthlyWarmUp, grid } = data;
 
-  // bar widths (minimum 2% so tiny segments are still visible)
-  const barWidths = SEGMENTS.map(s => Math.max(2, Math.round((values[s.key] / total) * 100)));
+  const stats = [
+    { label: '触客', done: touchCustomer.done, total: touchCustomer.total, sub: '已完成/总数' },
+    { label: '面访', done: faceVisit.done, total: faceVisit.total, sub: '已完成/总数' },
+    { label: '邀约', done: invite.done, total: invite.total, sub: '已完成/总数' },
+    { label: '当月升温', value: monthlyWarmUp, sub: '总数' },
+  ];
 
   return (
     <div style={{
@@ -36,87 +59,150 @@ export default function FieldCustomerPanoramaCard({ data }: FieldCustomerPanoram
         padding: '11px 14px 10px',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        gap: 7,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 7 }}>
-          <span style={{ fontSize: 16 }}>🗺️</span>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.02em' }}>客户全景大图</span>
-        </div>
-        <div style={{
-          background: 'rgba(255,255,255,0.18)',
-          borderRadius: 20,
-          padding: '2px 10px',
-          display: 'flex',
-          alignItems: 'baseline',
-          gap: 3,
-        }}>
-          <span style={{ fontSize: 18, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{total.toLocaleString()}</span>
-          <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.8)' }}>位客户</span>
-        </div>
+        <span style={{ fontSize: 16 }}>🗺️</span>
+        <span style={{ fontSize: 13, fontWeight: 700, color: '#fff', letterSpacing: '0.02em' }}>客户全景大图</span>
       </div>
 
-      {/* Stacked bar */}
-      <div style={{ padding: '10px 14px 4px' }}>
-        <div style={{ display: 'flex', height: 10, borderRadius: 6, overflow: 'hidden', gap: 2 }}>
-          {SEGMENTS.map((s, i) => (
-            <div
-              key={s.key}
-              style={{
-                width: `${barWidths[i]}%`,
-                background: s.color,
-                borderRadius: i === 0 ? '6px 0 0 6px' : i === SEGMENTS.length - 1 ? '0 6px 6px 0' : 0,
-                transition: 'width 0.6s ease',
-              }}
-            />
-          ))}
-        </div>
-        {/* Legend */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px', marginTop: 6 }}>
-          {SEGMENTS.map(s => (
-            <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-              <div style={{ width: 8, height: 8, borderRadius: 2, background: s.color, flexShrink: 0 }} />
-              <span style={{ fontSize: 10, color: '#64748B' }}>{s.label}</span>
+      {/* Stats row */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+        padding: '12px 10px 8px',
+        textAlign: 'center',
+      }}>
+        {stats.map((s, i) => (
+          <div key={i} style={{
+            borderRight: i < stats.length - 1 ? '1px solid #F1F5F9' : 'none',
+          }}>
+            <div style={{ fontSize: 11, color: '#64748B', marginBottom: 4 }}>{s.label}</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#1E293B', lineHeight: 1.2 }}>
+              {'value' in s ? (
+                s.value
+              ) : (
+                <>
+                  {s.done}<span style={{ fontSize: 13, fontWeight: 500, color: '#94A3B8' }}>/{s.total}</span>
+                </>
+              )}
+            </div>
+            <div style={{ fontSize: 9, color: '#94A3B8', marginTop: 2 }}>{s.sub}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Divider with label */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        padding: '4px 14px 8px',
+        gap: 8,
+      }}>
+        <div style={{ flex: 1, height: 1, background: '#E2E8F0' }} />
+        <span style={{ fontSize: 11, fontWeight: 600, color: '#475569', whiteSpace: 'nowrap' }}>本月经营分布</span>
+        <div style={{ flex: 1, height: 1, background: '#E2E8F0' }} />
+      </div>
+
+      {/* Nine-grid */}
+      <div style={{ padding: '0 10px 12px' }}>
+        {/* Column headers */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '32px 1fr 1fr 1fr',
+          gap: 6,
+          marginBottom: 6,
+        }}>
+          <div />
+          {TEMP_COLS.map(col => (
+            <div key={col.key} style={{
+              textAlign: 'center',
+              fontSize: 11,
+              fontWeight: 600,
+              color: '#475569',
+            }}>
+              {col.label}
             </div>
           ))}
         </div>
-      </div>
 
-      {/* Divider */}
-      <div style={{ height: 1, background: '#F1F5F9', margin: '8px 14px 0' }} />
-
-      {/* Metric tiles */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, padding: '9px 10px 10px' }}>
-        {SEGMENTS.map(s => {
-          const val = values[s.key];
-          const pct = Math.round((val / total) * 100);
+        {/* Grid rows */}
+        {ROW_LABELS.map(row => {
+          const rowData = grid[row.key];
           return (
-            <div key={s.key} style={{
-              borderRadius: 10,
-              background: `linear-gradient(135deg, ${s.bgFrom}, ${s.bgTo})`,
-              border: `1px solid ${s.border}`,
-              padding: '8px 10px',
+            <div key={row.key} style={{
+              display: 'grid',
+              gridTemplateColumns: '32px 1fr 1fr 1fr',
+              gap: 6,
+              marginBottom: 6,
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-                  <span style={{ fontSize: 13 }}>{s.icon}</span>
-                  <span style={{ fontSize: 11, fontWeight: 600, color: s.text }}>{s.label}</span>
-                </div>
-                <span style={{
-                  fontSize: 10, color: s.text,
-                  background: 'rgba(255,255,255,0.55)',
-                  borderRadius: 8, padding: '1px 5px',
-                }}>{pct}%</span>
+              {/* Row label */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: 12,
+                fontWeight: 700,
+                color: '#475569',
+              }}>
+                {row.label}
               </div>
-              <div style={{ fontSize: 22, fontWeight: 800, color: s.color, lineHeight: 1 }}>
-                {val.toLocaleString()}
-              </div>
-              {/* Mini bar */}
-              <div style={{ marginTop: 5, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.6)' }}>
-                <div style={{ width: `${pct}%`, height: '100%', borderRadius: 2, background: s.color, opacity: 0.7 }} />
-              </div>
+
+              {/* Cells */}
+              {TEMP_COLS.map(col => {
+                const cell = rowData[col.key];
+                const isHighlight = col.key !== 'cold';
+                const bgColor = isHighlight ? (col.bgColor || '#F8FAFC') : '#F8FAFC';
+                const borderColor = isHighlight ? (col.borderColor || '#E2E8F0') : '#E2E8F0';
+                const accentColor = isHighlight ? (col.color || '#475569') : '#475569';
+
+                return (
+                  <div key={col.key} style={{
+                    background: bgColor,
+                    border: `1px solid ${borderColor}`,
+                    borderRadius: 10,
+                    padding: '8px 6px',
+                    textAlign: 'center',
+                  }}>
+                    <div style={{
+                      fontSize: 18,
+                      fontWeight: 800,
+                      color: '#1E293B',
+                      lineHeight: 1.2,
+                    }}>
+                      {cell.count}<span style={{ fontSize: 12, fontWeight: 500 }}>人</span>
+                    </div>
+                    <div style={{
+                      fontSize: 9,
+                      color: accentColor,
+                      fontWeight: isHighlight ? 600 : 400,
+                      marginTop: 2,
+                    }}>
+                      {col.pendingLabel} {cell.pendingCount}人
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           );
         })}
+
+        {/* Bottom column labels */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '32px 1fr 1fr 1fr',
+          gap: 6,
+        }}>
+          <div />
+          {TEMP_COLS.map(col => (
+            <div key={col.key} style={{
+              textAlign: 'center',
+              fontSize: 10,
+              color: '#94A3B8',
+            }}>
+              {col.label}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
