@@ -635,6 +635,7 @@ export function WeChatSimulator({
       {currentView === 'chat' && (
         smartKeyboard ? (
           <SmartKeyboard
+            key={smartKeyboard.analysis}
             data={smartKeyboard}
             onSend={(text) => {
               onSendReply?.(text);
